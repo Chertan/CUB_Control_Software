@@ -1,5 +1,12 @@
 import pigpio
 
+# Class: PhotoSensor
+# Desc: Hardware interface class to handle the reading of photosensor components
+# Params: in_pin is the gpio pin number of the sensor
+#         in_true_value is the gpio value for which the sensor will return true
+#
+# Functions: read_sensor() - Returns True or False depending on the current output of the sensor
+
 
 class PhotoSensor:
     gpio = pigpio.pi()
@@ -19,4 +26,3 @@ class PhotoSensor:
             temp = False
 
         return temp
-
