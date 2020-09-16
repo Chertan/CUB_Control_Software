@@ -1,15 +1,15 @@
-# Class: PhotoSensor
-# Desc: Hardware interface class to handle the reading of photosensor components
+# Class: Selector
+# Desc:
 # Params: in_pin is the gpio pin number of the sensor
 #         in_true_value is the gpio value for which the sensor will return true
 #
-# Functions: read_sensor() - Returns True or False depending on the current output of the sensor
+# Functions:
 
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
 
 
-class Selector:
+class ToolSelector:
     # GPIO pins of the tool
     DIR_PIN = 6
     STEP_PIN = 13
@@ -31,17 +31,17 @@ class Selector:
 
     def __init__(self):
         # Define Tool stepper motor
-        self.toolStepper = StepperMotor(Selector.DIR_PIN, Selector.STEP_PIN, Selector.ENA_PIN,
-                                        Selector.START_SPEED, Selector.MAX_SPEED)
+        self.toolStepper = StepperMotor(ToolSelector.DIR_PIN, ToolSelector.STEP_PIN,ToolSelector.ENA_PIN,
+                                        ToolSelector.START_SPEED, ToolSelector.MAX_SPEED)
 
         # Photo interrupter sensor reads 0 when beam is cut
-        self.toolHomeSensor = PhotoSensor(Selector.TRAVPS_PIN, 0)
+        self.toolHomeSensor = PhotoSensor(ToolSelector.TRAVPS_PIN, 0)
 
         self.tool_home()
         self.currentTool = 0
 
     def tool_home(self):
-        self.toolStepper.move_until(Selector.POS_DIR, self.toolHomeSensor.read_sensor)
+        self.toolStepper.move_until(ToolSelector.POS_DIR, self.toolHomeSensor.read_sensor)
 
         # BACKUP
         # while not self.tool_home_sensor.read_sensor():

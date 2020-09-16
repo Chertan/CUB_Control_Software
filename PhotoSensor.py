@@ -20,9 +20,9 @@ class PhotoSensor:
     def read_sensor(self):
         if PhotoSensor.gpio.read(self.pin) == self.trueValue:
             # Sensor pin is in true position
-            temp = True
+            out = True
         else:
             # Sensor pin is in false position
-            temp = False
+            out = False
 
-        return temp
+        return out

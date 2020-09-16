@@ -54,6 +54,7 @@ class StepperMotor:
         # Set enable pin low
         StepperMotor.gpio.write(self.enable, 0)
 
+    # Function to move motor until the function in the in_condition parameter returns TRUE
     def move_until(self, in_direction, in_condition):
         # Set enable pin high
         StepperMotor.gpio.write(self.enable, 1)
@@ -69,6 +70,7 @@ class StepperMotor:
     def __step_motor(self, speed):
         # Pulse Step Pin
         StepperMotor.gpio.write(self.step, 1)
+        #
         StepperMotor.gpio.write(self.step, 0)
 
         # Wait - Sets speed
