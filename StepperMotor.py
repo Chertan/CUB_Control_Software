@@ -1,6 +1,3 @@
-import pigpio
-import time
-
 # Class: StepperMotor
 # Desc: Hardware interface class to handle the control of a stepper motor
 # Params: in_direction is the gpio pin number of the direction wire of the motor
@@ -11,6 +8,9 @@ import time
 #
 # Functions: move_steps(<number of steps>, <direction of movement(0 | 1)> )
 #               - rotates the motor the input number of steps
+
+import pigpio
+import time
 
 
 class StepperMotor:
@@ -40,9 +40,8 @@ class StepperMotor:
         ramp_length = (speed - self.maxSpeed) / StepperMotor.ramp_rate
 
         for i in range(0, count):
-            # Pulse Step Pin
-            StepperMotor.gpio.write(self.step, 1)
-            StepperMotor.gpio.write(self.step, 0)
+
+            __step_motor(speed)
 
             # Ramp up speed at start of movement
             if i < ramp_length:
@@ -52,9 +51,26 @@ class StepperMotor:
             if i > (count - ramp_length):
                 speed -= StepperMotor.ramp_rate
 
-            # Wait - Sets speed
-            # Transforms speed to a delay between steps
-            time.sleep(1 / (1 + (speed * 100)))
+        # Set enable pin low
+        StepperMotor.gpio.write(self.enable, 0)
+
+    def move_until(self, in_direction, in_condition):
+        # Set enable pin high
+        StepperMotor.gpio.write(self.enable, 1)
+        # Set direction pin
+        StepperMotor.gpio.write(self.direction, in_direction)
+
+        while not in_condition():
+            self.__step_motor(self.startSpeed)
 
         # Set enable pin low
         StepperMotor.gpio.write(self.enable, 0)
+
+    def __step_motor(self, speed):
+        # Pulse Step Pin
+        StepperMotor.gpio.write(self.step, 1)
+        StepperMotor.gpio.write(self.step, 0)
+
+        # Wait - Sets speed
+        # Transforms speed to a delay between steps
+        time.sleep(1 / (1 + (speed * 100)))
