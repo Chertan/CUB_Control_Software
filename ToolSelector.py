@@ -1,9 +1,9 @@
-# Class: Selector
-# Desc:
-# Params: in_pin is the gpio pin number of the sensor
-#         in_true_value is the gpio value for which the sensor will return true
+# Class: ToolSelector
+# Desc: Abstraction Class to represent the Tool selection mechanism for the CUB
+# Params:
 #
-# Functions:
+# Functions:    tool_home() - Returns the blank (home) tool to the selected position
+#               tool_select(tool) - Moved the tool
 
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
@@ -48,7 +48,7 @@ class ToolSelector:
         #     # Rotate the tool
         #     self.tool_stepper.move_steps(1, Selector.POS_DIR)
 
-    def tool_select(self, num):
+    def tool_select(self, tool):
         # Rotate to a specific tool: (Top, Middle, Bot)
         #   0 - Blank
         #   1 -
