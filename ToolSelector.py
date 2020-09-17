@@ -27,7 +27,7 @@ class ToolSelector:
     STEPS_PER_TOOL = 6
 
     # GPIO pin of the tool selector home sensor
-    TRAVPS = 27
+    TOOLPS = 27
 
     def __init__(self):
         # Define Tool stepper motor
@@ -35,7 +35,7 @@ class ToolSelector:
                                         ToolSelector.START_SPEED, ToolSelector.MAX_SPEED)
 
         # Photo interrupter sensor reads 0 when beam is cut
-        self.toolHomeSensor = PhotoSensor(ToolSelector.TRAVPS, 0)
+        self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, 0)
 
         self.tool_home()
         self.currentTool = 0
