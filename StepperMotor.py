@@ -8,6 +8,8 @@
 #
 # Functions: move_steps(<number of steps>, <direction of movement(0 | 1)> )
 #               - rotates the motor the input number of steps
+#            move_until(<condition function>, <direction of movement (0 | 1)> )
+#               - rotates the motor in the input direction until the condition function returns true
 
 import pigpio
 import time
@@ -65,16 +67,22 @@ class StepperMotor:
         StepperMotor.gpio.write(self.enable, 0)
 
     # Function to move motor until the function in the in_condition parameter returns TRUE
-    def move_until(self, in_direction, in_condition):
+    # Returns the number of steps taken
+    def move_until(self, in_condition, in_direction):
         # Set enable pin high
         StepperMotor.gpio.write(self.enable, 1)
         # Set direction pin
         StepperMotor.gpio.write(self.direction, in_direction)
 
+        count = 0
+
         while not in_condition():
             self.__step_motor(self.startSpeed)
+            count += 1
 
         # Set enable pin low
         StepperMotor.gpio.write(self.enable, 0)
+
+        return count
 
 

@@ -5,6 +5,7 @@
 # Functions:    tool_home() - Returns the blank (home) tool to the selected position
 #               tool_select(tool) - Moved the tool
 
+import logging
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
 
@@ -28,22 +29,43 @@ class ToolSelector:
 
     # GPIO pin of the tool selector home sensor
     TOOLPS = 27
+    # GPIO Input for the sensor to return True
+    PS_TRUE = 1
 
     def __init__(self):
         # Define Tool stepper motor
         self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
                                         ToolSelector.START_SPEED, ToolSelector.MAX_SPEED)
 
-        # Photo interrupter sensor reads 0 when beam is cut
-        self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, 0)
+        # Define Photo interrupter sensor, input is 0 when beam is cut
+        self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, ToolSelector.PS_TRUE)
 
+        # Initialise tool to home position (Blank face upwards)
+        self.currentTool = 9
         self.tool_home()
+
         self.currentTool = 0
 
     def tool_home(self):
-        self.toolStepper.move_until(ToolSelector.POS_DIR, self.toolHomeSensor.read_sensor)
+        self.tool_select(0)
 
-        # BACKUP
+        if self.currentTool > 4:
+            # Shortest travel is to wrap in forwards direction
+            direction = ToolSelector.POS_DIR
+            expected = (8 - self.currentTool) * ToolSelector.STEPS_PER_TOOL
+        else:
+            # Shortest travel is to rotate in backwards direction
+            direction = ToolSelector.NEG_DIR
+            expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
+
+        count = self.toolStepper.move_until(self.toolHomeSensor.read_sensor, direction)
+
+        logging.info(f"Tool Returned Home. Expected Steps = {expected}, Actual Steps = {count}")
+
+        # BACKUP #1
+        # self.toolStepper.move_until(self.toolHomeSensor.read_sensor, ToolSelector.POS_DIR)
+
+        # BACKUP #2
         # while not self.tool_home_sensor.read_sensor():
         #     # Rotate the tool
         #     self.tool_stepper.move_steps(1, Selector.POS_DIR)
@@ -60,21 +82,32 @@ class ToolSelector:
         #   7 - Top + Mid + Bot
 
         # Movement is found by translating the current tool to zero
+        # leaving the adjusted desired tool in a range from -3 to 4
+        # The value represents the direction (-ve = backwards rotation)
+        # and number of faces to rotate (Between 0 and 4)
         movement = tool - self.currentTool
-        direction = ToolSelector.POS_DIR
 
-        if movement < 0:
-            if movement < -3:
-                # Change rotation direction
-                direction = ToolSelector.NEG_DIR
-            else:
-                # Direction is +ve by default
-                movement += 8
+        if movement > 4:
+            # Wrap the adjusted movement value to keep within range
+            movement -= 8
+        elif movement < -3:
+            # Wrap the adjusted movement value to keep within range
+            movement += 8
+
+        if movement > 0:
+            # Rotate in a positive direction
+            direction = ToolSelector.POS_DIR
+
+        else:
+            # Rotate in a negative direction
+            direction = ToolSelector.NEG_DIR
 
         steps = movement * ToolSelector.STEPS_PER_TOOL
 
         # Move the Stepper motor
         self.toolStepper.move_steps(steps, direction)
+
+        logging.info(f"Rotated from tool #{self.current} to #{tool} in {steps} steps via direction {direction}")
 
         # Update the current tool attribute
         self.currentTool = tool
