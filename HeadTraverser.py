@@ -33,14 +33,16 @@ class HeadTraverser:
 
     # GPIO pin of the head home sensor
     TRAVPS = 4
+    # GPIO Input for the sensor to return True
+    PS_TRUE = 0
 
     def __init__(self):
         # Define Tool stepper motor
-        self.TraverseStepper = StepperMotor(HeadTraverser.TRAVDIR, HeadTraverser.TRAVSTEP,HeadTraverser.TRAVENA,
+        self.TraverseStepper = StepperMotor(HeadTraverser.TRAVDIR, HeadTraverser.TRAVSTEP, HeadTraverser.TRAVENA,
                                             HeadTraverser.START_SPEED, HeadTraverser.MAX_SPEED)
 
         # Photo interrupter sensor reads 0 when beam is cut
-        self.TraverseHomeSensor = PhotoSensor(HeadTraverser.TRAVPS, 0)
+        self.TraverseHomeSensor = PhotoSensor(HeadTraverser.TRAVPS, HeadTraverser.PS_TRUE)
 
         self.traverse_home()
         self.currentPosition = 0
@@ -48,7 +50,7 @@ class HeadTraverser:
     # Traverse the head back to the home position of the brailler
     def traverse_home(self):
         # Rotate backwards until the head it detected at the home position
-        self.TraverseStepper.move_until(HeadTraverser.NEG_DIR, self.TraverseHomeSensor.read_sensor)
+        self.TraverseStepper.move_until(self.TraverseHomeSensor.read_sensor, HeadTraverser.NEG_DIR)
 
         # BACKUP
         # while not self.tool_home_sensor.read_sensor():
