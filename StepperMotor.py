@@ -29,6 +29,16 @@ class StepperMotor:
         StepperMotor.gpio.write(self.step, 0)
         StepperMotor.gpio.write(self.direction, 0)
 
+    def __step_motor(self, speed):
+        # Pulse Step Pin
+        StepperMotor.gpio.write(self.step, 1)
+        #
+        StepperMotor.gpio.write(self.step, 0)
+
+        # Wait - Sets speed
+        # Transforms speed to a delay between steps
+        time.sleep(1 / (1 + (speed * 100)))
+
     def move_steps(self, count, in_direction):
         # Set enable pin high
         StepperMotor.gpio.write(self.enable, 1)
@@ -41,7 +51,7 @@ class StepperMotor:
 
         for i in range(0, count):
 
-            __step_motor(speed)
+            self.__step_motor(speed)
 
             # Ramp up speed at start of movement
             if i < ramp_length:
@@ -67,12 +77,4 @@ class StepperMotor:
         # Set enable pin low
         StepperMotor.gpio.write(self.enable, 0)
 
-    def __step_motor(self, speed):
-        # Pulse Step Pin
-        StepperMotor.gpio.write(self.step, 1)
-        #
-        StepperMotor.gpio.write(self.step, 0)
 
-        # Wait - Sets speed
-        # Transforms speed to a delay between steps
-        time.sleep(1 / (1 + (speed * 100)))
