@@ -10,10 +10,10 @@ from PhotoSensor import PhotoSensor
 
 
 class ToolSelector:
-    # GPIO pins of the tool
-    DIR_PIN = 6
-    STEP_PIN = 13
-    ENA_PIN = 5
+    # GPIO pins of the tool selector stepper motor
+    TOOLDIR = 6
+    TOOLSTEP = 13
+    TOOLENA = 5
 
     # Motor speed parameters to be tuned during testing
     START_SPEED = 5
@@ -27,15 +27,15 @@ class ToolSelector:
     STEPS_PER_TOOL = 6
 
     # GPIO pin of the tool selector home sensor
-    TRAVPS_PIN = 4
+    TRAVPS = 27
 
     def __init__(self):
         # Define Tool stepper motor
-        self.toolStepper = StepperMotor(ToolSelector.DIR_PIN, ToolSelector.STEP_PIN,ToolSelector.ENA_PIN,
+        self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
                                         ToolSelector.START_SPEED, ToolSelector.MAX_SPEED)
 
         # Photo interrupter sensor reads 0 when beam is cut
-        self.toolHomeSensor = PhotoSensor(ToolSelector.TRAVPS_PIN, 0)
+        self.toolHomeSensor = PhotoSensor(ToolSelector.TRAVPS, 0)
 
         self.tool_home()
         self.currentTool = 0
