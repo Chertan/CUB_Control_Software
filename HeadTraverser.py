@@ -25,11 +25,11 @@ class HeadTraverser:
 
     # Number of motor steps between columns of a single braille character (2.5mm)
     # Based of a single step (1.8 degrees) equalling 0.157mm
-    STEPS_BETWEEN_COLUMN= 16
+    STEPS_BETWEEN_COLUMN = 16
 
     # Number of motor steps between two braille characters (4.5mm)
     # Based of a single step (1.8 degrees) equalling 0.157mm
-    STEPS_BETWEEN_CHAR=29
+    STEPS_BETWEEN_CHAR = 29
 
     # GPIO pin of the head home sensor
     TRAVPS = 4
