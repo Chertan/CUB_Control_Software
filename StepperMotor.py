@@ -13,6 +13,7 @@
 
 import pigpio
 import time
+import logging
 
 
 class StepperMotor:
@@ -27,14 +28,21 @@ class StepperMotor:
         self.startSpeed = in_start_speed
         self.maxSpeed = in_max_speed
 
+        StepperMotor.gpio.set_mode(self.enable, pigpio.OUTPUT)
         StepperMotor.gpio.write(self.enable, 0)
+        logging.info(f"Setting up Stepper ENABLE on GPIO Pin: {self.enable}")
+
+        StepperMotor.gpio.set_mode(self.step, pigpio.OUTPUT)
         StepperMotor.gpio.write(self.step, 0)
+        logging.info(f"Setting up Stepper STEP on GPIO Pin: {self.step}")
+
+        StepperMotor.gpio.set_mode(self.direction, pigpio.OUTPUT)
         StepperMotor.gpio.write(self.direction, 0)
+        logging.info(f"Setting up Stepper DIR on GPIO Pin: {self.direction}")
 
     def __step_motor(self, speed):
         # Pulse Step Pin
         StepperMotor.gpio.write(self.step, 1)
-        #
         StepperMotor.gpio.write(self.step, 0)
 
         # Wait - Sets speed
@@ -46,6 +54,8 @@ class StepperMotor:
         StepperMotor.gpio.write(self.enable, 1)
         # Set direction pin
         StepperMotor.gpio.write(self.direction, in_direction)
+
+        logging.info(f"Stepping Stepper by {count} steps, in direction: {dir} on STEP Pin: {self.step}")
 
         speed = self.startSpeed
 
@@ -74,6 +84,8 @@ class StepperMotor:
         # Set direction pin
         StepperMotor.gpio.write(self.direction, in_direction)
 
+        logging.info(f"Stepping Stepper until {in_condition.__name__}, in direction: {dir} on STEP Pin: {self.step}")
+
         count = 0
 
         while not in_condition():
@@ -84,5 +96,3 @@ class StepperMotor:
         StepperMotor.gpio.write(self.enable, 0)
 
         return count
-
-
