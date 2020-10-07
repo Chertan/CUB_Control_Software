@@ -16,8 +16,9 @@ class PhotoSensor:
         self.pin = in_pin
         self.trueValue = in_true_value
 
+        PhotoSensor.gpio.set_mode(in_pin, pigpio.INPUT)
         PhotoSensor.gpio.set_pull_up_down(in_pin, pigpio.PUD_UP)
-        logging.info(f"Setting up Photo Sensor on GPIO Pin: {self.pin}")
+        logging.info(f"Setting up Photo Sensor INPUT on GPIO Pin: {self.pin}")
 
     def read_sensor(self):
         value = PhotoSensor.gpio.read(self.pin)
