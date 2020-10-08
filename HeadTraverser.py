@@ -1,12 +1,12 @@
 # Class: HeadTraverser
 # Desc: Abstraction Class to represent the Head Traversal mechanism for the CUB
-# Params:
 #
-# Functions:    traverse_home() - Returns brailler head to the home position (
+# Functions:    traverse_home() - Returns brailler head to the home position
 #               tool_select(tool) - Moved the tool
 
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
+import logging
 
 
 class HeadTraverser:
@@ -41,16 +41,31 @@ class HeadTraverser:
         self.TraverseStepper = StepperMotor(HeadTraverser.TRAVDIR, HeadTraverser.TRAVSTEP, HeadTraverser.TRAVENA,
                                             HeadTraverser.START_SPEED, HeadTraverser.MAX_SPEED)
 
+        logging.info(f"Setting up Traverser with STEP Pin: {HeadTraverser.TRAVSTEP}")
+
         # Photo interrupter sensor reads 0 when beam is cut
         self.TraverseHomeSensor = PhotoSensor(HeadTraverser.TRAVPS, HeadTraverser.PS_TRUE)
+
+        logging.info(f"Setting up Traverser Home Sensor on Pin: {HeadTraverser.TRAVPS}")
 
         self.traverse_home()
         self.currentPosition = 0
 
+    # Callback function called by pigpio library when the home photosensor is drawn low
+    def __home_callback(self):
+        self.TraverseStepper.stop()
+
+    def emergency_stop(self):
+        self.TraverseStepper.e_stop()
+
     # Traverse the head back to the home position of the brailler
     def traverse_home(self):
         # Rotate backwards until the head it detected at the home position
-        self.TraverseStepper.move_until(self.TraverseHomeSensor.read_sensor, HeadTraverser.NEG_DIR)
+        count = self.TraverseStepper.move_until(self.TraverseHomeSensor.read_sensor, HeadTraverser.NEG_DIR)
+
+        logging.info(f"Setting up Traverser Home Sensor on Pin: {HeadTraverser.TRAVPS}")
+
+        return count
 
         # BACKUP
         # while not self.tool_home_sensor.read_sensor():
