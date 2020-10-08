@@ -6,31 +6,34 @@
 #               tool_select(tool) - Moved the tool
 
 import logging
+import pigpio
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
 
 
 class ToolSelector:
+    gpio = pigpio.pi()
+
     # GPIO pins of the tool selector stepper motor
-    TOOLDIR = 6
-    TOOLSTEP = 13
-    TOOLENA = 5
+    TOOLDIR: int = 6
+    TOOLSTEP: int = 13
+    TOOLENA: int = 5
 
     # Motor speed parameters to be tuned during testing
-    START_SPEED = 5
-    MAX_SPEED = 10
+    START_SPEED: int = 5
+    MAX_SPEED: int = 10
 
     # Direction Selectors to be confirmed during testing
-    POS_DIR = 1
-    NEG_DIR = 0
+    POS_DIR: int = 1
+    NEG_DIR: int = 0
 
     # Number of motor steps between each face of the tool
-    STEPS_PER_TOOL = 6
+    STEPS_PER_TOOL: int = 6
 
     # GPIO pin of the tool selector home sensor
-    TOOLPS = 27
+    TOOLPS: int = 27
     # GPIO Input for the sensor to return True
-    PS_TRUE = 1
+    PS_TRUE: int = 1
 
     def __init__(self):
         # Define Tool stepper motor
@@ -46,6 +49,38 @@ class ToolSelector:
 
         self.currentTool = 0
 
+    # Perform a test of the rotation. One complete rotation completed in the estimated number of steps
+    # Completion time and step error reported
+    def __rotation_test(self):
+        callback = ToolSelector.gpio.callback(ToolSelector.TOOLPS, pigpio.FALLING_EDGE, self.__home_callback)
+
+        expected = ToolSelector.STEPS_PER_TOOL * 6
+
+        count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
+
+        if self.toolHomeSensor.read_sensor():
+            difference = expected - count
+            logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {count}, Diff = "
+                         f"{difference}")
+
+        else:
+            count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
+            total_count = expected + count
+
+            logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
+                         f"Diff = {count}")
+
+        callback.cancel()
+
+    # Callback function called by pigpio library when the home photosensor is drawn low
+    def __home_callback(self):
+        self.toolStepper.stop()
+
+    # Used to activate an emergency stop on all stepper motors
+    def emergency_stop(self):
+        self.toolStepper.e_stop()
+
+    # Rotates the tool to the home position
     def tool_home(self):
         self.tool_select(0)
 
@@ -61,6 +96,8 @@ class ToolSelector:
         count = self.toolStepper.move_until(self.toolHomeSensor.read_sensor, direction)
 
         logging.info(f"Tool Returned Home. Expected Steps = {expected}, Actual Steps = {count}")
+
+        return count
 
         # BACKUP #1
         # self.toolStepper.move_until(self.toolHomeSensor.read_sensor, ToolSelector.POS_DIR)
@@ -107,8 +144,7 @@ class ToolSelector:
         # Move the Stepper motor
         self.toolStepper.move_steps(steps, direction)
 
-        logging.info(f"Rotated from tool #{self.current} to #{tool} in {steps} steps via direction {direction}")
+        logging.info(f"Rotated from tool #{self.currentTool} to #{tool} in {steps} steps via direction {direction}")
 
         # Update the current tool attribute
         self.currentTool = tool
-
