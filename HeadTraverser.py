@@ -7,9 +7,12 @@
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
 import logging
+import pigpio
 
 
 class HeadTraverser:
+    gpio = pigpio.pi()
+
     # GPIO pins of the head traversal stepper motor
     TRAVDIR = 21
     TRAVSTEP = 20
@@ -22,6 +25,10 @@ class HeadTraverser:
     # Direction Selectors to be confirmed during testing
     POS_DIR = 1
     NEG_DIR = 0
+
+    # Max page steps
+    # Based of 300mm Travel length of head ( divided by 0.157mm per step)
+    MAX_TRAV_STEPS = 1915
 
     # Number of motor steps between columns of a single braille character (2.5mm)
     # Based of a single step (1.8 degrees) equalling 0.157mm
@@ -48,8 +55,30 @@ class HeadTraverser:
 
         logging.info(f"Setting up Traverser Home Sensor on Pin: {HeadTraverser.TRAVPS}")
 
+        self.currentStep = HeadTraverser.MAX_TRAV_STEPS
         self.traverse_home()
-        self.currentPosition = 0
+
+        self.__movement_test()
+
+    #
+    def __movement_test(self):
+
+        self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS/2, HeadTraverser.POS_DIR)
+
+        callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.FALLING_EDGE, self.__home_callback)
+
+        count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS / 2, HeadTraverser.NEG_DIR)
+
+        if self.TraverseHomeSensor.read_sensor():
+            logging.info(f"Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, "
+                         f"Steps taken = {count}")
+        else:
+            exp = count
+            count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS, HeadTraverser.NEG_DIR)
+            logging.info(f'Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, '
+                         f'Actual Steps = {exp + count}')
+
+        callback.cancel()
 
     # Callback function called by pigpio library when the home photosensor is drawn low
     def __home_callback(self):
@@ -61,9 +90,18 @@ class HeadTraverser:
     # Traverse the head back to the home position of the brailler
     def traverse_home(self):
         # Rotate backwards until the head it detected at the home position
-        count = self.TraverseStepper.move_until(self.TraverseHomeSensor.read_sensor, HeadTraverser.NEG_DIR)
+        callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.FALLING_EDGE, self.__home_callback)
 
-        logging.info(f"Setting up Traverser Home Sensor on Pin: {HeadTraverser.TRAVPS}")
+        count = self.TraverseStepper.move_steps(self.currentStep, HeadTraverser.NEG_DIR)
+
+        if self.TraverseHomeSensor.read_sensor():
+            logging.info(f"Tool Returned Home. Steps taken = {count}")
+        else:
+            exp = count
+            count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS, HeadTraverser.NEG_DIR)
+            logging.info(f"Tool Rotated to Blank Position. Expected Steps = {exp}, Actual Steps = {exp + count}")
+
+        callback.cancel()
 
         return count
 
@@ -73,9 +111,19 @@ class HeadTraverser:
         #     self.tool_stepper.move_steps(1, HeadTraverser.Neg_DIR)
 
     # Traverse the head by the spacing of one braille column
-    def traverse_column(self):
-        self.TraverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN, HeadTraverser.POS_DIR)
+    def traverse_column(self, reverse=False):
+        if reverse:
+            self.TraverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN, HeadTraverser.NEG_DIR)
+            self.currentStep -= HeadTraverser.STEPS_BETWEEN_COLUMN
+        else:
+            self.TraverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN, HeadTraverser.POS_DIR)
+            self.currentStep += HeadTraverser.STEPS_BETWEEN_COLUMN
 
     # Traverse the head by the spacing between braille characters
-    def traverse_character(self):
-        self.TraverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR, HeadTraverser.POS_DIR)
+    def traverse_character(self, reverse=False):
+        if reverse:
+            self.TraverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR, HeadTraverser.NEG_DIR)
+            self.currentStep -= HeadTraverser.STEPS_BETWEEN_CHAR
+        else:
+            self.TraverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR, HeadTraverser.POS_DIR)
+            self.currentStep += HeadTraverser.STEPS_BETWEEN_CHAR
