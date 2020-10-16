@@ -11,7 +11,6 @@
 #            move_until(<condition function>, <direction of movement (0 | 1)> )
 #               - rotates the motor in the input direction until the condition function returns true
 import pigpio
-import time
 import logging
 from StepperMotor import StepperMotor
 from DCOutputDevice import DCOutputDevice
@@ -19,6 +18,7 @@ from PhotoSensor import PhotoSensor
 
 
 class Feeder:
+    gpio = pigpio.pi()
 
     # // Line Feed Stepper Motor //
     # GPIO pins of the line feed stepper motor
@@ -90,9 +90,10 @@ class Feeder:
     # Note that
     def get_paper_size(self):
 
+        # Test sensors for which is not or if paper is empty
 
     def feed_line(self):
-
+        # Feed a single line
 
     def feed_lines(self, count):
         for i in range(count):
