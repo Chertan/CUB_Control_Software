@@ -15,25 +15,25 @@ class ToolSelector:
     gpio = pigpio.pi()
 
     # GPIO pins of the tool selector stepper motor
-    TOOLDIR: int = 6
-    TOOLSTEP: int = 13
-    TOOLENA: int = 5
+    TOOLDIR = 6
+    TOOLSTEP = 13
+    TOOLENA = 5
 
     # Motor speed parameters to be tuned during testing
-    START_SPEED: int = 5
-    MAX_SPEED: int = 10
+    START_SPEED = 5
+    MAX_SPEED = 10
 
     # Direction Selectors to be confirmed during testing
-    POS_DIR: int = 1
-    NEG_DIR: int = 0
+    POS_DIR = 1
+    NEG_DIR = 0
 
     # Number of motor steps between each face of the tool
-    STEPS_PER_TOOL: int = 6
+    STEPS_PER_TOOL = 6
 
     # GPIO pin of the tool selector home sensor
-    TOOLPS: int = 27
+    TOOLPS = 27
     # GPIO Input for the sensor to return True
-    PS_TRUE: int = 1
+    PS_TRUE = 1
 
     def __init__(self):
         # Define Tool stepper motor
@@ -44,10 +44,10 @@ class ToolSelector:
         self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, ToolSelector.PS_TRUE)
 
         # Initialise tool to home position (Blank face upwards)
-        self.currentTool = 9
+        self.currentTool = 5
         self.tool_home()
 
-        self.currentTool = 0
+        self.__rotation_test()
 
     # Perform a test of the rotation. One complete rotation completed in the estimated number of steps
     # Completion time and step error reported
@@ -81,9 +81,8 @@ class ToolSelector:
         self.toolStepper.e_stop()
 
     # Rotates the tool to the home position
+    # Note this operation is also used to test the drift of the stepper motor operation
     def tool_home(self):
-        self.tool_select(0)
-
         if self.currentTool > 4:
             # Shortest travel is to wrap in forwards direction
             direction = ToolSelector.POS_DIR
@@ -93,9 +92,15 @@ class ToolSelector:
             direction = ToolSelector.NEG_DIR
             expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
 
-        count = self.toolStepper.move_until(self.toolHomeSensor.read_sensor, direction)
+        callback = ToolSelector.gpio.callback(ToolSelector.TOOLPS, pigpio.FALLING_EDGE, self.__home_callback)
 
-        logging.info(f"Tool Returned Home. Expected Steps = {expected}, Actual Steps = {count}")
+        count = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 9, direction)
+
+        self.currentTool = 0
+
+        logging.info(f"Tool Rotated to Blank Position. Expected Steps = {expected}, Actual Steps = {count}")
+
+        callback.cancel()
 
         return count
 
