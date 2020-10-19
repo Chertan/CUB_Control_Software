@@ -17,7 +17,7 @@ import logging
 def main():
     traverser = HeadTraverser()
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(filename="TravTest.log", level=logging.DEBUG)
 
     pos = 0
 
