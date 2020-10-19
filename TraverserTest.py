@@ -11,10 +11,15 @@
 #
 
 from HeadTraverser import HeadTraverser
+import logging
 
 
 def main():
     traverser = HeadTraverser()
+
+    logger = logging.getLogger(__name__)
+
+    logger.setLevel(logging.DEBUG)
 
     pos = 0
 
