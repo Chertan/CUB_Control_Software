@@ -63,11 +63,11 @@ class HeadTraverser:
     #
     def __movement_test(self):
 
-        self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS/2, HeadTraverser.POS_DIR)
+        self.TraverseStepper.move_steps(round(HeadTraverser.MAX_TRAV_STEPS/2), HeadTraverser.POS_DIR)
 
         callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.FALLING_EDGE, self.__home_callback)
 
-        count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS / 2, HeadTraverser.NEG_DIR)
+        count = self.TraverseStepper.move_steps(round(HeadTraverser.MAX_TRAV_STEPS / 2), HeadTraverser.NEG_DIR)
 
         if self.TraverseHomeSensor.read_sensor():
             logging.info(f"Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, "
