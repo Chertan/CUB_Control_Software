@@ -17,9 +17,7 @@ import logging
 def main():
     traverser = HeadTraverser()
 
-    logger = logging.getLogger(__name__)
-
-    logger.setLevel(logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
 
     pos = 0
 
