@@ -19,6 +19,7 @@ def main():
 
     logging.basicConfig(filename="TravTest.log", level=logging.DEBUG)
     logging.info('Started')
+    logging.warning('Test')
 
     pos = 0
 
