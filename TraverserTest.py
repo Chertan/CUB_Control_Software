@@ -18,6 +18,7 @@ def main():
     traverser = HeadTraverser()
 
     logging.basicConfig(filename="TravTest.log", level=logging.DEBUG)
+    logging.info('Started')
 
     pos = 0
 
