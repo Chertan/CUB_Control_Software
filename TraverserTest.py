@@ -11,36 +11,68 @@
 #
 
 from HeadTraverser import HeadTraverser
+import time
 import logging
 
-
 def main():
-    traverser = HeadTraverser()
 
-    logging.basicConfig()
-    logging.info('Started')
-    logging.warning('Test')
+    logging.basicConfig(level = logging.INFO)
 
-    pos = 0
+    trav = ""
 
-    while True:
+    try:
+        trav = HeadTraverser()
 
-        d = input('Enter p or n for direction')
-        n = input('Enter number of character spaces')
+        if isinstance(trav, HeadTraverser):
+            print("HeadTraverser Successfully Initialised")
 
-        for i in range(0, n):
-            if pos == 30:
-                break
-            if d is 'p':
-                traverser.traverse_column()
-                pos += 1
-            if d is 'n':
-                traverser.traverse_column(reverse=True)
-                pos -= 1
+        #stepper.move_steps(300, POS_DIR)
+        #stepper.move_steps(300, NEG_DIR)
 
-        if pos == 30:
-            print('Reached page max distance')
+        step = 0
+        while True:
+
+            # time.sleep(0.5)
+            # print("Printing first Column")
+            # trav.traverse_column()
+
+            # time.sleep(0.5)
+            # print("Printing second Column")
+            # trav.traverse_column()
+
+            # time.sleep(1)
+            # print("Moving to next Character")
+            # trav.traverse_character()
+
+            # time.sleep(1)
+            # print("Moving back to last Character")
+            # trav.traverse_character(reverse=True)
+
+            # time.sleep(0.5)
+            # print("Replacing second Column")
+            # trav.traverse_column(reverse=True)
+
+            # time.sleep(0.5)
+            # print("Replacing first Column")
+            # trav.traverse_column(reverse=True)
+
+            for i in range(0, 25):
+                time.sleep(0.5)
+                trav.traverse_column()
+                time.sleep(0.5)
+                trav.traverse_character()
+
+            time.sleep(1)
+            print("Returning Home")
+            trav.traverse_home()
+            time.sleep(1)
 
 
-if __name__ == "__main__":
+    except:
+        if isinstance(trav, HeadTraverser):
+            trav.emergency_stop()
+
+
+
+if __name__ == '__main__':
     main()
