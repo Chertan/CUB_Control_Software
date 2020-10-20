@@ -20,25 +20,26 @@ class ToolSelector:
     TOOLENA = 5
 
     # Motor speed parameters to be tuned during testing
-    START_SPEED = 5
-    MAX_SPEED = 10
+    START_SPEED = 20
+    MAX_SPEED = 60
+    RAMP_RATE = 5
 
     # Direction Selectors to be confirmed during testing
     POS_DIR = 1
     NEG_DIR = 0
 
     # Number of motor steps between each face of the tool
-    STEPS_PER_TOOL = 6
+    STEPS_PER_TOOL = 7
 
     # GPIO pin of the tool selector home sensor
     TOOLPS = 27
     # GPIO Input for the sensor to return True
-    PS_TRUE = 1
+    PS_TRUE = 0
 
     def __init__(self):
         # Define Tool stepper motor
         self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
-                                        ToolSelector.START_SPEED, ToolSelector.MAX_SPEED)
+                                        ToolSelector.START_SPEED, ToolSelector.MAX_SPEED, ToolSelector.RAMP_RATE)
 
         # Define Photo interrupter sensor, input is 0 when beam is cut
         self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, ToolSelector.PS_TRUE)
