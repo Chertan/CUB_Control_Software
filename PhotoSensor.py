@@ -12,7 +12,7 @@ import pigpio
 class PhotoSensor:
     gpio = pigpio.pi()
 
-    def __init__(self, in_pin=None, in_true_value=0):
+    def __init__(self, in_pin, in_true_value):
         self.pin = in_pin
         self.trueValue = in_true_value
 
