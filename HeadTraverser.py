@@ -43,12 +43,12 @@ class HeadTraverser:
     # GPIO pin of the head home sensor
     TRAVPS = 4
     # GPIO Input for the sensor to return True
-    PS_TRUE = 0
+    PS_TRUE = 1
 
     def __init__(self):
         # Define Tool stepper motor
         self.TraverseStepper = StepperMotor(HeadTraverser.TRAVDIR, HeadTraverser.TRAVSTEP, HeadTraverser.TRAVENA,
-                                            HeadTraverser.START_SPEED, HeadTraverser.MAX_SPEED)
+                                            HeadTraverser.START_SPEED, HeadTraverser.MAX_SPEED, HeadTraverser.RAMP_RATE)
 
         logging.info(f"Setting up Traverser with STEP Pin: {HeadTraverser.TRAVSTEP}")
 
@@ -57,17 +57,29 @@ class HeadTraverser:
 
         logging.info(f"Setting up Traverser Home Sensor on Pin: {HeadTraverser.TRAVPS}")
 
-        self.currentStep = HeadTraverser.MAX_TRAV_STEPS
-        self.traverse_home()
+        try:
 
-        self.__movement_test()
+                self.currentStep = HeadTraverser.MAX_TRAV_STEPS
+                count = self.traverse_home()
+
+                if count == 2 * HeadTraverser.MAX_TRAV_STEPS:
+                    logging.error("Unable to return the Embosser Head to the home position")
+                    raise
+
+                self.__movement_test()
+        except:
+            self.emergency_stop()
+            raise
+
+    def __del__(self):
+        self.emergency_stop()
 
     #
     def __movement_test(self):
 
-        self.TraverseStepper.move_steps(round(HeadTraverser.MAX_TRAV_STEPS/2), HeadTraverser.POS_DIR)
+        callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.RISING_EDGE, self.__home_callback)
 
-        callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.FALLING_EDGE, self.__home_callback)
+        self.TraverseStepper.move_steps(round(HeadTraverser.MAX_TRAV_STEPS/2), HeadTraverser.POS_DIR)
 
         count = self.TraverseStepper.move_steps(round(HeadTraverser.MAX_TRAV_STEPS / 2), HeadTraverser.NEG_DIR)
 
@@ -76,14 +88,15 @@ class HeadTraverser:
                          f"Steps taken = {count}")
         else:
             exp = count
-            count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS, HeadTraverser.NEG_DIR)
+            count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS - count, HeadTraverser.NEG_DIR)
             logging.info(f'Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, '
                          f'Actual Steps = {exp + count}')
 
         callback.cancel()
 
     # Callback function called by pigpio library when the home photosensor is drawn low
-    def __home_callback(self):
+    def __home_callback(self, GPIO, level, tick):
+        logging.info("Traverser Callback Triggered")
         self.TraverseStepper.stop()
 
     def emergency_stop(self):
@@ -91,19 +104,27 @@ class HeadTraverser:
 
     # Traverse the head back to the home position of the brailler
     def traverse_home(self):
-        # Rotate backwards until the head it detected at the home position
-        callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.FALLING_EDGE, self.__home_callback)
-
-        count = self.TraverseStepper.move_steps(self.currentStep, HeadTraverser.NEG_DIR)
-
         if self.TraverseHomeSensor.read_sensor():
-            logging.info(f"Tool Returned Home. Steps taken = {count}")
+            logging.info(f"Tool Already Home. Steps taken = 0")
+            count = 0
         else:
-            exp = count
-            count = self.TraverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS, HeadTraverser.NEG_DIR)
-            logging.info(f"Tool Rotated to Blank Position. Expected Steps = {exp}, Actual Steps = {exp + count}")
+            # Rotate backwards until the head it detected at the home position
+            callback = HeadTraverser.gpio.callback(HeadTraverser.TRAVPS, pigpio.RISING_EDGE, self.__home_callback)
 
-        callback.cancel()
+            count = self.TraverseStepper.move_steps(self.currentStep, HeadTraverser.NEG_DIR)
+
+            if self.TraverseHomeSensor.read_sensor():
+                logging.info(f"Tool Returned Home. Steps taken = {count}")
+            else:
+                exp = 0
+                while not self.TraverseHomeSensor.read_sensor():
+                    exp += count
+                    count = self.TraverseStepper.move_steps(20, HeadTraverser.NEG_DIR)
+                    logging.info(f"Tool Returned Home. Expected Steps = {exp}, Actual Steps = {exp + count}")
+
+            callback.cancel()
+
+        self.currentStep = 0
 
         return count
 
