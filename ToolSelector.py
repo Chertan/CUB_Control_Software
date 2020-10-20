@@ -34,7 +34,7 @@ class ToolSelector:
     # GPIO pin of the tool selector home sensor
     TOOLPS = 27
     # GPIO Input for the sensor to return True
-    PS_TRUE = 0
+    PS_TRUE = 1
 
     def __init__(self):
         # Define Tool stepper motor
@@ -74,7 +74,7 @@ class ToolSelector:
         callback.cancel()
 
     # Callback function called by pigpio library when the home photosensor is drawn low
-    def __home_callback(self):
+    def __home_callback(self, GPIO, level, tick):
         self.toolStepper.stop()
 
     # Used to activate an emergency stop on all stepper motors
