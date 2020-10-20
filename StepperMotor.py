@@ -22,20 +22,22 @@ import logging
 class StepperMotor:
     gpio = pigpio.pi()
 
-    # Rate of speed ramp for the stepper motor
-    RAMP_RATE: float = 0.1
-
     # Emergency stop flag for the stepper motors
     # Setting to True will stop all motors from rotating
     emergency_stop = False
 
-    def __init__(self, in_direction=None, in_step=None, in_enable=None, in_start_speed=None, in_max_speed=None):
+    # Speed where the output is delayed by only the software and gpio overhead
+    CLIP_SPEED = 2000
+
+    def __init__(self, in_direction=None, in_step=None, in_enable=None, in_start_speed=None, in_max_speed=None, in_ramp_rate=None):
         self.direction = in_direction
         self.step = in_step
         self.enable = in_enable
 
+        # Speed is in steps per second
         self.startSpeed = in_start_speed
         self.maxSpeed = in_max_speed
+        self.rampRate = in_ramp_rate
 
         self.stop_motor = False
 
@@ -51,14 +53,23 @@ class StepperMotor:
         StepperMotor.gpio.write(self.direction, 0)
         logging.info(f"Setting up Stepper DIR on GPIO Pin: {self.direction}")
 
+        # Set enable pin high
+        # Set direction pin
+        self.__startup_motor(1)
+
+    def __del__(self):
+        self.__disable_motor()
+
     def __step_motor(self, speed):
+        # Wait - Sets speed
+        # Transforms speed to a delay between steps
+        if speed < StepperMotor.CLIP_SPEED:
+            logging.debug(f"Stepping Motor with speed: {speed}")
+            time.sleep(1 / speed)
+
         # Pulse Step Pin
         StepperMotor.gpio.write(self.step, 1)
         StepperMotor.gpio.write(self.step, 0)
-
-        # Wait - Sets speed
-        # Transforms speed to a delay between steps
-        time.sleep(1 / (1 + (speed * 100)))
 
     def __startup_motor(self, in_dir):
         if not StepperMotor.emergency_stop:
@@ -76,9 +87,10 @@ class StepperMotor:
 
     def stop(self):
         self.stop_motor = True
-        self.__disable_motor()
+        # self.__disable_motor()
 
         logging.error("Stepper Motor Stop Flag Set to True")
+
 
     def e_stop(self):
         StepperMotor.emergency_stop = True
@@ -91,11 +103,11 @@ class StepperMotor:
         # Set direction pin
         self.__startup_motor(in_direction)
 
-        logging.info(f"Stepping Stepper by {count} steps, in direction: {dir} on STEP Pin: {self.step}")
+        logging.info(f"Stepping Stepper by {count} steps, in direction: {in_direction} on STEP Pin: {self.step}")
 
         speed = self.startSpeed
 
-        ramp_length = (speed - self.maxSpeed) / StepperMotor.RAMP_RATE
+        ramp_length = (self.maxSpeed - speed) / self.rampRate
 
         step_count = count
 
@@ -116,14 +128,15 @@ class StepperMotor:
 
             # Ramp up speed at start of movement
             if i < ramp_length:
-                speed += StepperMotor.RAMP_RATE
+                speed += self.rampRate
 
             # Ramp down speed at end of movement
-            if i > (count - ramp_length):
-                speed -= StepperMotor.RAMP_RATE
+            # count -1 for index from 0, total -1 as it is decremented after step
+            if i > (((count-1) - ramp_length) -1):
+                speed -= self.rampRate
 
         # Set all output pins low
-        self.__disable_motor()
+        # self.__disable_motor()
 
         return step_count
 
@@ -156,6 +169,6 @@ class StepperMotor:
             count += 1
 
         # Set all output pins low
-        self.__disable_motor()
+        # self.__disable_motor()
 
         return count
