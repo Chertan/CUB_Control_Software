@@ -33,7 +33,7 @@ NEG_DIR = 0
 
 def main():
 
-    logging.basicConfig(level = logging.DEBUG)
+    logging.basicConfig(level = logging.INFO)
 
     mot = input("Enter motor to test, <TOOL or TRAV>")
 
