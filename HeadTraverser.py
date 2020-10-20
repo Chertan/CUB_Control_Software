@@ -19,16 +19,18 @@ class HeadTraverser:
     TRAVENA = 16
 
     # Motor speed parameters to be tuned during testing
-    START_SPEED = 5
-    MAX_SPEED = 10
+    START_SPEED = 500
+    MAX_SPEED = 1200
+    RAMP_RATE = 15
 
     # Direction Selectors to be confirmed during testing
     POS_DIR = 1
     NEG_DIR = 0
 
     # Max page steps
-    # Based of 300mm Travel length of head ( divided by 0.157mm per step)
-    MAX_TRAV_STEPS = 1915
+    # Based of 300mm Travel length of head ( divided by 0.157mm per step) (1400)
+    # Adjusted from testing down to 1200
+    MAX_TRAV_STEPS = 1200
 
     # Number of motor steps between columns of a single braille character (2.5mm)
     # Based of a single step (1.8 degrees) equalling 0.157mm
