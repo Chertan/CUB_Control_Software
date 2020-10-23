@@ -1,19 +1,20 @@
-# Class: ToolSelector
-# Desc: Abstraction Class to represent the Tool selection mechanism for the CUB
-# Params:
-#
-# Functions:    tool_home() - Returns the blank (home) tool to the selected position
-#               tool_select(tool) - Moved the tool
-
 import logging
-import pigpio
 from StepperMotor import StepperMotor
 from PhotoSensor import PhotoSensor
 
 
 class ToolSelector:
-    gpio = pigpio.pi()
+    """Abstraction Class to represent the Tool selection mechanism for the CUB
 
+        Attributes: toolStepper    - Stepper motor class to represent the Tool selection stepper motor
+                    toolHomeSensor - PhotoSensor class for the Photosensor used to detect the home tool position
+                    currentTool    - Tracks the currently selected tool in the embossing position
+
+        Methods:    emergency_stop()    - Shuts down the tool stepper motor to prevent future operation
+                    tool_home()         - Rotates the embosser head to the blank (home) position
+                    tool_select(<tool>) - Rotates the embosser head to select the input tool
+
+    """
     # GPIO pins of the tool selector stepper motor
     TOOLDIR = 6
     TOOLSTEP = 13
@@ -37,6 +38,9 @@ class ToolSelector:
     PS_TRUE = 1
 
     def __init__(self):
+        """Creates an abstraction object of the Tool Selector module for the CUB
+
+        """
         # Define Tool stepper motor
         self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
                                         ToolSelector.START_SPEED, ToolSelector.MAX_SPEED, ToolSelector.RAMP_RATE)
@@ -50,12 +54,16 @@ class ToolSelector:
 
         self.__rotation_test()
 
-    # Perform a test of the rotation. One complete rotation completed in the estimated number of steps
-    # Completion time and step error reported
     def __rotation_test(self):
-        callback = ToolSelector.gpio.callback(ToolSelector.TOOLPS, pigpio.FALLING_EDGE, self.__home_callback)
+        """Complete a movement test of the Tool Selection Module
+        Performs a full rotation and reports any differences in expected steps
 
-        expected = ToolSelector.STEPS_PER_TOOL * 6
+        :return: None
+        """
+        self.toolHomeSensor.set_falling_callback(self.__home_callback)
+
+        # One full rotation
+        expected = ToolSelector.STEPS_PER_TOOL * 8
 
         count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
 
@@ -71,19 +79,31 @@ class ToolSelector:
             logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
                          f"Diff = {count}")
 
-        callback.cancel()
+            self.toolHomeSensor.clear_falling_callback()
 
-    # Callback function called by pigpio library when the home photosensor is drawn low
-    def __home_callback(self, GPIO, level, tick):
+    def __home_callback(self, gpio, level, tick):
+        """Callback function called when the home photosensor detects the embossing tool in the blank position
+
+        :param gpio: Pin that triggered callback
+        :param level: Level of the pin that triggered callback
+        :param tick: Timing value to represent when the trigger ocured
+        :return: None
+        """
         self.toolStepper.stop()
 
     # Used to activate an emergency stop on all stepper motors
     def emergency_stop(self):
+        """Stops the selector motor to a state that requires a hard restart of the program
+
+        :return: None
+        """
         self.toolStepper.e_stop()
 
-    # Rotates the tool to the home position
-    # Note this operation is also used to test the drift of the stepper motor operation
     def tool_home(self):
+        """Rotates the tool back to the blank (home) position and reports any missed or extra steps
+
+        :return: count: number of steps taken to rotate to home position
+        """
         if self.currentTool > 4:
             # Shortest travel is to wrap in forwards direction
             direction = ToolSelector.POS_DIR
@@ -93,27 +113,25 @@ class ToolSelector:
             direction = ToolSelector.NEG_DIR
             expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
 
-        callback = ToolSelector.gpio.callback(ToolSelector.TOOLPS, pigpio.FALLING_EDGE, self.__home_callback)
+        self.toolHomeSensor.set_falling_callback(self.__home_callback)
 
         count = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 9, direction)
 
+        logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
+                     f"Actual Steps = {count}")
+
         self.currentTool = 0
 
-        logging.info(f"Tool Rotated to Blank Position. Expected Steps = {expected}, Actual Steps = {count}")
-
-        callback.cancel()
+        self.toolHomeSensor.clear_falling_callback()
 
         return count
 
-        # BACKUP #1
-        # self.toolStepper.move_until(self.toolHomeSensor.read_sensor, ToolSelector.POS_DIR)
-
-        # BACKUP #2
-        # while not self.tool_home_sensor.read_sensor():
-        #     # Rotate the tool
-        #     self.tool_stepper.move_steps(1, Selector.POS_DIR)
-
     def tool_select(self, tool):
+        """Rotates the tool to place the input tool into the selected position ready for embossing
+
+        :param tool: The integer number of the tool to be selected
+        :return: count: Number of steps taken to change to input tool
+        """
         # Rotate to a specific tool: (Top, Middle, Bot)
         #   0 - Blank
         #   1 - Top
@@ -128,29 +146,32 @@ class ToolSelector:
         # leaving the adjusted desired tool in a range from -3 to 4
         # The value represents the direction (-ve = backwards rotation)
         # and number of faces to rotate (Between 0 and 4)
-        movement = tool - self.currentTool
-
-        if movement > 4:
-            # Wrap the adjusted movement value to keep within range
-            movement -= 8
-        elif movement < -3:
-            # Wrap the adjusted movement value to keep within range
-            movement += 8
-
-        if movement > 0:
-            # Rotate in a positive direction
-            direction = ToolSelector.POS_DIR
-
+        if tool == 0:
+            count = self.tool_home()
         else:
-            # Rotate in a negative direction
-            direction = ToolSelector.NEG_DIR
+            movement = tool - self.currentTool
 
-        steps = movement * ToolSelector.STEPS_PER_TOOL
+            if movement > 4:
+                # Wrap the adjusted movement value to keep within range
+                movement -= 8
+            elif movement < -3:
+                # Wrap the adjusted movement value to keep within range
+                movement += 8
 
-        # Move the Stepper motor
-        self.toolStepper.move_steps(steps, direction)
+            if movement > 0:
+                # Rotate in a positive direction
+                direction = ToolSelector.POS_DIR
 
-        logging.info(f"Rotated from tool #{self.currentTool} to #{tool} in {steps} steps via direction {direction}")
+            else:
+                # Rotate in a negative direction
+                direction = ToolSelector.NEG_DIR
+
+            steps = movement * ToolSelector.STEPS_PER_TOOL
+
+            # Move the Stepper motor
+            count = self.toolStepper.move_steps(steps, direction)
 
         # Update the current tool attribute
         self.currentTool = tool
+
+        return count

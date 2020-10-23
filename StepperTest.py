@@ -1,4 +1,3 @@
-
 from StepperMotor import StepperMotor
 import time
 import logging
@@ -24,7 +23,6 @@ TOOL_START_SPEED = 20
 TOOL_MAX_SPEED = 60
 TOOL_RAMP_RATE = 5
 TOOL_NSTEPS = 54
-#54
 
 # Direction Selectors to be confirmed during testing
 POS_DIR = 1
@@ -33,7 +31,7 @@ NEG_DIR = 0
 
 def main():
 
-    logging.basicConfig(level = logging.INFO)
+    logging.basicConfig(level=logging.INFO)
 
     mot = input("Enter motor to test, <TOOL or TRAV>")
 
@@ -41,11 +39,11 @@ def main():
         if mot == "TOOL":
             print("Testing with the Tool Selection Motor")
             stepper = StepperMotor(TOOL_DIR,TOOL_STEP, TOOL_ENA, TOOL_START_SPEED, TOOL_MAX_SPEED,TOOL_RAMP_RATE)
-            nSteps = TOOL_NSTEPS
+            n_steps = TOOL_NSTEPS
         elif mot == "TRAV":
             print("Testing with the Head Traversal Motor")
             stepper = StepperMotor(TRAV_DIR, TRAV_STEP, TRAV_ENA, TRAV_START_SPEED, TRAV_MAX_SPEED, TRAV_RAMP_RATE)
-            nSteps = TRAV_NSTEPS
+            n_steps = TRAV_NSTEPS
         else:
             print("Enter Valid Input")
             exit
@@ -56,17 +54,15 @@ def main():
         print("Exit testing with CTRL-C")
 
         while True:
-            print(f"Moved {stepper.move_steps(nSteps, POS_DIR)} steps in the POS DIR")
+            print(f"Moved {stepper.move_steps(n_steps, POS_DIR)} steps in the POS DIR")
             time.sleep(1)
 
-            print(f"Moved {stepper.move_steps(nSteps, NEG_DIR)} steps in the POS DIR")
+            print(f"Moved {stepper.move_steps(n_steps, NEG_DIR)} steps in the POS DIR")
 
             time.sleep(1)
-
 
     except KeyboardInterrupt:
         stepper.e_stop()
-
 
 
 if __name__ == '__main__':
