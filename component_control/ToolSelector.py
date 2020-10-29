@@ -1,6 +1,19 @@
+from component_control.hardware_interface.StepperMotor import StepperMotor
+from component_control.hardware_interface.PhotoSensor import PhotoSensor
+from CUBExceptions import *
+import multiprocessing
 import logging
-from StepperMotor import StepperMotor
-from PhotoSensor import PhotoSensor
+
+
+def translate_tool(index):
+    """Translates the index sent from the Main thread to a tool index
+
+    :param index: The desired tool as a string binary representation
+    :return: The corresponding tool index as a integer
+    """
+    # Reverse string from top to bottom, to bottom to top order
+    rev = index[::-1]
+    return int(rev, 2)
 
 
 class ToolSelector:
@@ -48,11 +61,133 @@ class ToolSelector:
         # Define Photo interrupter sensor, input is 0 when beam is cut
         self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, ToolSelector.PS_TRUE)
 
-        # Initialise tool to home position (Blank face upwards)
+        self.exit = False
         self.currentTool = 5
-        self.tool_home()
+
+        self.in_pipe, self.out_pipe = multiprocessing.Pipe()
+
+    def __del__(self):
+        self.emergency_stop()
+
+    def thread_in(self):
+        """Entrance point for the Head Traverser component thread
+
+        :return: 0 to confirm successful close of thread
+        """
+        try:
+            self.startup()
+            self.run()
+
+        except InitialisationError as err:
+            self.emergency_stop()
+            self.__output(f"{err.component} ERROR: {err.message}")
+        except KeyboardInterrupt:
+            self.emergency_stop()
+        except CommunicationError as comm:
+            self.emergency_stop()
+            self.__output(f"{comm.component} ERROR: {comm.message} - MSG: {comm.errorInput}")
+        except OperationError as op:
+            self.emergency_stop()
+            self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
+        finally:
+            return 0
+
+    def __output(self, obj):
+        """Places the argument object into the output pipe to be received by another thread
+
+        :param obj: Object to be output to another thread
+        :return: None
+        """
+        self.out_pipe.send(obj)
+
+    def __input(self):
+        """Returns the next message in the input pipe to be received from another thread
+
+        :return: The object received from another thread
+        """
+        msg = self.in_pipe.recv()
+        logging.debug(f"HeadTraverser Received MSG: {msg}")
+
+        msg_split = msg.split()
+        for i in range(3 - len(msg_split)):
+            msg_split.append("NULL")
+        key = msg_split[0]
+        index = msg_split[1]
+        direction = msg_split[2]
+
+        return key, index, direction
+
+    def send(self, obj):
+        """Used by other threads to send an object to the input pipe
+
+        :param obj: Object to be input to the Head Traverser Thread
+        :return: None
+        """
+        self.in_pipe.send(obj)
+
+    def recv(self):
+        """Used by other threads to send an object to the input pipe
+
+        :return: Object output by Head Traverser
+        """
+        return self.out_pipe.recv()
+
+    def startup(self):
+        """Runs a startup test of the Tool Selector module
+
+        :return: None
+        """
+        # Initialise tool to home position (Blank face upwards)
+        count = self.tool_home()
+
+        if count > ToolSelector.STEPS_PER_TOOL * 8:
+            logging.error("Unable to return the Embosser Tool to the blank position")
+            raise InitialisationError(self.__class__, "Unable to return the Embosser Tool to the blank position")
 
         self.__rotation_test()
+        if self.toolHomeSensor.read_sensor():
+            self.__output("ACK")
+        else:
+            logging.error("Tool not Blank After Test")
+            raise InitialisationError(self.__class__, "Rotation Test Failed - Tool not home")
+
+    def run(self):
+        while not self.exit:
+            # Get Input from Main Thread
+            key, index, direction = self.__input()
+            # ------------------------------------------
+            # Close Command
+            # ------------------------------------------
+            if key is "CLOSE":
+                # Close program
+                self.close()
+            # ------------------------------------------
+            # Home Command
+            # ------------------------------------------
+            elif key is "HOME":
+                # Move Head Home
+                self.tool_home()
+            # ------------------------------------------
+            # Move Commands
+            # ------------------------------------------
+            elif key is "MOVE":
+                # --------------------
+                # Character Traversal
+                # --------------------
+                try:
+                    tool = translate_tool(index)
+                    self.tool_select(tool)
+                except ValueError:
+                    raise CommunicationError(self.__class__, index, "Conversion to Base 2 Index Failed")
+
+            else:
+                raise CommunicationError(self.__class__, key, "Key portion of message")
+
+            # If no exceptions are raised, acknowledge task complete
+            self.__output("ACK")
+
+    def close(self):
+        self.exit = True
 
     def __rotation_test(self):
         """Complete a movement test of the Tool Selection Module
@@ -98,6 +233,7 @@ class ToolSelector:
         :return: None
         """
         self.toolStepper.e_stop()
+        self.close()
 
     def tool_home(self):
         """Rotates the tool back to the blank (home) position and reports any missed or extra steps
@@ -148,6 +284,8 @@ class ToolSelector:
         # and number of faces to rotate (Between 0 and 4)
         if tool == 0:
             count = self.tool_home()
+        elif tool > 7 or tool < 0:
+            raise CommunicationError(self.__class__, tool, "Invalid Tool Index")
         else:
             movement = tool - self.currentTool
 

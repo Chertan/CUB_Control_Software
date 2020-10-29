@@ -5,7 +5,7 @@ import threading
 
 
 class DCOutputDevice:
-    """ Hardware interface class to handle the control of a DC output device which bi-directional output
+    """Hardware interface class to handle the control of a DC output device which bi-directional output
 
         Attributes: direction     - GPIO pin number of the direction wire of the device
                     enable        - GPIO pin number of the enable wire of the device

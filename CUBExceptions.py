@@ -42,6 +42,20 @@ class OperationError(CUBError):
         self.message = message
 
 
+class CommunicationError(CUBError):
+    """Exception to be raised for errors in communication between threads
+
+        Attributes:
+            component -- Component which received communication
+            errorInput -- Input that caused the error
+            message    -- Explanation of the error
+    """
+    def __init__(self, component, error_input, message):
+        self.component = component
+        self.errorInput = error_input
+        self.message = message
+
+
 class InputError(CUBError):
     """Exception to be raised for errors in processing input
 
