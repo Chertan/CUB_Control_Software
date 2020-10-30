@@ -17,9 +17,10 @@ class CUBInput:
         Methods:
     """
 
-    def __init__(self, input_mode="KEYBOARD"):
+    def __init__(self, input_mode="KEYBOARD", filename=""):
         """Creates an abstraction object of the Embosser module for the CUB
 
+        :param filename: Optional parameter to define the input file to read the characters from
         """
         logging.info(f"Setting up Input in mode: {input_mode}")
         self.mode = input_mode
@@ -27,23 +28,24 @@ class CUBInput:
         self.runFlag = threading.Event()
 
         self.exit = False
-        self.in_cub, self.out_cub = mp.Pipe()
-        self.in_BKeyboard, self.out_BKeyboard = mp.Pipe()
+        self.cub_pipe, self.input_pipe_cub = mp.Pipe()
+        self.BKeyboard_pipe, self.input_pipe_BKeyboard = mp.Pipe()
 
+        self.inFilename = filename
         self.inFile = None
         self.p_BKeyboard = None
 
         self.f_stdin = sys.stdin.fileno()
         self.terminal_old = termios.tcgetattr(self.f_stdin)
 
-    def thread_in(self, filename=""):
+    def thread_in(self):
         """Entry Point for the CUB Input component thread to begin execution
 
-        :param filename: Optional parameter to define the input file to read the characters from
         :return: None
         """
         try:
-            self.startup(filename)
+            logging.info("Input thread Started")
+            self.startup()
             self.run()
 
         except InitialisationError as err:
@@ -59,32 +61,33 @@ class CUBInput:
             self.__output_cub(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
         finally:
             # Clean up
-            self.inFile.close()
-            termios.tcsetattr(self.f_stdin, termios.TCSADRAOM, self.terminal_old)
+            if self.inFile is not None:
+                self.inFile.close()
+            termios.tcsetattr(self.f_stdin, termios.TCSADRAIN, self.terminal_old)
 
             # Notify CUB of closure
             self.__output_cub("END OF INPUT")
 
             # Close Braille Keyboard process if still alive
-            if self.p_BKeyboard.is_alive():
+            if self.p_BKeyboard is not None and self.p_BKeyboard.is_alive():
                 self.out_BKeyboard.send("END OF INPUT")
                 self.p_BKeyboard.join(timeout=10)
 
-    def startup(self, filename):
+    def startup(self):
         """Initialises Input functions depending on input mode
 
-        :param filename:
         :return:
         """
+        logging.info("Initialising input method")
         # -----------
         # File Input
         # -----------
-        if self.mode == "FILE" and filename is not "":
+        if self.mode == "FILE" and self.inFilename is not "":
             try:
-                self.inFile = open(filename, "r")
-                logging.info(f"CUBInput opened file with name {filename}")
+                self.inFile = open(self.inFilename, "r")
+                logging.info(f"CUBInput opened file with name {self.inFilename}")
             except IOError:
-                raise InitialisationError(self.__class__, f"Unable to open file with name - {filename}")
+                raise InitialisationError(self.__class__, f"Unable to open file with name - {self.inFilename}")
         # -----------------
         # Braille Keyboard
         # -----------------
@@ -93,6 +96,7 @@ class CUBInput:
                 # Start Process at main function of BrailleKeyboard program
                 self.p_BKeyboard = mp.Process(target=bk_main, args=(self.in_BKeyboard, self.out_BKeyboard))
                 self.p_BKeyboard.start()
+                logging.info("Connecting to Braille keyboard for input")
             except AttributeError:
                 raise InitialisationError(self.__class__, "Unable to start Braille Keyboard Process")
 
@@ -100,23 +104,28 @@ class CUBInput:
         # Keyboard
         # ---------
         elif self.mode == "KEYBOARD":
+            logging.info("Connecting to keyboard for input")
             tty.setraw(self.f_stdin)
         else:
             raise InitialisationError(self.__class__, f"Invalid Input Mode - {self.mode}")
         self.__output_cub("ACK")
 
     def run(self):
+        logging.info("Starting Input Loop")
         self.runFlag.wait()
-
         while not self.exit:
             # Get input as a list of characters in braille cell notation
+            logging.info("Taking Input from source")
             in_chars = self.take_input()
 
             if in_chars[0] == "END OF INPUT":
+                logging.info("Input denotes end of input")
                 self.exit = True
             else:
                 # Output each character to the Control System
+                logging.info(f"Sending input to CUB - Input: {in_chars}")
                 for char in in_chars:
+                    logging.info(f"Sending Character to CUB - Char: {char}")
                     self.__output_cub(char)
 
             # Pause if flag is not set
@@ -129,8 +138,10 @@ class CUBInput:
             # Keyboard
             # ---------
             if self.mode == "KEYBOARD":
+                logging.info("Retreiving Keyboard Input")
                 char_raw = sys.stdin.read(1)
-                if char_raw == '\x03' or '\x1a':
+                logging.info(f"Input retreived as : {char_raw}")
+                if char_raw == '\x03' or char_raw == '\x1a':
                     raise CUBClose("Keyboard Input", "Keyboard Interrupt received")
 
                     logging.info("Keyboard triggered Shutdown")
@@ -140,6 +151,7 @@ class CUBInput:
             # Braille Keyboard
             # -----------------
             elif self.mode == "BRAILLE KEYBOARD":
+                logging.info("Retreiving Braille Keyboard input")
                 msg = self.__input_b_keyboard()
                 chars = translate_b_keyboard(msg)
 
@@ -150,7 +162,7 @@ class CUBInput:
                 chars = translate(self.next_file_char(), grade=2)
 
         except EOFError:
-            chars = "END OF INPUT"
+            chars = ["END OF INPUT"]
             logging.warning("Input Finished while reading")
         return chars
 
@@ -165,6 +177,7 @@ class CUBInput:
 
     def stop(self):
         self.exit = True
+        self.runFlag.set()
 
     def __output_cub(self, msg):
         """Places the argument object into the output pipe to be received by another thread
@@ -172,46 +185,42 @@ class CUBInput:
         :param msg: Message to be output to another thread
         :return: None
         """
-        self.out_cub.send(msg)
+        
+        self.input_pipe_cub.send(msg)
+        logging.info(f"Sent message to CUB - {msg}")
 
     def __input_cub(self):
         """Returns the next message in the input pipe to be received from another thread
 
         :return: The object received from another thread
         """
-        msg = self.in_pipe.recv()
-        logging.debug(f"HeadTraverser Received MSG: {msg}")
+        msg = self.input_pipe_cub.recv()
 
-        msg_split = msg.split()
-        for i in range(3 - len(msg_split)):
-            msg_split.append("NULL")
-        key = msg_split[0]
-        index = msg_split[1]
-        direction = msg_split[2]
+        return msg 
 
-        return key, index, direction
-
-    def send_cub(self, msg):
+    def send(self, msg):
         """Used by other threads to send an object to the input pipe
 
         :param msg: Message to be input to the Head Traverser Thread
         :return: None
         """
-        self.in_cub.send(msg)
+        self.cub_pipe.send(msg)
 
-    def recv_cub(self):
+    def recv(self):
         """Used by other threads to send an object to the input pipe
 
         :return: Message output by Head Traverser
         """
-        return self.out_cub.recv()
+        msg = self.cub_pipe.recv()
+        logging.info(f"Cub received message from input - {msg}")
+        return msg
 
     def __input_b_keyboard(self):
         """Returns the next message in the input pipe to be received from another thread
 
         :return: The object received from another thread
         """
-        return self.in_BKeyboard.recv()
+        return self.input_pipe_BKeyboard.recv()
 
     def __output_b_keyboard(self, msg):
         """
@@ -219,4 +228,4 @@ class CUBInput:
         :param msg:
         :return:
         """
-        self.out_BKeyboard.send(msg)
+        self.input_pipe_BKeyboard.send(msg)
