@@ -5,13 +5,13 @@ import louis
 ueb_to_br = {
     'a': "100000", 'b': "110000", 'c': "100100", 'd': "100110",  'e': "100010", 'f': "110100", 'g': "111100",
     'h': "110010", 'i': "010100", 'j': "010110", 'k': "101000",  'l': "111000", 'm': "101100", 'n': "101110",
-    'o': "101010", 'p': "111100", 'q': "111110", 'r': "111010",  's': "011100", 't': "011110", 'u': "101001",  
-    'v': "111001", 'w': "010111", 'x': "101101", 'y': "101111",  'z': "101011", ',': "000001", '#': "001111",  
-    '0': "001011", '1': "010000", '2': "011000", '3': "010010",  '4': "010011", '5': "110001", '6': "011010", 
+    'o': "101010", 'p': "111100", 'q': "111110", 'r': "111010",  's': "011100", 't': "011110", 'u': "101001",
+    'v': "111001", 'w': "010111", 'x': "101101", 'y': "101111",  'z': "101011", ',': "000001", '#': "001111",
+    '0': "001011", '1': "010000", '2': "011000", '3': "010010",  '4': "010011", '5': "110001", '6': "011010",
     '7': "011011", '8': "011001", '9': "001010", '\"': "000010", '<': "110001", '>': "001110", '\'': "001000",
     '.': "000101", "-": "001001", "_": "000111", "?": "100111",  "`": "000100", "&": "111101", "/": "001100",
     "+": "001101", "=": "111111", "!": "011101", "}": "110111",  "|": "110011", "*": "100001", ';': "000011",
-    ':': "100011", '(': "111011", ")": "011111", '~': "000110",  '%': "100101", '{': "010101", '\\\\': "BACKSPACE",
+    ':': "100011", '(': "111011", ")": "011111", '~': "000110",  '%': "100101", '{': "010101", '\\': "BACKSPACE",
     '\\t': "TAB", " ": "000000"
 }
 
@@ -40,7 +40,7 @@ def translate(in_string, in_lang, grade=1):
     :return: A list of the translated characters
     """
     # Translate english strings into braille
-    if in_lang is "ENG":
+    if in_lang == "ENG":
         # Convert as per the input grade (default of 1)
         if grade == 1:
             braille = louis.translateString(['en-ueb-g1.ctb'], in_string)
@@ -55,17 +55,18 @@ def translate(in_string, in_lang, grade=1):
     output = []
 
     # Iterate through the string and convert each symbol to its cell description equivalent
-    for char in braille:
-        if in_lang == "ENG" or in_lang == "UEB":
-            # Converted character as per UEB Specification
-            output.append(ueb_to_br[char])
-        if in_lang == "BKB":
-            # Convert as per Braille Keyboard Specification
-            output.append(b_keyboard_to_br[char])
-        else:
-            # Invalid language set - Should never reach in operation as argument parser should prevent
-            # Left here in case of abnormal circumstances
-            raise OperationError("Input Conversation", "Translation", "Invalid Language of input file")
+    if in_lang == "BKB":
+        # Convert as per Braille Keyboard Specification
+        output.append(b_keyboard_to_br[braille])
+    else:
+        for char in braille:
+            if in_lang == "ENG" or in_lang == "UEB":
+                # Converted character as per UEB Specification
+                output.append(ueb_to_br[char])
+            else:
+                # Invalid language set - Should never reach in operation as argument parser should prevent
+                # Left here in case of abnormal circumstances
+                raise OperationError("Input Conversation", "Translation", "Invalid Language of input file")
     return output
 
 
