@@ -56,14 +56,6 @@ class DCOutputDevice:
         DCOutputDevice.gpio.write(self.direction, 0)
         logging.info(f"Setting up DC Output Device DIR on GPIO Pin: {self.direction}")
 
-    def __del__(self):
-        """Deconstruct to ensure outputs are disabled at exit
-
-        :return: None
-        """
-        logging.info(f"Deconstructing DC Output Device ENABLE on GPIO Pin: {self.enable}")
-        self.__disable_output()
-        DCOutputDevice.gpio.stop()
 
     def __enable_output(self, in_dir):
         """Enables the DC Output in the input direction

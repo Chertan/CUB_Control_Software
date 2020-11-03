@@ -72,15 +72,6 @@ class StepperMotor:
         StepperMotor.gpio.write(self.direction, 0)
         logging.info(f"Setting up Stepper DIR on GPIO Pin: {self.direction}")
 
-    def __del__(self):
-        """
-        Deconstruct to ensure outputs are disabled at exit
-        :return: None
-        """
-        logging.info(f"Deconstructing Stepper with STEP on GPIO Pin: {self.step}")
-        self.__disable_motor()
-        StepperMotor.gpio.stop()
-
     def __startup_motor(self, in_dir):
         """
         Initialises motor ready for a movement in the input direction
