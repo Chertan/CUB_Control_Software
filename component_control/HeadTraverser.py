@@ -4,9 +4,6 @@ from CUBExceptions import *
 import multiprocessing
 import logging
 
-# Flag to enable or disable simulation of outputs
-# Allows for testing of system software without needing devices connected
-SIMULATE = False
 
 
 class HeadTraverser:
@@ -60,7 +57,11 @@ class HeadTraverser:
         """Creates an abstraction object of the Head Traverser module for the CUB
 
         """
-        HeadTraverser.SIMULATE = simulate
+        # Flag to enable or disable simulation of outputs
+        # Allows for testing of system software without needing devices connected
+        self.SIMULATE = simulate
+        if self.SIMULATE:
+            logging.info("Setting up Traverser as Simulated Component.")
 
         # Define Tool stepper motor
         self.traverseStepper = StepperMotor(HeadTraverser.TRAVDIR, HeadTraverser.TRAVSTEP, HeadTraverser.TRAVENA,
@@ -80,13 +81,6 @@ class HeadTraverser:
         # cub_pipe is The CUB's end of the pipe
         # head_pipe is the HeadTraverser's end of the pipe
         self.cub_pipe, self.head_pipe = multiprocessing.Pipe()
-
-    def __del__(self):
-        """Deconstruct to ensure outputs are disabled at exit
-
-        :return: None
-        """
-        self.emergency_stop()
 
     def thread_in(self):
         """Entrance point for the Head Traverser component thread
@@ -129,7 +123,7 @@ class HeadTraverser:
         logging.debug(f"HeadTraverser Received MSG: {msg}")
 
         msg_split = msg.split()
-        for i in range(3 - len(msg_split)):
+        for i in range(4 - len(msg_split)):
             msg_split.append("NULL")
         key = msg_split[0]
         index = msg_split[1]
@@ -158,18 +152,22 @@ class HeadTraverser:
 
         :return: None
         """
-        count = self.traverse_home()
-
-        if count > HeadTraverser.MAX_TRAV_STEPS:
-            logging.error("Unable to return the Embosser Head to the home position")
-            raise InitialisationError(self.__class__, "Unable to return the Embosser Head to the home position")
-
-        self.__movement_test()
-        if self.traverseHomeSensor.read_sensor():
+        if self.SIMULATE:
+            logging.info(f"Simulating Head movement test...")
             self.__output("ACK")
         else:
-            logging.error("Head Not at Home After Test")
-            raise InitialisationError(self.__class__, "Unable to return the Embosser Head to the home position")
+            count = self.traverse_home()
+
+            if count > HeadTraverser.MAX_TRAV_STEPS:
+                logging.error("Unable to return the Embosser Head to the home position")
+                raise InitialisationError(self.__class__, "Unable to return the Embosser Head to the home position")
+
+            self.__movement_test()
+            if self.traverseHomeSensor.read_sensor():
+                self.__output("ACK")
+            else:
+                logging.error("Head Not at Home After Test")
+                raise InitialisationError(self.__class__, "Unable to return the Embosser Head to the home position")
 
     def run(self):
         while not self.exit:
@@ -239,7 +237,7 @@ class HeadTraverser:
 
         :return: None
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info(f"Simulating Head movement test...")
             out = 0
         else:
@@ -282,7 +280,7 @@ class HeadTraverser:
 
         :return: None
         """
-        if not SIMULATE:
+        if not self.SIMULATE:
             self.traverseStepper.e_stop()
         self.close()
 
@@ -291,8 +289,9 @@ class HeadTraverser:
 
         :return: count: Number of steps taken to return home
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info(f"Simulating Head Traversal to Home...")
+            count = 0
         else:
             if self.traverseHomeSensor.read_sensor():
                 logging.info(f"Tool Already Home. Steps taken = 0")
@@ -326,13 +325,13 @@ class HeadTraverser:
         :return: None
         """
         if reverse:
-            if SIMULATE:
+            if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Column in Negative Dir, count:{count}...")
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_COLUMN * count
         else:
-            if SIMULATE:
+            if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Column in Positive Dir, count:{count}...")
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.POS_DIR)
@@ -346,13 +345,13 @@ class HeadTraverser:
         :return: None
         """
         if reverse:
-            if SIMULATE:
+            if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Character in Negative Dir, count:{count}...")
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_CHAR * count
         else:
-            if SIMULATE:
+            if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Character in Positive Dir, count:{count}...")
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR*count, HeadTraverser.POS_DIR)

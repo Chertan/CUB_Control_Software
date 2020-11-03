@@ -17,10 +17,6 @@ from CUBExceptions import *
 import logging
 import multiprocessing
 
-# Flag to enable or disable simulation of outputs
-# Allows for testing of system software without needing devices connected
-# - Current set to true as system is not yet developed
-SIMULATE = False
 
 
 class Feeder:
@@ -90,8 +86,12 @@ class Feeder:
         """Creates an abstraction object of the Line Feeder module for the CUB
 
         """
-        # Set simulate flag
-        Feeder.SIMULATE = simulate
+        # Flag to enable or disable simulation of outputs
+        # Allows for testing of system software without needing devices connected
+        # - Current set to true as system is not yet developed
+        self.SIMULATE = simulate
+        if self.SIMULATE:
+            logging.info("Setting up Feeder as Feeder Component.")
 
         # Define Tool stepper motor
         self.LineStepper = StepperMotor(Feeder.LNFDIR, Feeder.LNFSTEP, Feeder.LNFENA,
@@ -124,13 +124,6 @@ class Feeder:
         # cub_pipe is The CUB's end of the pipe
         # feeder_pipe is the Feeder's end of the pipe
         self.cub_pipe, self.feeder_pipe = multiprocessing.Pipe()
-
-    def __del__(self):
-        """Ensures that outputs are stopped on deconstruction
-
-        :return: None
-        """
-        self.emergency_stop()
 
     def thread_in(self):
         """Entrance point for the Feeder component thread
@@ -165,52 +158,12 @@ class Feeder:
         finally:
             return 0
 
-    def __output(self, msg):
-        """Places the argument message into the pipe to be received by the cub thread
-
-        :param msg: Message to be output to another thread
-        :return: None
-        """
-        self.feeder_pipe.send(msg)
-
-    def __input(self):
-        """Returns the next message in the pipe to be received from the CUB thread
-
-        :return: Message received from the CUB thread
-        :rtype string
-        """
-        msg = self.feeder_pipe.recv()
-        logging.debug(f"Feeder Received MSG: {msg}")
-
-        msg_split = msg.split()
-        for i in range(3 - len(msg_split)):
-            msg_split.append("NULL")
-        key = msg_split[0]
-        index = msg_split[1]
-        direction = msg_split[2]
-
-        return key, index, direction
-
-    def send(self, msg):
-        """Retrieves a message from the pipe that as been sent by the Feeder Thread
-
-        :return: None
-        """
-        self.cub_pipe.send(msg)
-
-    def recv(self):
-        """Retrieves a message from the pipe that as been sent by the Feeder Thread
-
-        :return: Object output by Fedder
-        """
-        return self.cub_pipe.recv()
-
     def startup(self):
         """Startup procedure of the feeder system, to be impletment with construction of system
 
         :return:
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info("Simulating Feeder Startup")
         else:
             logging.info("Performing Feeder Startup")
@@ -272,11 +225,52 @@ class Feeder:
             # If no exceptions are raised, acknowledge task complete
             self.__output("ACK")
 
+    def __output(self, msg):
+        """Places the argument message into the pipe to be received by the cub thread
+
+        :param msg: Message to be output to another thread
+        :return: None
+        """
+        logging.debug(f"Feeder Sending MSG: {msg}")
+        self.feeder_pipe.send(msg)
+
+    def __input(self):
+        """Returns the next message in the pipe to be received from the CUB thread
+
+        :return: Message received from the CUB thread
+        :rtype string
+        """
+        msg = self.feeder_pipe.recv()
+        logging.debug(f"Feeder Received MSG: {msg}")
+
+        msg_split = msg.split()
+        for i in range(3 - len(msg_split)):
+            msg_split.append("NULL")
+        key = msg_split[0]
+        index = msg_split[1]
+        direction = msg_split[2]
+
+        return key, index, direction
+
+    def send(self, msg):
+        """Retrieves a message from the pipe that as been sent by the Feeder Thread
+
+        :return: None
+        """
+        self.cub_pipe.send(msg)
+
+    def recv(self):
+        """Retrieves a message from the pipe that as been sent by the Feeder Thread
+
+        :return: Object output by Fedder
+        """
+        return self.cub_pipe.recv()
+
     def close(self):
         self.exit = True
 
     def emergency_stop(self):
-        if not SIMULATE:
+        if not self.SIMULATE:
             self.LineStepper.e_stop()
             self.PaperFeed.e_stop()
         self.close()
@@ -286,7 +280,7 @@ class Feeder:
 
         :return: Width of paper in cells
         """
-        if SIMULATE:
+        if self.SIMULATE:
             out = Feeder.A4_CELLS
             logging.info(f"Simulating Get Paper Width Operation, return value of {out}...")
         else:
@@ -304,7 +298,7 @@ class Feeder:
 
         :return: Length of paper in lines
         """
-        if SIMULATE:
+        if self.SIMULATE:
             out = Feeder.A4_LINES
             logging.info(f"Simulating Get Paper Length Operation, return value of {out}...")
         else:
@@ -323,7 +317,7 @@ class Feeder:
         :param reverse: Optional Parameter to indicate feeding in the reverse direction
         :return:
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info("Simulating Feed Line Operation...")
         else:
             # Feed a single line
@@ -349,7 +343,7 @@ class Feeder:
 
         :return: None
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info("Simulating Feeder Page Feed Operation...")
 
         else:
@@ -372,7 +366,7 @@ class Feeder:
 
         :return: None
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info("Simulating Feeder Page Eject Operation...")
         else:
             if self.LineOutputSensor.read_sensor():

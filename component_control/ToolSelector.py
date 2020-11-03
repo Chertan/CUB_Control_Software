@@ -4,9 +4,6 @@ from CUBExceptions import *
 import multiprocessing
 import logging
 
-# Flag to enable or disable simulation of outputs
-# Allows for testing of system software without needing devices connected
-SIMULATE = False
 
 
 def translate_tool(index):
@@ -17,6 +14,7 @@ def translate_tool(index):
     """
     # Reverse string from top to bottom, to bottom to top order
     rev = index[::-1]
+    logging.debug(f"Translated tool {index} to {rev}")
     return int(rev, 2)
 
 
@@ -58,7 +56,11 @@ class ToolSelector:
         """Creates an abstraction object of the Tool Selector module for the CUB
 
         """
-        ToolSelector.SIMULATE = simulate
+        # Flag to enable or disable simulation of outputs
+        # Allows for testing of system software without needing devices connected
+        self.SIMULATE = simulate
+        if self.SIMULATE:
+            logging.info("Setting up Selector as Simulated Component.")
 
         # Define Tool stepper motor
         self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
@@ -76,13 +78,6 @@ class ToolSelector:
         # cub_pipe is The CUB's end of the pipe
         # tool_pipe is the ToolSelector's end of the pipe
         self.cub_pipe, self.tool_pipe = multiprocessing.Pipe()
-
-    def __del__(self):
-        """Ensures that outputs are stopped on deconstruction
-
-        :return: None
-        """
-        self.emergency_stop()
 
     def thread_in(self):
         """Entrance point for the Head Traverser component thread
@@ -113,6 +108,7 @@ class ToolSelector:
         :param msg: Message to be output to another thread
         :return: None
         """
+        logging.debug(f"ToolSelector Sent MSG: {msg}")
         self.tool_pipe.send(msg)
 
     def __input(self):
@@ -122,7 +118,7 @@ class ToolSelector:
         :rtype string
         """
         msg = self.tool_pipe.recv()
-        logging.debug(f"HeadTraverser Received MSG: {msg}")
+        logging.debug(f"ToolSelector Received MSG: {msg}")
 
         msg_split = msg.split()
         for i in range(3 - len(msg_split)):
@@ -176,23 +172,22 @@ class ToolSelector:
             # Get Message from CUB
             # Blocks until message is received
             key, index, direction = self.__input()
-            logging.debug(f"Msg Received by {self.__class__} - key:{key}, index:{index}, direction:{direction}")
             # ------------------------------------------
             # Close Command
             # ------------------------------------------
-            if key is "CLOSE":
+            if key == "CLOSE":
                 # Close program
                 self.close()
             # ------------------------------------------
             # Home Command
             # ------------------------------------------
-            elif key is "HOME":
+            elif key == "HOME":
                 # Move Head Home
                 self.tool_home()
             # ------------------------------------------
             # Move Commands
             # ------------------------------------------
-            elif key is "MOVE":
+            elif key == "MOVE":
                 # --------------------
                 # Character Traversal
                 # --------------------
@@ -217,7 +212,7 @@ class ToolSelector:
 
         :return: None
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info("Simulating Tool Rotation Test...")
         else:
             self.toolHomeSensor.set_falling_callback(self.__home_callback)
@@ -266,7 +261,7 @@ class ToolSelector:
 
         :return: count: number of steps taken to rotate to home position
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info(f"Simulating Selecting blank tool...")
             count = 0
         else:
@@ -337,7 +332,7 @@ class ToolSelector:
             steps = movement * ToolSelector.STEPS_PER_TOOL
 
             # Move the Stepper motor
-            if SIMULATE:
+            if self.SIMULATE:
                 logging.info(f"Simulating Tool selection to tool {tool}...")
                 count = steps
             else:

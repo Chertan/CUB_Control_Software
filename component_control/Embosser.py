@@ -3,9 +3,6 @@ from component_control.hardware_interface.PhotoSensor import *
 import logging
 import time
 
-# Flag to enable or disable simulation of outputs
-# Allows for testing of system software without needing devices connected
-SIMULATE = False
 
 
 class Embosser:
@@ -18,6 +15,7 @@ class Embosser:
         Methods:    activate()       - Activates the Embosser
                     emergency_stop() - Shuts down the embosser to prevent future operation
     """
+
     # GPIO pins for embossing mechanism
     COILENA = 19
     COILDIR = 26
@@ -41,7 +39,11 @@ class Embosser:
         """Creates an abstraction object of the Embosser module for the CUB
 
         """
-        Embosser.SIMULATE = simulate
+        # Flag to enable or disable simulation of outputs
+        # Allows for testing of system software without needing devices connected
+        self.SIMULATE = simulate
+        if self.SIMULATE:
+            logging.info("Setting up Embosser as Simulated Component.")
 
         self.embosser = DCOutputDevice(Embosser.COILDIR, Embosser.COILENA)
         self.embosserHomeSensor = PhotoSensor(Embosser.COILPS, Embosser.PS_TRUE)
@@ -55,15 +57,8 @@ class Embosser:
         self.start_check = False
         self.leave_check = False
 
-    def __del__(self):
-        """Deconstructor to ensure output is turned off before exit
-
-        :return: None
-        """
-        self.embosser.e_stop()
-
     def startup(self):
-        if SIMULATE:
+        if self.SIMULATE:
             logging.info("Simulating startup of Embosser...")
             out = "ACK"
         else:
@@ -110,7 +105,7 @@ class Embosser:
         :param length: Optional parameter that indicates the length of the output pulse
         :return: None
         """
-        if SIMULATE:
+        if self.SIMULATE:
             logging.debug(f"Simulating Embosser Activation...")
         else:
             current = self.start - time.time()
@@ -125,13 +120,13 @@ class Embosser:
 
         :return: None
         """
-        if not SIMULATE:
+        if not self.SIMULATE:
             self.embosser.e_stop()
 
-    def exit(self):
+    def close(self):
         """Stops the embossing mechanism ready for program exit
 
         :return: None
         """
-        if not SIMULATE:
+        if not self.SIMULATE:
             self.embosser.stop()
