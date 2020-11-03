@@ -17,6 +17,11 @@ from CUBExceptions import *
 import logging
 import multiprocessing
 
+# Flag to enable or disable simulation of outputs
+# Allows for testing of system software without needing devices connected
+# - Current set to true as system is not yet developed
+SIMULATE = False
+
 
 class Feeder:
 
@@ -79,34 +84,50 @@ class Feeder:
     # GPIO Input for the sensor to return True
     BPPRPS_TRUE = 0
 
-    def __init__(self):
-        # Construct Line Stepper
+    def __init__(self, simulate=False):
+        """Creates an abstraction object of the Line Feeder module for the CUB
+
+        """
+        # Set simulate flag
+        Feeder.SIMULATE = simulate
+
+        # Define Tool stepper motor
         self.LineStepper = StepperMotor(Feeder.LNFDIR, Feeder.LNFSTEP, Feeder.LNFENA,
-                                         Feeder.START_SPEED, Feeder.MAX_SPEED)
+                                        Feeder.START_SPEED, Feeder.MAX_SPEED)
         logging.info(f"Setting up Line Feed Stepper with STEP Pin: {Feeder.LNFSTEP}")
 
-        # Construct Paper Feed
+        # Define Paper Feed DC Motor
         self.PaperFeed = DCOutputDevice(Feeder.PPRDIR, Feeder.PPRENA)
         logging.info(f"Setting up Paper Feed Motor with ENA Pin: {Feeder.PPRENA}")
 
+        # Define Paper input side Photo interrupter sensor, input is 0 when beam is cut
         self.LineInputSensor = PhotoSensor(Feeder.PBOTPS, Feeder.PBOTPS_TRUE)
         logging.info(f"Setting up Paper Input Sensor on Pin: {Feeder.PBOTPS}")
 
+        # Define Paper output side Photo interrupter sensor, input is 0 when beam is cut
         self.LineOutputSensor = PhotoSensor(Feeder.PTOPPS, Feeder.PBTOPPS_TRUE)
         logging.info(f"Setting up Paper Output Sensor on Pin: {Feeder.PTOPPS}")
 
+        # Define A4 Paper size Photo reflector sensor, input is 0 when paper is present
         self.A4PaperSensor = PhotoSensor(Feeder.A4PPRPS, Feeder.A4PPRPS_TRUE)
         logging.info(f"Setting up A4 Paper Size Sensor on Pin: {Feeder.A4PPRPS}")
 
+        # Define Braille Paper size Photo reflector sensor, input is 0 when paper is present
         self.BraillePaperSensor = PhotoSensor(Feeder.BPPRPS, Feeder.BPPRPS_TRUE)
         logging.info(f"Setting up Braille Paper Size Sensor on Pin: {Feeder.BPPRPS}")
 
-        self.currentLine = 0
-
+        # Exit flag for when to stop operation
         self.exit = False
-        self.in_pipe, self.out_pipe = multiprocessing.Pipe()
+
+        # cub_pipe is The CUB's end of the pipe
+        # feeder_pipe is the Feeder's end of the pipe
+        self.cub_pipe, self.feeder_pipe = multiprocessing.Pipe()
 
     def __del__(self):
+        """Ensures that outputs are stopped on deconstruction
+
+        :return: None
+        """
         self.emergency_stop()
 
     def thread_in(self):
@@ -115,38 +136,49 @@ class Feeder:
         :return: 0 to confirm successful close of thread
         """
         try:
+            # Run component startup procedure
             self.startup()
+            # Run component loop
             self.run()
 
         except InitialisationError as err:
+            # Exception raised while initialising component
             self.emergency_stop()
             self.__output(f"{err.component} ERROR: {err.message}")
+
         except KeyboardInterrupt:
+            # Interrupt raised from keyboard - Should never occur
             self.emergency_stop()
+
         except CommunicationError as comm:
+            # Exception raised during communication
             self.emergency_stop()
             self.__output(f"{comm.component} ERROR: {comm.message} - MSG: {comm.errorInput}")
+
         except OperationError as op:
+            # Exception raised during operation
             self.emergency_stop()
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
+
         finally:
             return 0
 
-    def __output(self, obj):
-        """Places the argument object into the output pipe to be received by another thread
+    def __output(self, msg):
+        """Places the argument message into the pipe to be received by the cub thread
 
-        :param obj: Object to be output to another thread
+        :param msg: Message to be output to another thread
         :return: None
         """
-        self.out_pipe.send(obj)
+        self.feeder_pipe.send(msg)
 
     def __input(self):
-        """Returns the next message in the input pipe to be received from another thread
+        """Returns the next message in the pipe to be received from the CUB thread
 
-        :return: The object received from another thread
+        :return: Message received from the CUB thread
+        :rtype string
         """
-        msg = self.in_pipe.recv()
-        logging.debug(f"HeadTraverser Received MSG: {msg}")
+        msg = self.feeder_pipe.recv()
+        logging.debug(f"Feeder Received MSG: {msg}")
 
         msg_split = msg.split()
         for i in range(3 - len(msg_split)):
@@ -157,23 +189,31 @@ class Feeder:
 
         return key, index, direction
 
-    def send(self, obj):
-        """Used by other threads to send an object to the input pipe
+    def send(self, msg):
+        """Retrieves a message from the pipe that as been sent by the Feeder Thread
 
-        :param obj: Object to be input to the Head Traverser Thread
         :return: None
         """
-        self.in_pipe.send(obj)
+        self.cub_pipe.send(msg)
 
     def recv(self):
-        """Used by other threads to send an object to the input pipe
+        """Retrieves a message from the pipe that as been sent by the Feeder Thread
 
-        :return: Object output by Head Traverser
+        :return: Object output by Fedder
         """
-        return self.out_pipe.recv()
+        return self.cub_pipe.recv()
 
     def startup(self):
-        logging.info("Simulating Feeder Startup")
+        """Startup procedure of the feeder system, to be impletment with construction of system
+
+        :return:
+        """
+        if SIMULATE:
+            logging.info("Simulating Feeder Startup")
+        else:
+            logging.info("Performing Feeder Startup")
+            # Perform Startup - Develop with feeder system
+
         self.__output("ACK")
 
     def run(self):
@@ -234,24 +274,26 @@ class Feeder:
         self.exit = True
 
     def emergency_stop(self):
-        self.LineStepper.e_stop()
-        self.PaperFeed.e_stop()
+        if not SIMULATE:
+            self.LineStepper.e_stop()
+            self.PaperFeed.e_stop()
         self.close()
-
-    def get_current_line(self):
-        return self.currentLine
 
     def get_paper_size(self):
         """Returns the number of cells that fit on the currently loaded paper or zero if tray is empty
 
         :return: Width of paper in cells
         """
-        # Test sensors for which is not or if paper is empty
-        out = 0
-        if self.A4PaperSensor.read_sensor():
+        if SIMULATE:
             out = Feeder.A4_CELLS
-        if self.BraillePaperSensor.read_sensor():
-            out = Feeder.BRAILLE_CELLS
+            logging.info(f"Simulating Get Paper Width Operation, return value of {out}...")
+        else:
+            # Test sensors for which is not or if paper is empty
+            out = 0
+            if self.A4PaperSensor.read_sensor():
+                out = Feeder.A4_CELLS
+            if self.BraillePaperSensor.read_sensor():
+                out = Feeder.BRAILLE_CELLS
 
         return out
 
@@ -260,12 +302,16 @@ class Feeder:
 
         :return: Length of paper in lines
         """
-        # Test sensors for which is not or if paper is empty
-        out = 0
-        if self.A4PaperSensor.read_sensor():
+        if SIMULATE:
             out = Feeder.A4_LINES
-        if self.BraillePaperSensor.read_sensor():
-            out = Feeder.BRAILLE_LINES
+            logging.info(f"Simulating Get Paper Length Operation, return value of {out}...")
+        else:
+            # Test sensors for which is not or if paper is empty
+            out = 0
+            if self.A4PaperSensor.read_sensor():
+                out = Feeder.A4_LINES
+            if self.BraillePaperSensor.read_sensor():
+                out = Feeder.BRAILLE_LINES
 
         return out
 
@@ -275,15 +321,16 @@ class Feeder:
         :param reverse: Optional Parameter to indicate feeding in the reverse direction
         :return:
         """
-        # Feed a single line
-        if not reverse:
-            self.LineStepper.move_steps(Feeder.LINE_STEPS, Feeder.LNF_POS_DIR)
-            self.currentLine += 1
-            logging.info(f"Feeding line in the Positive Direction")
+        if SIMULATE:
+            logging.info("Simulating Feed Line Operation...")
         else:
-            self.LineStepper.move_steps(Feeder.LINE_STEPS, Feeder.LNF_NEG_DIR)
-            self.currentLine -= 1
-            logging.info(f"Feeding line in the Negative Direction")
+            # Feed a single line
+            if not reverse:
+                self.LineStepper.move_steps(Feeder.LINE_STEPS, Feeder.LNF_POS_DIR)
+                logging.info(f"Feeding line in the Positive Direction")
+            else:
+                self.LineStepper.move_steps(Feeder.LINE_STEPS, Feeder.LNF_NEG_DIR)
+                logging.info(f"Feeding line in the Negative Direction")
 
     def feed_lines(self, count, reverse=False):
         """Performs multiple line feed operations to move the position of the head on the page by a number of lines
@@ -300,38 +347,44 @@ class Feeder:
 
         :return: None
         """
-        # Activate motor until paper detected at
-        if not self.LineInputSensor.read_sensor():
-            self.LineInputSensor.set_rising_callback(self.__load_callback)
-
-            self.PaperFeed.pulse(Feeder.PPR_POS_DIR, duration=Feeder.FEED_TIMEOUT)
-            self.currentLine = 0
-            self.LineInputSensor.clear_rising_callback()
-
-            if self.LineInputSensor.read_sensor():
-                raise OperationError(self.__class__, __name__, "Paper not detected after feeding")
+        if SIMULATE:
+            logging.info("Simulating Feeder Page Feed Operation...")
 
         else:
-            # Still Paper Loaded
-            raise OperationError(self.__class__, __name__, "Can't Feed paper, paper detected in embosser")
+            # Activate motor until paper detected at
+            if not self.LineInputSensor.read_sensor():
+                self.LineInputSensor.set_rising_callback(self.__load_callback)
+
+                self.PaperFeed.pulse(Feeder.PPR_POS_DIR, duration=Feeder.FEED_TIMEOUT)
+                self.LineInputSensor.clear_rising_callback()
+
+                if self.LineInputSensor.read_sensor():
+                    raise OperationError(self.__class__, __name__, "Paper not detected after feeding")
+
+            else:
+                # Still Paper Loaded
+                raise OperationError(self.__class__, __name__, "Can't Feed paper, paper detected in embosser")
 
     def eject(self):
         """Ejects the currently loaded paper from the embossing area
 
         :return: None
         """
-        if self.LineOutputSensor.read_sensor():
-            self.LineOutputSensor.set_falling_callback(self.__eject_callback)
-
-            self.feed_lines(Feeder.LNF_MAX_LINES)
-
-            self.LineOutputSensor.clear_falling_callback()
-
-            if self.LineOutputSensor.read_sensor():
-                raise OperationError(self.__class__, __name__, "Paper still detected after ejection")
+        if SIMULATE:
+            logging.info("Simulating Feeder Page Eject Operation...")
         else:
-            # No Paper Loaded
-            raise OperationError(self.__class__, __name__, "No paper detected to eject")
+            if self.LineOutputSensor.read_sensor():
+                self.LineOutputSensor.set_falling_callback(self.__eject_callback)
+
+                self.feed_lines(Feeder.LNF_MAX_LINES)
+
+                self.LineOutputSensor.clear_falling_callback()
+
+                if self.LineOutputSensor.read_sensor():
+                    raise OperationError(self.__class__, __name__, "Paper still detected after ejection")
+            else:
+                # No Paper Loaded
+                raise OperationError(self.__class__, __name__, "No paper detected to eject")
 
     def __eject_callback(self, gpio, level, tick):
         """Callback function called when the Output side sensor no longer detects paper

@@ -4,6 +4,10 @@ from CUBExceptions import *
 import multiprocessing
 import logging
 
+# Flag to enable or disable simulation of outputs
+# Allows for testing of system software without needing devices connected
+SIMULATE = False
+
 
 def translate_tool(index):
     """Translates the index sent from the Main thread to a tool index
@@ -50,10 +54,12 @@ class ToolSelector:
     # GPIO Input for the sensor to return True
     PS_TRUE = 1
 
-    def __init__(self):
+    def __init__(self, simulate=False):
         """Creates an abstraction object of the Tool Selector module for the CUB
 
         """
+        ToolSelector.SIMULATE = simulate
+
         # Define Tool stepper motor
         self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
                                         ToolSelector.START_SPEED, ToolSelector.MAX_SPEED, ToolSelector.RAMP_RATE)
@@ -61,12 +67,21 @@ class ToolSelector:
         # Define Photo interrupter sensor, input is 0 when beam is cut
         self.toolHomeSensor = PhotoSensor(ToolSelector.TOOLPS, ToolSelector.PS_TRUE)
 
-        self.exit = False
+        # Tracks the currently selected tool
         self.currentTool = 5
 
-        self.in_pipe, self.out_pipe = multiprocessing.Pipe()
+        # Exit flag for when to stop operation
+        self.exit = False
+
+        # cub_pipe is The CUB's end of the pipe
+        # tool_pipe is the ToolSelector's end of the pipe
+        self.cub_pipe, self.tool_pipe = multiprocessing.Pipe()
 
     def __del__(self):
+        """Ensures that outputs are stopped on deconstruction
+
+        :return: None
+        """
         self.emergency_stop()
 
     def thread_in(self):
@@ -92,20 +107,21 @@ class ToolSelector:
         finally:
             return 0
 
-    def __output(self, obj):
-        """Places the argument object into the output pipe to be received by another thread
+    def __output(self, msg):
+        """Places the argument message into the pipe to be received by the cub thread
 
-        :param obj: Object to be output to another thread
+        :param msg: Message to be output to another thread
         :return: None
         """
-        self.out_pipe.send(obj)
+        self.tool_pipe.send(msg)
 
     def __input(self):
-        """Returns the next message in the input pipe to be received from another thread
+        """Returns the next message in the pipe to be received from the CUB thread
 
-        :return: The object received from another thread
+        :return: Message received from the CUB thread
+        :rtype string
         """
-        msg = self.in_pipe.recv()
+        msg = self.tool_pipe.recv()
         logging.debug(f"HeadTraverser Received MSG: {msg}")
 
         msg_split = msg.split()
@@ -117,20 +133,20 @@ class ToolSelector:
 
         return key, index, direction
 
-    def send(self, obj):
-        """Used by other threads to send an object to the input pipe
+    def send(self, msg):
+        """Places a message into the pipe to be received by the ToolSelector Thread
 
-        :param obj: Object to be input to the Head Traverser Thread
+        :param msg: Message to be input to the Head Traverser Thread
         :return: None
         """
-        self.in_pipe.send(obj)
+        self.cub_pipe.send(msg)
 
     def recv(self):
-        """Used by other threads to send an object to the input pipe
+        """Retrieves a message from the pipe that as been sent by the ToolSelector Thread
 
-        :return: Object output by Head Traverser
+        :return: Object output by Tool Selector
         """
-        return self.out_pipe.recv()
+        return self.cub_pipe.recv()
 
     def startup(self):
         """Runs a startup test of the Tool Selector module
@@ -152,9 +168,15 @@ class ToolSelector:
             raise InitialisationError(self.__class__, "Rotation Test Failed - Tool not home")
 
     def run(self):
+        """Main operational loop for the ToolSelector Thread
+
+        :return:
+        """
         while not self.exit:
-            # Get Input from Main Thread
+            # Get Message from CUB
+            # Blocks until message is received
             key, index, direction = self.__input()
+            logging.debug(f"Msg Received by {self.__class__} - key:{key}, index:{index}, direction:{direction}")
             # ------------------------------------------
             # Close Command
             # ------------------------------------------
@@ -195,26 +217,29 @@ class ToolSelector:
 
         :return: None
         """
-        self.toolHomeSensor.set_falling_callback(self.__home_callback)
-
-        # One full rotation
-        expected = ToolSelector.STEPS_PER_TOOL * 8
-
-        count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
-
-        if self.toolHomeSensor.read_sensor():
-            difference = expected - count
-            logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {count}, Diff = "
-                         f"{difference}")
-
+        if SIMULATE:
+            logging.info("Simulating Tool Rotation Test...")
         else:
+            self.toolHomeSensor.set_falling_callback(self.__home_callback)
+
+            # One full rotation
+            expected = ToolSelector.STEPS_PER_TOOL * 8
+
             count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
-            total_count = expected + count
 
-            logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
-                         f"Diff = {count}")
+            if self.toolHomeSensor.read_sensor():
+                difference = expected - count
+                logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {count}, Diff = "
+                             f"{difference}")
 
-            self.toolHomeSensor.clear_falling_callback()
+            else:
+                count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
+                total_count = expected + count
+
+                logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
+                             f"Diff = {count}")
+
+                self.toolHomeSensor.clear_falling_callback()
 
     def __home_callback(self, gpio, level, tick):
         """Callback function called when the home photosensor detects the embossing tool in the blank position
@@ -232,7 +257,8 @@ class ToolSelector:
 
         :return: None
         """
-        self.toolStepper.e_stop()
+        if not SIMULATE:
+            self.toolStepper.e_stop()
         self.close()
 
     def tool_home(self):
@@ -240,25 +266,29 @@ class ToolSelector:
 
         :return: count: number of steps taken to rotate to home position
         """
-        if self.currentTool > 4:
-            # Shortest travel is to wrap in forwards direction
-            direction = ToolSelector.POS_DIR
-            expected = (8 - self.currentTool) * ToolSelector.STEPS_PER_TOOL
+        if SIMULATE:
+            logging.info(f"Simulating Selecting blank tool...")
+            count = 0
         else:
-            # Shortest travel is to rotate in backwards direction
-            direction = ToolSelector.NEG_DIR
-            expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
+            if self.currentTool > 4:
+                # Shortest travel is to wrap in forwards direction
+                direction = ToolSelector.POS_DIR
+                expected = (8 - self.currentTool) * ToolSelector.STEPS_PER_TOOL
+            else:
+                # Shortest travel is to rotate in backwards direction
+                direction = ToolSelector.NEG_DIR
+                expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
 
-        self.toolHomeSensor.set_falling_callback(self.__home_callback)
+            self.toolHomeSensor.set_falling_callback(self.__home_callback)
 
-        count = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 9, direction)
+            count = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 9, direction)
 
-        logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
-                     f"Actual Steps = {count}")
+            logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
+                         f"Actual Steps = {count}")
 
-        self.currentTool = 0
+            self.currentTool = 0
 
-        self.toolHomeSensor.clear_falling_callback()
+            self.toolHomeSensor.clear_falling_callback()
 
         return count
 
@@ -307,7 +337,11 @@ class ToolSelector:
             steps = movement * ToolSelector.STEPS_PER_TOOL
 
             # Move the Stepper motor
-            count = self.toolStepper.move_steps(steps, direction)
+            if SIMULATE:
+                logging.info(f"Simulating Tool selection to tool {tool}...")
+                count = steps
+            else:
+                count = self.toolStepper.move_steps(steps, direction)
 
         # Update the current tool attribute
         self.currentTool = tool

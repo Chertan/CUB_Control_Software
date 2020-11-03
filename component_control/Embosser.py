@@ -3,6 +3,10 @@ from component_control.hardware_interface.PhotoSensor import *
 import logging
 import time
 
+# Flag to enable or disable simulation of outputs
+# Allows for testing of system software without needing devices connected
+SIMULATE = False
+
 
 class Embosser:
     """Abstraction Class to represent the Embossing mechanism for the CUB
@@ -33,10 +37,12 @@ class Embosser:
     # GPIO Input for the sensor to return True
     PS_TRUE = 1
 
-    def __init__(self):
+    def __init__(self, simulate=False):
         """Creates an abstraction object of the Embosser module for the CUB
 
         """
+        Embosser.SIMULATE = simulate
+
         self.embosser = DCOutputDevice(Embosser.COILDIR, Embosser.COILENA)
         self.embosserHomeSensor = PhotoSensor(Embosser.COILPS, Embosser.PS_TRUE)
 
@@ -57,17 +63,21 @@ class Embosser:
         self.embosser.e_stop()
 
     def startup(self):
-        if self.embosserHomeSensor.read_sensor():
-            self.activate()
-            if self.leave_check:
-                if self.home_check:
-                    out = "ACK"
-                else:
-                    out = "Embosser did not return to Home Position"
-            else:
-                out = "Embosser did not leave Home Position"
+        if SIMULATE:
+            logging.info("Simulating startup of Embosser...")
+            out = "ACK"
         else:
-            out = "Embosser not detected at Home Position at Initialisation"
+            if self.embosserHomeSensor.read_sensor():
+                self.activate()
+                if self.leave_check:
+                    if self.home_check:
+                        out = "ACK"
+                    else:
+                        out = "Embosser did not return to Home Position"
+                else:
+                    out = "Embosser did not leave Home Position"
+            else:
+                out = "Embosser not detected at Home Position at Initialisation"
         return out
 
     def __home_callback(self, gpio, level, tick):
@@ -97,19 +107,23 @@ class Embosser:
     def activate(self, length=PULSE_LEN):
         """Activates the embosser to complete a single embossing action
 
+        :param length: Optional parameter that indicates the length of the output pulse
         :return: None
         """
-        if Embosser.DUAL_DIR:
-            self.embosser.swap_pulse(Embosser.DOWN_DIR, duration=(length/2))
+        if SIMULATE:
+            logging.debug(f"Simulating Embosser Activation...")
         else:
-            self.embosser.pulse(Embosser.DOWN_DIR, duration=length)
-
-        current = self.start - time.time()
-        logging.debug(f"Embosser Activation at t+{current} seconds for a length of {Embosser.PULSE_LEN}")
+            current = self.start - time.time()
+            logging.debug(f"Embosser Activation at t+{current} seconds for a length of {length}")
+            if Embosser.DUAL_DIR:
+                self.embosser.swap_pulse(Embosser.DOWN_DIR, duration=(length/2))
+            else:
+                self.embosser.pulse(Embosser.DOWN_DIR, duration=length)
 
     def emergency_stop(self):
         """Stops the embossing mechanism to a state that requires a hard restart of the program
 
         :return: None
         """
-        self.embosser.e_stop()
+        if not SIMULATE:
+            self.embosser.e_stop()

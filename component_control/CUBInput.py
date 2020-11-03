@@ -1,5 +1,5 @@
 from CUBExceptions import *
-from EnglishCUBConverter import *
+from CUBConverter import *
 from BrailleKeyboard import main as bk_main
 import logging
 import multiprocessing as mp
@@ -7,6 +7,10 @@ import threading
 import tty
 import sys
 import termios
+
+INPUT_MODES = ["BKEYBOARD", "KEYBOARD", "FILE"]
+
+FILE_LANGUAGES = ["ENG", "UEB", "BKB"]
 
 
 class CUBInput:
@@ -17,7 +21,7 @@ class CUBInput:
         Methods:
     """
 
-    def __init__(self, input_mode="KEYBOARD", filename=""):
+    def __init__(self, input_mode="KEYBOARD", filename="", file_language="ENG"):
         """Creates an abstraction object of the Embosser module for the CUB
 
         :param filename: Optional parameter to define the input file to read the characters from
@@ -32,6 +36,7 @@ class CUBInput:
         self.BKeyboard_pipe, self.input_pipe_BKeyboard = mp.Pipe()
 
         self.inFilename = filename
+        self.inFileLang = file_language
         self.inFile = None
         self.p_BKeyboard = None
 
@@ -70,8 +75,8 @@ class CUBInput:
 
             # Close Braille Keyboard process if still alive
             if self.p_BKeyboard is not None and self.p_BKeyboard.is_alive():
-                self.out_BKeyboard.send("END OF INPUT")
-                self.p_BKeyboard.join(timeout=10)
+                self.input_pipe_BKeyboard.send("END OF INPUT")
+                self.p_BKeyboard.join(timeout=2)
 
     def startup(self):
         """Initialises Input functions depending on input mode
@@ -91,7 +96,7 @@ class CUBInput:
         # -----------------
         # Braille Keyboard
         # -----------------
-        elif self.mode == "BRAILLE KEYBOARD":
+        elif self.mode == "BKEYBOARD":
             try:
                 # Start Process at main function of BrailleKeyboard program
                 self.p_BKeyboard = mp.Process(target=bk_main, args=(self.in_BKeyboard, self.out_BKeyboard))
@@ -99,7 +104,7 @@ class CUBInput:
                 logging.info("Connecting to Braille keyboard for input")
             except AttributeError:
                 raise InitialisationError(self.__class__, "Unable to start Braille Keyboard Process")
-
+ 
         # ---------
         # Keyboard
         # ---------
@@ -138,35 +143,35 @@ class CUBInput:
             # Keyboard
             # ---------
             if self.mode == "KEYBOARD":
-                logging.info("Retreiving Keyboard Input")
+                logging.info("Retrieving Keyboard Input")
                 char_raw = sys.stdin.read(1)
                 logging.info(f"Input retreived as : {char_raw}")
                 if char_raw == '\x03' or char_raw == '\x1a':
+                    logging.info("Keyboard triggered Shutdown")
                     raise CUBClose("Keyboard Input", "Keyboard Interrupt received")
 
-                    logging.info("Keyboard triggered Shutdown")
-                chars = translate(char_raw)
+                chars = translate(char_raw, "ENG")
 
             # -----------------
             # Braille Keyboard
             # -----------------
             elif self.mode == "BRAILLE KEYBOARD":
-                logging.info("Retreiving Braille Keyboard input")
+                logging.info("Retrieving Braille Keyboard input")
                 msg = self.__input_b_keyboard()
-                chars = translate_b_keyboard(msg)
+                chars = translate(msg, "BKB")
 
             # -----------
             # File Input
             # -----------
             elif self.mode == "FILE":
-                chars = translate(self.next_file_char(), grade=2)
+                chars = translate(self.next_file_line(), self.inFileLang, grade=2)
 
         except EOFError:
             chars = ["END OF INPUT"]
             logging.warning("Input Finished while reading")
         return chars
 
-    def next_file_char(self):
+    def next_file_line(self):
         return self.inFile.readline()
 
     def pause_input(self):
