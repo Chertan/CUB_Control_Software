@@ -112,7 +112,7 @@ def get_args():
     word_wrap = args.nowrap
 
     # Get mode argument (Converted to Uppercase by parser)
-    mode = args.mode
+    mode = args.mode[0]
     # Optional arguments
     filename = args.inputfile
     file_language = args.file_language
@@ -135,7 +135,7 @@ def setup_logging(level, logfile):
     :return:
     """
     log_format = '%(asctime)s : %(message)s'
-    date_format = '%d/%m/%Y - %H:%M:S'
+    date_format = '%d/%m/%Y - %H:%M:%S'
 
     if logfile is None:
         logging.basicConfig(level=level, format=log_format, datefmt=date_format)
@@ -191,8 +191,8 @@ def start_threads():
 
     # For each non embosser component, create and start the thread
     for name, component in components.items():
-        if name is not 'Embosser':
-            threads[name] = Thread(component.thread_in)
+        if name != 'Embosser':
+            threads[name] = Thread(target=component.thread_in)
             threads[name].start()
 
 
@@ -222,7 +222,7 @@ def cub_loop():
             # Perform Backspace
             try:
                 # Last character is a space,
-                if last_char is not "000000":
+                if last_char != "000000":
                     backspace(clear=True)
                 # last character is a space, no need to clear
                 else:
