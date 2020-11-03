@@ -127,3 +127,11 @@ class Embosser:
         """
         if not SIMULATE:
             self.embosser.e_stop()
+
+    def exit(self):
+        """Stops the embossing mechanism ready for program exit
+
+        :return: None
+        """
+        if not SIMULATE:
+            self.embosser.stop()
