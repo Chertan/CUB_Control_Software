@@ -19,7 +19,7 @@ def main():
     parser = argparse.ArgumentParser(description='Test Program for the CUBInput class.')
     parser.add_argument('mode', metavar='MODE', type=str, nargs=1, help='Input Mode to test')
     parser.add_argument('--file', metavar='file', type=str, nargs='?', help='File name for file input')
-    parser.add_argument('--log', metavar='level', type=str, nargs='?', help='Loggin Level')
+    parser.add_argument('--log', metavar='level', type=str, nargs='?', help='Logging Level')
 
     args = parser.parse_args()
 
@@ -27,7 +27,7 @@ def main():
     filename = args.file
     level = args.log
 
-    if mode == "FILE" and filename == None:
+    if mode == "FILE" and filename is None:
         print("File name required for File Input")
         exit()
 
