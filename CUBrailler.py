@@ -134,7 +134,7 @@ def setup_logging(level, logfile):
     :param logfile: Output file for the logging if logging is to be to a file
     :return:
     """
-    log_format = '%(asctime)s : $(message)s'
+    log_format = '%(asctime)s : %(message)s'
     date_format = '%d/%m/%Y - %H:%M:S'
 
     if logfile is None:
@@ -190,10 +190,10 @@ def start_threads():
     tasks['Input'] = 0
 
     # For each non embosser component, create and start the thread
-    for component in components:
-        if component.key() is not 'Embosser':
-            threads[component.key] = Thread(component.value.thread_in)
-            threads[component.key].start()
+    for name, component in components.items():
+        if name is not 'Embosser':
+            threads[name] = Thread(component.thread_in)
+            threads[name].start()
 
 
 def cub_loop():
@@ -454,11 +454,10 @@ def close_components():
     """
     for name, comp in components.items():
         logging.info(f"Shutting down component: {name}")
-        if name == 'Embosser':
+        if comp is not None:
             comp.exit()
-        else:
-            comp.exit()
-            comp.send("CLOSE")
+            if name != 'Embosser':
+                comp.send("CLOSE")
 
 
 def join_threads():
