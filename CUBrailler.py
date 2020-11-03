@@ -115,7 +115,7 @@ def get_args():
     mode = args.mode
     # Optional arguments
     filename = args.inputfile
-    file_language = args.filelang
+    file_language = args.file_language
     level = args.log
     logfile = args.logfile
 
