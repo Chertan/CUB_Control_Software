@@ -66,3 +66,17 @@ class InputError(CUBError):
     def __init__(self, error_input, message):
         self.errorInput = error_input
         self.message = message
+
+
+class ArgumentError(CUBError):
+    """Exception to be raised for errors in parsing arguments
+
+        Attributes:
+            argumentName -- Input that caused the error
+            message      -- Explanation of the error
+            argHelp      -- Argument help to print to user
+    """
+    def __init__(self, argument_name, message, arg_help):
+        self.argumentName = argument_name
+        self.message = message
+        self.argHelp = arg_help
