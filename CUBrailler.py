@@ -109,7 +109,7 @@ def get_args():
 
     # Set word wrap value based on flag presence
     global word_wrap
-    word_wrap = args.wrap
+    word_wrap = args.nowrap
 
     # Get mode argument (Converted to Uppercase by parser)
     mode = args.mode
