@@ -6,6 +6,7 @@ from component_control.CUBInput import CUBInput
 from component_control.CUBInput import INPUT_MODES
 from component_control.CUBInput import FILE_LANGUAGES
 from CUBExceptions import *
+import sys
 import argparse
 import logging
 from threading import Thread
@@ -42,6 +43,10 @@ def main():
 
         # Enable logging as per arguments
         setup_logging(level, logfile)
+
+        print("=============================================")
+        print(" Curtin University Brailler Control Software")
+        print("=============================================")
 
         # Create component objects and start threads
         # Also runs startup procedures and ensures components return positive acknowledgements
@@ -134,13 +139,16 @@ def setup_logging(level, logfile):
     :param logfile: Output file for the logging if logging is to be to a file
     :return:
     """
-    log_format = '%(asctime)s : %(message)s'
+    log_format = '%(asctime)s : %(levelname)s : %(module)s : %(message)s'
     date_format = '%d/%m/%Y - %H:%M:%S'
+
+    #for name in ['Embosser', 'Selector', 'Traverser', 'Feeder', 'Input']:
+    #    temp_logger = logging.getLogger(name)
 
     if logfile is None:
         logging.basicConfig(level=level, format=log_format, datefmt=date_format)
     else:
-        logging.basicConfig(level=level, format=log_format, datefmt=date_format,  filename=logfile)
+        logging.basicConfig(level=level, format=log_format, datefmt=date_format, filename=logfile)
 
 
 def initialise_components(mode, filename, file_language):
@@ -152,17 +160,22 @@ def initialise_components(mode, filename, file_language):
     :return:
     """
     # Construct component objects
+    print("Initialising Compononents...", end='')
+    logging.info("Constructing Components...")
     components['Embosser'] = Embosser(simulate=True)
     components['Traverser'] = HeadTraverser(simulate=True)
     components['Selector'] = ToolSelector(simulate=True)
     components['Feeder'] = Feeder(simulate=True)
     components['Input'] = CUBInput(input_mode=mode, filename=filename, file_language=file_language)
+    print("Complete")
 
     # Fork threads and run startup routines
     start_threads()
 
+    print("Running Startup routines", end='')
     # For each of the components
     for name, comp in components.items():
+        logging.info(f"Receiving startup message from {name}")
         # Embosser is controlled by main thread
         if name is 'Embosser':
             # run Embosser startup
@@ -177,6 +190,8 @@ def initialise_components(mode, filename, file_language):
         else:
             # Startup Failure
             raise InitialisationError(name, f"Initialisation Failed. ACK message: {msg}")
+        print(".",end='')
+    print("Complete")
 
 
 def start_threads():
@@ -184,6 +199,7 @@ def start_threads():
 
     :return: None
     """
+    print("Starting Threads...", end='')
     tasks['Traverser'] = 0
     tasks['Selector'] = 0
     tasks['Feeder'] = 0
@@ -192,8 +208,10 @@ def start_threads():
     # For each non embosser component, create and start the thread
     for name, component in components.items():
         if name != 'Embosser':
+            logging.info(f"Starting {name} thread...")
             threads[name] = Thread(target=component.thread_in)
             threads[name].start()
+    print("Complete")
 
 
 def cub_loop():
@@ -209,16 +227,19 @@ def cub_loop():
     global last_char
     last_char = ""
 
+    components["Input"].start_input()
+
+    print("Starting Cub Operation")
     # Loop until the input is finished
     while not end_of_input:
         # Retrieve the next character from the Input component
-        next_char = components['input'].recv()
+        next_char = components['Input'].recv()
 
         # Input signals the end of input
         if next_char == "END OF INPUT":
             end_of_input = True
         # Input is a backspace
-        if next_char == "BACKSPACE":
+        elif next_char == "BACKSPACE":
             # Perform Backspace
             try:
                 # Last character is a space,
@@ -283,7 +304,7 @@ def print_char(char):
             current_char += 1
     # Print each column separately
     else:
-        print_col(char[1:3])
+        print_col(char[0:3])
         send_task('Traverser', "MOVE COL POS")
         print_col(char[3:6])
         current_char += 1
@@ -323,7 +344,7 @@ def head_next_char(word_length=1):
 
         else:
             # If not at end of page, load the next line
-            send_task('Feeder', "LINE FEED")
+            send_task('Feeder', "FEED 1 POS")
             current_line += 1
 
         send_task('Traverser', "HOME")
@@ -339,7 +360,7 @@ def head_next_char(word_length=1):
         current_char += 1
 
     # Wait until movement is complete to continue
-    task_barrier(['Selector', 'Traverser'])
+    task_barrier(['Selector', 'Traverser', 'Feeder'])
 
 
 def backspace(clear=True):
@@ -376,12 +397,12 @@ def backspace(clear=True):
             raise OperationError("CUBBrailler", "Backspace", "Unable to backspace at start of page, no action taken")
         else:
             # Can return to last line, move to the final position
-            send_task('Feeder', "PAGE FEED NEG")
+            send_task('Feeder', "FEED 1 NEG")
             # Select blank tool for large movement - Current mitigation of tool head dragging on embossing plate
             send_task('Selector', "HOME")
             # Move the head to the position of the last column
-            send_task('Traverser', "MOVE CHAR POS " + components['Feeder'].get_paper_size())
-            send_task('Traverser', "MOVE COL POS " + components['Feeder'].get_paper_size())
+            send_task('Traverser', "MOVE CHAR POS " + str(components['Feeder'].get_paper_size()))
+            send_task('Traverser', "MOVE COL POS " + str(components['Feeder'].get_paper_size()))
             # Update State variables
             current_line -= 1
             current_char = components['Feeder'].get_paper_size()
@@ -402,6 +423,7 @@ def send_task(target, task):
     :param task: String task message to be send
     :return: None
     """
+    logging.debug(f"Sending Task to {target} - {task}")
     # Send task to component
     components[target].send(task)
     # Increment task tracker counter
@@ -422,6 +444,8 @@ def task_barrier(targets=list()):
         for tar in targets:
             group.append([tar, tasks[tar]])
 
+    logging.info(f"Task barrier for: {group}")
+
     # For each component in the group, and its task count
     for name, count in group:
         # Loop for number of tasks in count
@@ -434,6 +458,8 @@ def task_barrier(targets=list()):
             else:
                 logging.error(msg)
                 raise OperationError(name, "", msg)
+
+    logging.info(f"Leaving Task barrier for: {group}")
 
 
 def shutdown():
@@ -455,7 +481,7 @@ def close_components():
     for name, comp in components.items():
         logging.info(f"Shutting down component: {name}")
         if comp is not None:
-            comp.exit()
+            comp.close()
             if name != 'Embosser':
                 comp.send("CLOSE")
 
