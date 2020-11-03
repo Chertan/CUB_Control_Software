@@ -33,6 +33,8 @@ class Feeder:
     # Motor speed parameters to be tuned during testing
     START_SPEED = 5
     MAX_SPEED = 10
+    RAMP_RATE = 1
+
     # Motor directional parameters
     LNF_POS_DIR = 1
     LNF_NEG_DIR = 0
@@ -93,7 +95,7 @@ class Feeder:
 
         # Define Tool stepper motor
         self.LineStepper = StepperMotor(Feeder.LNFDIR, Feeder.LNFSTEP, Feeder.LNFENA,
-                                        Feeder.START_SPEED, Feeder.MAX_SPEED)
+                                        Feeder.START_SPEED, Feeder.MAX_SPEED, Feeder.RAMP_RATE)
         logging.info(f"Setting up Line Feed Stepper with STEP Pin: {Feeder.LNFSTEP}")
 
         # Define Paper Feed DC Motor
