@@ -81,8 +81,8 @@ class StepperMotor:
         # Check if the emergency stop Event flag is set
         if not StepperMotor.emergencyFlag.is_set():
             self.stopFlag.clear()
-            StepperMotor.gpio.write(self.enable, 1)
             StepperMotor.gpio.write(self.direction, in_dir)
+            StepperMotor.gpio.write(self.enable, 1)
 
         else:
             logging.error("Stepper not started due to Emergency Stop Flag set")
@@ -123,7 +123,7 @@ class StepperMotor:
         :return: None
         """
         self.stopFlag.set()
-        logging.error("Stepper Motor Stop Flag Set to True")
+        logging.debug("Stepper Motor Stop Flag Set to True")
 
     def e_stop(self):
         """
@@ -133,7 +133,7 @@ class StepperMotor:
         """
         StepperMotor.emergencyFlag.set()
         self.__disable_motor()
-        logging.error("Stepper Motor Emergency Stop Flag Set to True")
+        logging.info("Stepper Motor Emergency Stop Flag Set to True")
 
     def move_steps(self, count, in_direction):
         """
