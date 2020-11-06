@@ -1,6 +1,7 @@
 from component_control.hardware_interface.StepperMotor import StepperMotor
 from component_control.hardware_interface.PhotoSensor import PhotoSensor
 from CUBExceptions import *
+import time
 import multiprocessing
 import logging
 
@@ -92,17 +93,15 @@ class HeadTraverser:
             self.run()
 
         except InitialisationError as err:
-            self.emergency_stop()
             self.__output(f"{err.component} ERROR: {err.message}")
         except KeyboardInterrupt:
             self.emergency_stop()
         except CommunicationError as comm:
-            self.emergency_stop()
             self.__output(f"{comm.component} ERROR: {comm.message} - MSG: {comm.errorInput}")
         except OperationError as op:
-            self.emergency_stop()
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
         finally:
+            self.emergency_stop()
             return 0
 
     def __output(self, msg):
@@ -156,6 +155,8 @@ class HeadTraverser:
             logging.info(f"Simulating Head movement test...")
             self.__output("ACK")
         else:
+            logging.info("Performing Traverser Startup")
+
             count = self.traverse_home()
 
             if count > HeadTraverser.MAX_TRAV_STEPS:
@@ -291,6 +292,7 @@ class HeadTraverser:
         """
         if self.SIMULATE:
             logging.info(f"Simulating Head Traversal to Home...")
+            time.sleep(0.5)
             count = 0
         else:
             if self.traverseHomeSensor.read_sensor():
@@ -327,12 +329,14 @@ class HeadTraverser:
         if reverse:
             if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Column in Negative Dir, count:{count}...")
+                time.sleep(0.5)
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_COLUMN * count
         else:
             if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Column in Positive Dir, count:{count}...")
+                time.sleep(0.5)
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.POS_DIR)
                 self.currentStep += HeadTraverser.STEPS_BETWEEN_COLUMN * count
@@ -347,12 +351,14 @@ class HeadTraverser:
         if reverse:
             if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Character in Negative Dir, count:{count}...")
+                time.sleep(0.5)
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_CHAR * count
         else:
             if self.SIMULATE:
                 logging.info(f"Simulating Head Traversal of Character in Positive Dir, count:{count}...")
+                time.sleep(0.5)
             else:
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR*count, HeadTraverser.POS_DIR)
                 self.currentStep += HeadTraverser.STEPS_BETWEEN_CHAR * count
