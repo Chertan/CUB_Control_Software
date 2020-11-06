@@ -1,5 +1,5 @@
 from CUBExceptions import *
-from CUBConverter import *
+from component_control.Translator import *
 from BrailleKeyboard import main as bk_main
 import logging
 import multiprocessing as mp
@@ -13,7 +13,7 @@ INPUT_MODES = ["BKEYBOARD", "KEYBOARD", "FILE"]
 FILE_LANGUAGES = ["ENG", "UEB", "BKB"]
 
 
-class CUBInput:
+class Input:
     """Functional Class to represent input into the CUB Control system
 
         Attributes:
@@ -129,20 +129,22 @@ class CUBInput:
 
     def run(self):
         self.runFlag.wait()
-        if self.mode == "KEYBOARD":
-            self.inputlogFile.write("Reading Input from Keyboard\n")
-            self.inputlogFile.write("------------------------------\n")
-            print("Keyboard connected for input: type to print to the Curtin University Brailler")
-            print("To Exit, press CTRL-C or CTRL-Z")
-            print("-----------------------------------------------------------------------------")
-            tty.setraw(self.f_stdin)
-        elif self.mode == "FILE":
-            self.inputlogFile.write(f"Reading Input from File: {self.inFilename}\n")
-            self.inputlogFile.write("------------------------------\n")
-            print(f"Translating and outputting from file: {self.inFilename}")
-            print("Printing", end='')
+        if not self.exit:
+            if self.mode == "KEYBOARD":
+                self.inputlogFile.write("Reading Input from Keyboard\n")
+                self.inputlogFile.write("------------------------------\n")
+                print("\nKeyboard connected for input: type to print to the Curtin University Brailler")
+                print("To Exit, press ESC, CTRL-C or CTRL-Z")
+                print("-----------------------------------------------------------------------------")
+                tty.setraw(self.f_stdin)
+            elif self.mode == "FILE":
+                self.inputlogFile.write(f"Reading Input from File: {self.inFilename}\n")
+                self.inputlogFile.write("------------------------------\n")
+                print(f"Translating and outputting from file: {self.inFilename}")
+                print("Printing", end='')
 
-        logging.info("Starting Input Loop")
+            logging.info("Starting Input Loop")
+
         while not self.exit:
             # Get input as a list of characters in braille cell notation
             logging.info("Taking Input from source")
@@ -176,7 +178,7 @@ class CUBInput:
             char_raw = sys.stdin.read(1)
             self.inputlogFile.write(char_raw)
             logging.info(f"Input retreived as : {char_raw}")
-            if char_raw == '\x03' or char_raw == '\x1a' or char_raw == '^C' or char_raw == '^Z':
+            if char_raw == '\x03' or char_raw == '\x1a' or char_raw == '^C' or char_raw == '^Z' or char_raw == '\x1b':
                 logging.info("Keyboard triggered Shutdown")
                 raise CUBClose("Keyboard Input", "Keyboard Interrupt received")
 
