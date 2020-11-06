@@ -155,6 +155,9 @@ class Feeder:
             self.emergency_stop()
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
 
+        except Exception as ex:
+            self.__output(f"Feeder ERROR: {ex}")
+
         finally:
             return 0
 

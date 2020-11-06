@@ -100,6 +100,8 @@ class HeadTraverser:
             self.__output(f"{comm.component} ERROR: {comm.message} - MSG: {comm.errorInput}")
         except OperationError as op:
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
+        except Exception as ex:
+            self.__output(f"Traverser ERROR: {ex}")
         finally:
             self.emergency_stop()
             return 0
