@@ -64,6 +64,8 @@ class PhotoSensor:
         :return: None
         """
         self.rising_callback = PhotoSensor.gpio.callback(self.pin, pigpio.RISING_EDGE, callback)
+        logging.debug(f"Set rising callback on pin {self.pin} - {callback.__name__}")
+
 
     def clear_rising_callback(self):
         """Clears the currently attached callback function for the sensor rising edge
@@ -83,6 +85,7 @@ class PhotoSensor:
         :return: None
         """
         self.falling_callback = PhotoSensor.gpio.callback(self.pin, pigpio.FALLING_EDGE, callback)
+        logging.debug(f"Set falling callback on pin {self.pin} - {callback.__name__}")
 
     def clear_falling_callback(self):
         """Clears the currently attached callback function for the sensor falling edge
@@ -93,7 +96,7 @@ class PhotoSensor:
             logging.warning(f"Attempted to clear falling callback on pin {self.pin}, but no callback present")
         else:
             self.falling_callback.cancel()
-            logging.info(f"Cleared falling callback on pin {self.pin}")
+            logging.debug(f"Cleared falling callback on pin {self.pin}")
 
     def set_either_callback(self, callback):
         """Sets the input function to be called whenever the sensor input has a rising or falling edge
@@ -101,7 +104,9 @@ class PhotoSensor:
         :param callback: Function to be called on a rising or falling edge
         :return: None
         """
-        self.falling_callback = PhotoSensor.gpio.callback(self.pin, pigpio.EITHER_EDGE, callback)
+        self.either_callback = PhotoSensor.gpio.callback(self.pin, pigpio.EITHER_EDGE, callback)
+        logging.debug(f"Set either callback on pin {self.pin} - {callback.__name__}")
+
 
     def clear_either_callback(self):
         """Clears the currently attached callback function for the sensor falling or rising edge
@@ -112,4 +117,4 @@ class PhotoSensor:
             logging.warning(f"Attempted to clear either callback on pin {self.pin}, but no callback present")
         else:
             self.either_callback.cancel()
-            logging.info(f"Cleared either callback on pin {self.pin}")
+            logging.debug(f"Cleared either callback on pin {self.pin}")
