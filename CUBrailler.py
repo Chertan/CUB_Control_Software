@@ -2,9 +2,9 @@ from component_control.ToolSelector import ToolSelector
 from component_control.HeadTraverser import HeadTraverser
 from component_control.Embosser import Embosser
 from component_control.Feeder import Feeder
-from component_control.CUBInput import CUBInput
-from component_control.CUBInput import INPUT_MODES
-from component_control.CUBInput import FILE_LANGUAGES
+from component_control.Input import Input
+from component_control.Input import INPUT_MODES
+from component_control.Input import FILE_LANGUAGES
 from CUBExceptions import *
 import sys
 import argparse
@@ -58,6 +58,7 @@ def main():
     except KeyboardInterrupt:
         # Interrupt from the command line
         logging.warning("Shutting Down due to Keyboard Interrupt")
+        print("")
 
     except ArgumentError as err:
         # Exception when parsing command line arguments
@@ -67,6 +68,7 @@ def main():
 
     except InitialisationError as err:
         # Exception while initialising components
+        print(f"Error while Initalising {err.component} - {err.message}")
         logging.error(err.message)
 
     except OperationError as err:
@@ -75,17 +77,19 @@ def main():
 
     finally:
         # Shut down the system, ensures outputs are disabled and threads are joined on close
+        print("Shutting down components...", end='')
         shutdown()
-
+        print("Complete")
+        print("Goodbye")
     return 0
 
 
 def get_args():
     """Parses the arguments for the control system and outputs usage or help information if needed
 
-    :return: mode: Input mode of the CUB as one of the choices defined in CUBInput.INPUT_MODES
+    :return: mode: Input mode of the CUB as one of the choices defined in Input.INPUT_MODES
              filename: Input file for the file input mode
-             file_language: Language/Format of the input file as defined in CUBInput.FILE_LANGUAGES
+             file_language: Language/Format of the input file as defined in Input.FILE_LANGUAGES
              level:  Logging level for providing extra output to user
              logfile: Logging file for output to a file
     :rtype: (string, string, string, string, string)
@@ -166,7 +170,7 @@ def initialise_components(mode, filename, file_language):
     components['Traverser'] = HeadTraverser(simulate=True)
     components['Selector'] = ToolSelector(simulate=True)
     components['Feeder'] = Feeder(simulate=True)
-    components['Input'] = CUBInput(input_mode=mode, filename=filename, file_language=file_language)
+    components['Input'] = Input(input_mode=mode, filename=filename, file_language=file_language)
     print("Complete")
 
     # Fork threads and run startup routines
@@ -177,7 +181,7 @@ def initialise_components(mode, filename, file_language):
     for name, comp in components.items():
         logging.info(f"Receiving startup message from {name}")
         # Embosser is controlled by main thread
-        if name is 'Embosser':
+        if name == 'Embosser':
             # run Embosser startup
             msg = comp.startup()
         else:
@@ -191,6 +195,7 @@ def initialise_components(mode, filename, file_language):
             # Startup Failure
             raise InitialisationError(name, f"Initialisation Failed. ACK message: {msg}")
         print(".",end='')
+
     print("Complete")
 
 
