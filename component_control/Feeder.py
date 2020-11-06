@@ -91,7 +91,7 @@ class Feeder:
         # - Current set to true as system is not yet developed
         self.SIMULATE = simulate
         if self.SIMULATE:
-            logging.info("Setting up Feeder as Feeder Component.")
+            logging.info("Setting up Feeder as Simulated Component.")
 
         # Define Tool stepper motor
         self.LineStepper = StepperMotor(Feeder.LNFDIR, Feeder.LNFSTEP, Feeder.LNFENA,
