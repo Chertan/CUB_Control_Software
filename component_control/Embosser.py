@@ -4,7 +4,6 @@ import logging
 import time
 
 
-
 class Embosser:
     """Abstraction Class to represent the Embossing mechanism for the CUB
 
@@ -14,6 +13,10 @@ class Embosser:
 
         Methods:    activate()       - Activates the Embosser
                     emergency_stop() - Shuts down the embosser to prevent future operation
+
+        Future Works:   Movement check could be put in place for all activations rather than just the test
+                        It is as is currently as it is to detect power issues/placement issues that are not
+                        likely to change during operation
     """
 
     # GPIO pins for embossing mechanism
@@ -28,10 +31,11 @@ class Embosser:
     DUAL_DIR = False
 
     # Total duration of the pulse, combined for dual direction operation
-    PULSE_LEN = 0.01
+    # Current safe value for further testing with finalised power supply
+    PULSE_LEN = 0.1
 
     # GPIO pin of the embossing home sensor
-    COILPS = 4
+    COILPS = 7
     # GPIO Input for the sensor to return True
     PS_TRUE = 1
 
@@ -54,16 +58,22 @@ class Embosser:
         self.embosserHomeSensor.set_rising_callback(self.__home_callback)
 
         self.start = time.time()
-        self.start_check = False
+        self.home_check = False
         self.leave_check = False
 
     def startup(self):
+        """Runs startup routine for the Embosser component. Completes an activation and ensures the embosser left its position
+        and returned
+
+        """
         if self.SIMULATE:
-            logging.info("Simulating startup of Embosser...")
+            logging.debug("Simulating startup of Embosser...")
+            time.sleep(Embosser.PULSE_LEN * 2)
             out = "ACK"
         else:
             if self.embosserHomeSensor.read_sensor():
                 self.activate()
+                time.sleep(Embosser.PULSE_LEN)
                 if self.leave_check:
                     if self.home_check:
                         out = "ACK"
@@ -83,7 +93,7 @@ class Embosser:
         :param tick: Timing value to represent when the trigger ocured
         :return: None
         """
-        current = self.start - time.time()
+        current = time.time() - self.start
         self.home_check = True
         logging.debug(f"Embosser returned to home position at t+{current} seconds")
 
@@ -95,7 +105,7 @@ class Embosser:
         :param tick: Timing value to represent when the trigger ocured
         :return: None
         """
-        current = self.start - time.time()
+        current = time.time() - self.start
         self.leave_check = True
         logging.debug(f"Embosser left home position at t+{current} seconds")
 
@@ -106,14 +116,16 @@ class Embosser:
         :return: None
         """
         if self.SIMULATE:
-            logging.debug(f"Simulating Embosser Activation...")
+            logging.info(f"Simulating Embosser Activation...")
+            time.sleep(Embosser.PULSE_LEN)
         else:
             current = self.start - time.time()
-            logging.debug(f"Embosser Activation at t+{current} seconds for a length of {length}")
+            logging.info(f"Embosser Activation at t+{current} seconds for a length of {length}")
             if Embosser.DUAL_DIR:
                 self.embosser.swap_pulse(Embosser.DOWN_DIR, duration=(length/2))
             else:
                 self.embosser.pulse(Embosser.DOWN_DIR, duration=length)
+                time.sleep(Embosser.PULSE_LEN)
 
     def emergency_stop(self):
         """Stops the embossing mechanism to a state that requires a hard restart of the program
