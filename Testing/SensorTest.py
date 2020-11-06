@@ -8,7 +8,7 @@ TRAVPS = 4
 TRAVPS_TRUE = 1
 
 # GPIO pin of the tool selector home sensor
-TOOLPS = 27
+TOOLPS = 17
 # GPIO Input for the sensor to return True
 TOOLPS_TRUE = 0
 
