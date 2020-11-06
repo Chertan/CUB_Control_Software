@@ -1,6 +1,7 @@
 from component_control.hardware_interface.StepperMotor import StepperMotor
 from component_control.hardware_interface.PhotoSensor import PhotoSensor
 from CUBExceptions import *
+import time
 import multiprocessing
 import logging
 
@@ -14,8 +15,9 @@ def translate_tool(index):
     """
     # Reverse string from top to bottom, to bottom to top order
     rev = index[::-1]
-    logging.debug(f"Translated tool {index} to {rev}")
-    return int(rev, 2)
+    out = int(rev, 2)
+    logging.debug(f"Translated tool {index} to {out}")
+    return out
 
 
 class ToolSelector:
@@ -36,21 +38,24 @@ class ToolSelector:
     TOOLENA = 5
 
     # Motor speed parameters to be tuned during testing
-    START_SPEED = 20
-    MAX_SPEED = 60
-    RAMP_RATE = 5
+    # Tested range of speeds, current motor still skips/misses steps
+    # (Software outputs appear to be fine, May be a issue with the motor itself)
+    START_SPEED = 30
+    MAX_SPEED = 30
+    RAMP_RATE = 1
 
     # Direction Selectors to be confirmed during testing
     POS_DIR = 1
     NEG_DIR = 0
 
     # Number of motor steps between each face of the tool
-    STEPS_PER_TOOL = 7
+    # Steps per revolution / 8 - note with current motor not a whole number (50/8)
+    STEPS_PER_TOOL = 6
 
     # GPIO pin of the tool selector home sensor
-    TOOLPS = 27
+    TOOLPS = 17
     # GPIO Input for the sensor to return True
-    PS_TRUE = 1
+    PS_TRUE = 0
 
     def __init__(self, simulate=False):
         """Creates an abstraction object of the Tool Selector module for the CUB
@@ -89,17 +94,17 @@ class ToolSelector:
             self.run()
 
         except InitialisationError as err:
-            self.emergency_stop()
             self.__output(f"{err.component} ERROR: {err.message}")
         except KeyboardInterrupt:
             self.emergency_stop()
         except CommunicationError as comm:
-            self.emergency_stop()
             self.__output(f"{comm.component} ERROR: {comm.message} - MSG: {comm.errorInput}")
         except OperationError as op:
-            self.emergency_stop()
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
+        except Exception as ex:
+            self.__output(f"Selector ERROR: {ex}")
         finally:
+            self.emergency_stop()
             return 0
 
     def __output(self, msg):
@@ -149,19 +154,26 @@ class ToolSelector:
 
         :return: None
         """
-        # Initialise tool to home position (Blank face upwards)
-        count = self.tool_home()
-
-        if count > ToolSelector.STEPS_PER_TOOL * 8:
-            logging.error("Unable to return the Embosser Tool to the blank position")
-            raise InitialisationError(self.__class__, "Unable to return the Embosser Tool to the blank position")
-
-        self.__rotation_test()
-        if self.toolHomeSensor.read_sensor():
+        if self.SIMULATE:
+            logging.info(f"Simulating Head movement test...")
             self.__output("ACK")
         else:
-            logging.error("Tool not Blank After Test")
-            raise InitialisationError(self.__class__, "Rotation Test Failed - Tool not home")
+            logging.info("Performing Selector Startup")
+
+            # Initialise tool to home position (Blank face upwards)
+            count = self.tool_home()
+
+            if count > ToolSelector.STEPS_PER_TOOL * 8:
+                logging.error("Unable to return the Embosser Tool to the blank position")
+                raise InitialisationError(__name__, "Unable to return the Embosser Tool to the blank position")
+
+            self.__rotation_test()
+            if self.toolHomeSensor.read_sensor():
+                self.currentTool = 0
+                self.__output("ACK")
+            else:
+                logging.error("Tool not Blank After Test")
+                raise InitialisationError(__name__, "Rotation Test Failed - Tool not in blank position after test")
 
     def run(self):
         """Main operational loop for the ToolSelector Thread
@@ -216,7 +228,6 @@ class ToolSelector:
             logging.info("Simulating Tool Rotation Test...")
         else:
             self.toolHomeSensor.set_falling_callback(self.__home_callback)
-
             # One full rotation
             expected = ToolSelector.STEPS_PER_TOOL * 8
 
@@ -228,13 +239,13 @@ class ToolSelector:
                              f"{difference}")
 
             else:
-                count = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
-                total_count = expected + count
+                count2 = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
+                total_count = count + count2
 
                 logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
-                             f"Diff = {count}")
+                             f"Diff = {count2}")
 
-                self.toolHomeSensor.clear_falling_callback()
+            self.toolHomeSensor.clear_falling_callback()
 
     def __home_callback(self, gpio, level, tick):
         """Callback function called when the home photosensor detects the embossing tool in the blank position
@@ -252,7 +263,7 @@ class ToolSelector:
 
         :return: None
         """
-        if not SIMULATE:
+        if not self.SIMULATE:
             self.toolStepper.e_stop()
         self.close()
 
@@ -263,27 +274,39 @@ class ToolSelector:
         """
         if self.SIMULATE:
             logging.info(f"Simulating Selecting blank tool...")
+            time.sleep(0.5)
             count = 0
         else:
-            if self.currentTool > 4:
-                # Shortest travel is to wrap in forwards direction
-                direction = ToolSelector.POS_DIR
-                expected = (8 - self.currentTool) * ToolSelector.STEPS_PER_TOOL
+            if self.toolHomeSensor.read_sensor():
+                count = 0
             else:
-                # Shortest travel is to rotate in backwards direction
-                direction = ToolSelector.NEG_DIR
-                expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
+                if self.currentTool > 4:
+                    # Shortest travel is to wrap in forwards direction
+                    direction = ToolSelector.POS_DIR
+                    expected = (8 - self.currentTool) * ToolSelector.STEPS_PER_TOOL
+                else:
+                    # Shortest travel is to rotate in backwards direction
+                    direction = ToolSelector.NEG_DIR
+                    expected = self.currentTool * ToolSelector.STEPS_PER_TOOL
 
-            self.toolHomeSensor.set_falling_callback(self.__home_callback)
+                self.toolHomeSensor.set_falling_callback(self.__home_callback)
+                count = self.toolStepper.move_steps(expected*2, direction)
 
-            count = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 9, direction)
+                if self.toolHomeSensor.read_sensor():
+                    logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
+                                 f"Actual Steps = {count}")
+                    self.currentTool = 0
+                else:
+                    count2 = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 10, direction)
 
-            logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
-                         f"Actual Steps = {count}")
-
-            self.currentTool = 0
-
-            self.toolHomeSensor.clear_falling_callback()
+                    if self.toolHomeSensor.read_sensor():
+                        logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
+                                     f"Actual Steps = {count+count2}")
+                        self.currentTool = 0
+                    else:
+                        logging.error("Tool could not be returned home")
+                        raise OperationError(__name__, 'Tool Home', "Tool home operation failed, - Blank face could not be selected")
+                self.toolHomeSensor.clear_falling_callback()
 
         return count
 
@@ -307,10 +330,14 @@ class ToolSelector:
         # leaving the adjusted desired tool in a range from -3 to 4
         # The value represents the direction (-ve = backwards rotation)
         # and number of faces to rotate (Between 0 and 4)
-        if tool == 0:
+        if tool == self.currentTool:
+            logging.info(f"Staying at tool {self.currentTool}")
+            count = 0
+        elif tool == 0:
             count = self.tool_home()
         elif tool > 7 or tool < 0:
             raise CommunicationError(self.__class__, tool, "Invalid Tool Index")
+            count = "0"
         else:
             movement = tool - self.currentTool
 
@@ -328,15 +355,18 @@ class ToolSelector:
             else:
                 # Rotate in a negative direction
                 direction = ToolSelector.NEG_DIR
+                movement *= -1
 
             steps = movement * ToolSelector.STEPS_PER_TOOL
 
             # Move the Stepper motor
             if self.SIMULATE:
                 logging.info(f"Simulating Tool selection to tool {tool}...")
+                time.sleep(0.5)
                 count = steps
             else:
                 count = self.toolStepper.move_steps(steps, direction)
+                logging.info(f"Moved Tool from {self.currentTool} to tool {tool} in {count} steps")
 
         # Update the current tool attribute
         self.currentTool = tool
