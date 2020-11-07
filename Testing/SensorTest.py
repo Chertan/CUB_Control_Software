@@ -2,6 +2,9 @@ from component_control.hardware_interface.PhotoSensor import PhotoSensor
 import logging
 import time
 
+# Rate of Sensor reading and output in samples/second
+SAMPLE_RATE = 100
+
 # GPIO pin of the head home sensor
 TRAVPS = 4
 # GPIO Input for the sensor to return True
@@ -17,22 +20,26 @@ EMBPS = 7
 # GPIO Input for the sensor to return True
 EMBPS_TRUE = 1
 
+# Dictionary of sensor info, any sensors added here will be sampled and output
+SENSOR_INFO = {'Traverse Home': (TRAVPS,TRAVPS_TRUE), 
+               'Tool Home': (TOOLPS,TOOLPS_TRUE), 
+               'Embosser Home': (EMBPS,EMBPS_TRUE)}
 
 def main():
     logging.basicConfig(level=logging.INFO)
 
-    trav = PhotoSensor(TRAVPS, TRAVPS_TRUE)
-    tool = PhotoSensor(TOOLPS, TOOLPS_TRUE)
-    emb = PhotoSensor(EMBPS, EMBPS_TRUE)
-
+    sensors = {}
+    
+    for name, sense in SENSORS.items():
+	    sensors[name] = PhotoSensor(sense[0], sense[1])
+        
     while True:
-            print(f"Traverse Home Sensor Output: {trav.read_sensor()}")
-            print(f"Tool Blank Sensor Output: {tool.read_sensor()}")
-            print(f"Embosser Home Sensor Output: {emb.read_sensor()}")
-
-            print("\n")
-
-            time.sleep(0.01)
+        print("")
+        
+        for name, sensor in sensors.items():
+		    print(f"{name} Sensor Output: {sensor.read_sensor()}")
+        
+        time.sleep(1 / SAMPLE_RATE)
 
 
 if __name__ == '__main__':
