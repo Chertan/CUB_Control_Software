@@ -72,7 +72,7 @@ class ArgumentError(CUBError):
     """Exception to be raised for errors in parsing arguments
 
         Attributes:
-            argumentName -- Input that caused the error
+            argumentName -- Name of the argument that caused the error
             message      -- Explanation of the error
             argHelp      -- Argument help to print to user
     """
