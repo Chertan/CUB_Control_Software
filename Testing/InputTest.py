@@ -1,17 +1,9 @@
-from component_control.CUBInput import CUBInput
+from component_control.Input import Input
 from threading import Thread
 import logging
 import argparse
 
 # Input Component Test Program
-
-
-INPUT_MODE = "FILE"
-FILENAME = "testinput.txt"
-
-components = {}
-threads = {}
-tasks = {}
 
 
 def main():
@@ -35,32 +27,31 @@ def main():
         logging.basicConfig(level=logging.INFO)
     elif level == "debug":
         logging.basicConfig(level=logging.DEBUG)
-    
-    try:
 
-        in_comp = CUBInput(input_mode=mode, filename=filename)
+    in_comp = Input(input_mode=mode, filename=filename)
 
-        t_in = Thread(target = in_comp.thread_in)
+    t_in = Thread(target=in_comp.thread_in)
 
-        t_in.start()
+    t_in.start()
 
-        msg = in_comp.recv()
+    msg = in_comp.recv()
 
-        if msg == "ACK":
-            logging.info(f"Received Ackknowldgement: {msg}")
-        
-            in_comp.start_input()
+    if msg == "ACK":
+        logging.info(f"Received Acknowledgement: {msg}")
 
-            while True:
-                msg = (in_comp.recv())
-                print(msg)
-                if msg == "END OF INPUT":
-                    break
+        in_comp.start_input()
 
-        else:
-            logging.error(msg)
-    finally:
-        in_comp.stop()
+        while True:
+            msg = (in_comp.recv())
+            print(msg)
+            if msg == "END OF INPUT":
+                break
+
+    else:
+        logging.error(msg)
+
+    in_comp.close()
+
 
 if __name__ == '__main__':
     main()
