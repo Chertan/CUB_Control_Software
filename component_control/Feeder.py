@@ -131,6 +131,7 @@ class Feeder:
         :return: 0 to confirm successful close of thread
         """
         try:
+            logging.debug("Feeder thread Started")
             # Run component startup procedure
             self.startup()
             # Run component loop

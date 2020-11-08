@@ -29,9 +29,6 @@ class StepperMotor:
     # Thread safe equivalent to emergencyFlag = False
     emergencyFlag = threading.Event()
 
-    # Speed where the output is delayed by only the software and gpio overhead
-    CLIP_SPEED = 2000
-
     def __init__(self, in_direction, in_step, in_enable, in_start_speed, in_max_speed, in_ramp_rate):
         """
         Creates an object to interface with a Stepper motor connected via a stepper controller
@@ -60,17 +57,17 @@ class StepperMotor:
         # Setup ENABLE Pin as output
         StepperMotor.gpio.set_mode(self.enable, pigpio.OUTPUT)
         StepperMotor.gpio.write(self.enable, 0)
-        logging.info(f"Setting up Stepper ENABLE on GPIO Pin: {self.enable}")
+        logging.debug(f"Setting up Stepper ENABLE on GPIO Pin: {self.enable}")
 
         # Setup STOP pin as output
         StepperMotor.gpio.set_mode(self.step, pigpio.OUTPUT)
         StepperMotor.gpio.write(self.step, 0)
-        logging.info(f"Setting up Stepper STEP on GPIO Pin: {self.step}")
+        logging.debug(f"Setting up Stepper STEP on GPIO Pin: {self.step}")
 
         # Setup DIRECTION pin as output
         StepperMotor.gpio.set_mode(self.direction, pigpio.OUTPUT)
         StepperMotor.gpio.write(self.direction, 0)
-        logging.info(f"Setting up Stepper DIR on GPIO Pin: {self.direction}")
+        logging.debug(f"Setting up Stepper DIR on GPIO Pin: {self.direction}")
 
     def __startup_motor(self, in_dir):
         """
@@ -85,7 +82,7 @@ class StepperMotor:
             StepperMotor.gpio.write(self.enable, 1)
 
         else:
-            logging.error("Stepper not started due to Emergency Stop Flag set")
+            logging.warning(f"Stepper not started due to Emergency Stop Flag set on STEP Pin: {self.step}")
 
     def __disable_motor(self):
         """
@@ -106,7 +103,6 @@ class StepperMotor:
         """
         # Transforms speed to a time between steps (n steps per second = 1/n seconds between steps)
         if speed > 0:
-            logging.debug(f"Stepping Motor with speed: {speed}")
             # sleep to limit the steps per second to match the input speed
             time.sleep(1 / speed)
 
@@ -123,7 +119,7 @@ class StepperMotor:
         :return: None
         """
         self.stopFlag.set()
-        logging.debug("Stepper Motor Stop Flag Set to True")
+        logging.debug(f"Stepper Motor Stop Flag Set to True on STEP Pin: {self.step}")
 
     def e_stop(self):
         """
@@ -133,7 +129,7 @@ class StepperMotor:
         """
         StepperMotor.emergencyFlag.set()
         self.__disable_motor()
-        logging.info("Stepper Motor Emergency Stop Flag Set to True")
+        logging.warning("Stepper Motor Emergency Stop Flag Set to True")
 
     def move_steps(self, count, in_direction):
         """
@@ -146,7 +142,7 @@ class StepperMotor:
         # Set direction pin
         self.__startup_motor(in_direction)
 
-        logging.info(f"Stepping Stepper by {count} steps, in direction: {in_direction} on STEP Pin: {self.step}")
+        logging.debug(f"Stepping Stepper by {count} steps, in direction: {in_direction} on STEP Pin: {self.step}")
 
         speed = self.startSpeed
 
@@ -157,12 +153,12 @@ class StepperMotor:
         for i in range(0, count):
 
             if StepperMotor.emergencyFlag.is_set():
-                logging.info("Stepper Motor stopping due to Emergency flag set")
+                logging.debug(f"Stepper Motor stopping due to Emergency flag set on STEP Pin: {self.step}")
                 step_count = i
                 break
 
             if self.stopFlag.is_set():
-                logging.info("Stepper Motor stopping due to stop flag set")
+                logging.debug(f"Stepper Motor stopping due to stop flag set on STEP Pin: {self.step}")
                 step_count = i
                 break
 

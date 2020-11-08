@@ -6,7 +6,6 @@ import multiprocessing
 import logging
 
 
-
 class HeadTraverser:
     """Abstraction Class to represent the Head Traversal mechanism for the CUB
 
@@ -63,15 +62,15 @@ class HeadTraverser:
         self.SIMULATE = simulate
         if self.SIMULATE:
             logging.info("Setting up Traverser as Simulated Component.")
+        else:
+            logging.info(f"Setting up Traverser with STEP Pin: {HeadTraverser.TRAVSTEP}")
 
         # Define Tool stepper motor
         self.traverseStepper = StepperMotor(HeadTraverser.TRAVDIR, HeadTraverser.TRAVSTEP, HeadTraverser.TRAVENA,
                                             HeadTraverser.START_SPEED, HeadTraverser.MAX_SPEED, HeadTraverser.RAMP_RATE)
-        logging.info(f"Setting up Traverser with STEP Pin: {HeadTraverser.TRAVSTEP}")
 
         # Photo interrupter sensor reads 0 when beam is cut
         self.traverseHomeSensor = PhotoSensor(HeadTraverser.TRAVPS, HeadTraverser.PS_TRUE)
-        logging.info(f"Setting up Traverser Home Sensor on Pin: {HeadTraverser.TRAVPS}")
 
         # Tracks the current position of the embossing head
         self.currentStep = HeadTraverser.MAX_TRAV_STEPS
@@ -89,8 +88,11 @@ class HeadTraverser:
         :return: 0 to confirm successful close of thread
         """
         try:
-            self.startup()
-            self.run()
+            logging.debug("Traverser thread Started")
+            # Run component startup procedure
+            self.__startup()
+            # Run component loop
+            self.__run()
 
         except InitialisationError as err:
             self.__output(f"{err.component} ERROR: {err.message}")
@@ -101,7 +103,7 @@ class HeadTraverser:
         except OperationError as op:
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
         except Exception as ex:
-            self.__output(f"Traverser ERROR: {ex}")
+            self.__output(f"Undefined Traverser ERROR: {ex}")
         finally:
             self.emergency_stop()
             return 0
@@ -148,7 +150,7 @@ class HeadTraverser:
         """
         return self.cub_pipe.recv()
 
-    def startup(self):
+    def __startup(self):
         """Runs a startup test of the Head Traverser module
 
         :return: None
@@ -159,7 +161,7 @@ class HeadTraverser:
         else:
             logging.info("Performing Traverser Startup")
 
-            count = self.traverse_home()
+            count = self.__traverse_home()
 
             if count > HeadTraverser.MAX_TRAV_STEPS:
                 logging.error("Unable to return the Embosser Head to the home position")
@@ -172,7 +174,7 @@ class HeadTraverser:
                 logging.error("Head Not at Home After Test")
                 raise InitialisationError(self.__class__, "Unable to return the Embosser Head to the home position")
 
-    def run(self):
+    def __run(self):
         while not self.exit:
             # Get Input from Main Thread
             key, index, direction, count = self.__input()
@@ -187,7 +189,7 @@ class HeadTraverser:
             # ------------------------------------------
             elif key == "HOME":
                 # Move Head Home
-                self.traverse_home()
+                self.__traverse_home()
             # ------------------------------------------
             # Move Commands
             # ------------------------------------------
@@ -205,9 +207,9 @@ class HeadTraverser:
                 # --------------------
                 if index == "CHAR":
                     if direction == "POS":
-                        self.traverse_character(count=count)
+                        self.__traverse_character(count=count)
                     elif direction == "NEG":
-                        self.traverse_character(reverse=True, count=count)
+                        self.__traverse_character(reverse=True, count=count)
                     else:
                         raise CommunicationError(self.__class__, direction, "Direction portion of message for "
                                                                             f"{index} operation")
@@ -216,9 +218,9 @@ class HeadTraverser:
                 # -----------------
                 elif index == "COL":
                     if direction == "POS":
-                        self.traverse_column(count=count)
+                        self.__traverse_column(count=count)
                     elif direction == "NEG":
-                        self.traverse_column(reverse=True, count=count)
+                        self.__traverse_column(reverse=True, count=count)
                     else:
                         raise CommunicationError(self.__class__, direction, "Direction portion of message for "
                                                                             f"{index} operation")
@@ -241,7 +243,7 @@ class HeadTraverser:
         :return: None
         """
         if self.SIMULATE:
-            logging.info(f"Simulating Head movement test...")
+            logging.debug(f"Simulating Head movement test...")
             out = 0
         else:
             self.traverseHomeSensor.set_rising_callback(self.__home_callback)
@@ -251,14 +253,14 @@ class HeadTraverser:
             count = self.traverseStepper.move_steps(round(HeadTraverser.MAX_TRAV_STEPS / 2), HeadTraverser.NEG_DIR)
 
             if self.traverseHomeSensor.read_sensor():
-                logging.info(f"Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, "
-                             f"Steps taken = {count}")
+                logging.debug(f"Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, "
+                              f"Steps taken = {count}")
                 out = count
             else:
                 exp = count
                 count = self.traverseStepper.move_steps(HeadTraverser.MAX_TRAV_STEPS - count, HeadTraverser.NEG_DIR)
-                logging.info(f'Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, '
-                             f'Actual Steps = {exp + count}')
+                logging.debug(f'Tool Movement Test Completed. Expected Steps = {HeadTraverser.MAX_TRAV_STEPS/2}, '
+                              f'Actual Steps = {exp + count}')
                 out = count + exp
 
             self.traverseHomeSensor.clear_rising_callback()
@@ -287,7 +289,7 @@ class HeadTraverser:
             self.traverseStepper.e_stop()
         self.close()
 
-    def traverse_home(self):
+    def __traverse_home(self):
         """Traverse the head back to the home position of the brailler
 
         :return: count: Number of steps taken to return home
@@ -321,7 +323,7 @@ class HeadTraverser:
 
         return count
 
-    def traverse_column(self, reverse=False, count=1):
+    def __traverse_column(self, reverse=False, count=1):
         """Traverses the distance between two columns of a single braille cell
 
         :param reverse: Optional parameter to reverse direction of traversal
@@ -333,6 +335,7 @@ class HeadTraverser:
                 logging.info(f"Simulating Head Traversal of Column in Negative Dir, count:{count}...")
                 time.sleep(0.5)
             else:
+                logging.info(f"Completing Head Traversal of Character in Negative Dir, count:{count}...")
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_COLUMN * count
         else:
@@ -340,10 +343,11 @@ class HeadTraverser:
                 logging.info(f"Simulating Head Traversal of Column in Positive Dir, count:{count}...")
                 time.sleep(0.5)
             else:
+                logging.info(f"Completing Head Traversal of Character in Positive Dir, count:{count}...")
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.POS_DIR)
                 self.currentStep += HeadTraverser.STEPS_BETWEEN_COLUMN * count
 
-    def traverse_character(self, reverse=False, count=1):
+    def __traverse_character(self, reverse=False, count=1):
         """Traverse the head by the spacing between braille cells
 
         :param reverse: Optional parameter to reverse direction of traversal
@@ -355,6 +359,7 @@ class HeadTraverser:
                 logging.info(f"Simulating Head Traversal of Character in Negative Dir, count:{count}...")
                 time.sleep(0.5)
             else:
+                logging.info(f"Completing Head Traversal of Character in Negative Dir, count:{count}...")
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_CHAR * count
         else:
@@ -362,5 +367,6 @@ class HeadTraverser:
                 logging.info(f"Simulating Head Traversal of Character in Positive Dir, count:{count}...")
                 time.sleep(0.5)
             else:
+                logging.info(f"Completing Head Traversal of Character in Positive Dir, count:{count}...")
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_CHAR*count, HeadTraverser.POS_DIR)
                 self.currentStep += HeadTraverser.STEPS_BETWEEN_CHAR * count

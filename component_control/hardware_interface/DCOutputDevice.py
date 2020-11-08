@@ -49,13 +49,12 @@ class DCOutputDevice:
         # Setup ENABLE pin as output
         DCOutputDevice.gpio.set_mode(self.enable, pigpio.OUTPUT)
         DCOutputDevice.gpio.write(self.enable, 0)
-        logging.info(f"Setting up DC Output Device ENABLE on GPIO Pin: {self.enable}")
+        logging.debug(f"Setting up DC Output Device ENABLE on GPIO Pin: {self.enable}")
 
         # Setup DIRECTION pin as output
         DCOutputDevice.gpio.set_mode(self.direction, pigpio.OUTPUT)
         DCOutputDevice.gpio.write(self.direction, 0)
-        logging.info(f"Setting up DC Output Device DIR on GPIO Pin: {self.direction}")
-
+        logging.debug(f"Setting up DC Output Device DIR on GPIO Pin: {self.direction}")
 
     def __enable_output(self, in_dir):
         """Enables the DC Output in the input direction
@@ -73,7 +72,7 @@ class DCOutputDevice:
             DCOutputDevice.gpio.write(self.enable, 1)
         else:
             # Emergency Stop flag is set
-            logging.error("DC Output not started due to Emergency Stop Flag set")
+            logging.warning("DC Output not started due to Emergency Stop Flag set")
 
     def __disable_output(self):
         """Disables DC Output by drawing Enable pin low
@@ -94,7 +93,7 @@ class DCOutputDevice:
         # Set stop flag to notify to stop current output
         self.stopFlag.set()
 
-        logging.info(f"DC Output Stop Flag Set to True {self.stopFlag.is_set()}")
+        logging.debug(f"DC Output Stop Flag Set to True {self.stopFlag.is_set()} on ENA pin: {self.enable}")
 
     def e_stop(self):
         """Stops device output and sets the emergency stop flag to stop all dc device outputs
@@ -106,7 +105,7 @@ class DCOutputDevice:
         # Ensure current operation stops
         self.stop()
 
-        logging.info(f"DC Output Emergency Stop Flag Set to {DCOutputDevice.emergencyFlag.is_set()}")
+        logging.debug(f"DC Output Emergency Stop Flag Set to True")
 
     def pulse(self, direction, duration=0):
         """Pulses the output in the input direction
@@ -177,7 +176,7 @@ class DCOutputDevice:
         :return:   count: Actual length of the pulse in seconds, value of -1 indicates the pulse was not completed
         """
         if DCOutputDevice.emergencyFlag.is_set():
-            logging.error("DC Output not started due to Emergency flag set")
+            logging.error(f"DC Output not started due to Emergency flag set on ENA pin: {self.enable}")
             count = -1
         else:
             # Activate the output in the input direction
@@ -200,9 +199,9 @@ class DCOutputDevice:
             if flag:
                 # The stop flag was set
                 if DCOutputDevice.emergencyFlag.is_set():
-                    logging.error("DC Output stopping due to Emergency flag set")
+                    logging.error(f"DC Output stopping due to Emergency flag set on ENA pin: {self.enable}")
                 elif self.stopFlag.is_set():
-                    logging.info("DC Output stopping due to stop flag set")
+                    logging.debug(f"DC Output stopping due to stop flag set on ENA pin: {self.enable}")
 
                 # Determine if no pulse was output
                 if count < 0.001:
@@ -210,6 +209,6 @@ class DCOutputDevice:
 
             else:
                 # The timeout duration was reached
-                logging.info(f"DC Output duration reached on ENA pin: {self.enable}")
+                logging.debug(f"DC Output duration reached on ENA pin: {self.enable}")
 
         return count

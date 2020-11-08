@@ -6,7 +6,6 @@ import multiprocessing
 import logging
 
 
-
 def translate_tool(index):
     """Translates the index sent from the Main thread to a tool index
 
@@ -66,6 +65,8 @@ class ToolSelector:
         self.SIMULATE = simulate
         if self.SIMULATE:
             logging.info("Setting up Selector as Simulated Component.")
+        else:
+            logging.info("Setting up Selector component")
 
         # Define Tool stepper motor
         self.toolStepper = StepperMotor(ToolSelector.TOOLDIR, ToolSelector.TOOLSTEP, ToolSelector.TOOLENA,
@@ -90,8 +91,11 @@ class ToolSelector:
         :return: 0 to confirm successful close of thread
         """
         try:
-            self.startup()
-            self.run()
+            logging.debug("Selector thread Started")
+            # Run component startup procedure
+            self.__startup()
+            # Run component loop
+            self.__run()
 
         except InitialisationError as err:
             self.__output(f"{err.component} ERROR: {err.message}")
@@ -102,7 +106,7 @@ class ToolSelector:
         except OperationError as op:
             self.__output(f"{op.component} ERROR: {op.message} - OP: {op.operation}")
         except Exception as ex:
-            self.__output(f"Selector ERROR: {ex}")
+            self.__output(f"Unidentified Selector ERROR: {ex}")
         finally:
             self.emergency_stop()
             return 0
@@ -149,7 +153,7 @@ class ToolSelector:
         """
         return self.cub_pipe.recv()
 
-    def startup(self):
+    def __startup(self):
         """Runs a startup test of the Tool Selector module
 
         :return: None
@@ -161,7 +165,7 @@ class ToolSelector:
             logging.info("Performing Selector Startup")
 
             # Initialise tool to home position (Blank face upwards)
-            count = self.tool_home()
+            count = self.__tool_home()
 
             if count > ToolSelector.STEPS_PER_TOOL * 8:
                 logging.error("Unable to return the Embosser Tool to the blank position")
@@ -175,7 +179,7 @@ class ToolSelector:
                 logging.error("Tool not Blank After Test")
                 raise InitialisationError(__name__, "Rotation Test Failed - Tool not in blank position after test")
 
-    def run(self):
+    def __run(self):
         """Main operational loop for the ToolSelector Thread
 
         :return:
@@ -195,7 +199,7 @@ class ToolSelector:
             # ------------------------------------------
             elif key == "HOME":
                 # Move Head Home
-                self.tool_home()
+                self.__tool_home()
             # ------------------------------------------
             # Move Commands
             # ------------------------------------------
@@ -205,7 +209,7 @@ class ToolSelector:
                 # --------------------
                 try:
                     tool = translate_tool(index)
-                    self.tool_select(tool)
+                    self.__tool_select(tool)
                 except ValueError:
                     raise CommunicationError(self.__class__, index, "Conversion to Base 2 Index Failed")
 
@@ -225,7 +229,7 @@ class ToolSelector:
         :return: None
         """
         if self.SIMULATE:
-            logging.info("Simulating Tool Rotation Test...")
+            logging.debug("Simulating Tool Rotation Test...")
         else:
             self.toolHomeSensor.set_falling_callback(self.__home_callback)
             # One full rotation
@@ -235,15 +239,15 @@ class ToolSelector:
 
             if self.toolHomeSensor.read_sensor():
                 difference = expected - count
-                logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {count}, Diff = "
-                             f"{difference}")
+                logging.debug(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {count}, Diff = "
+                              f"{difference}")
 
             else:
                 count2 = self.toolStepper.move_steps(expected, ToolSelector.POS_DIR)
                 total_count = count + count2
 
-                logging.info(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
-                             f"Diff = {count2}")
+                logging.debug(f"Tool Test completed. Expected Steps = {expected}, Actual Steps = {total_count}, "
+                              f"Diff = {count2}")
 
             self.toolHomeSensor.clear_falling_callback()
 
@@ -267,7 +271,7 @@ class ToolSelector:
             self.toolStepper.e_stop()
         self.close()
 
-    def tool_home(self):
+    def __tool_home(self):
         """Rotates the tool back to the blank (home) position and reports any missed or extra steps
 
         :return: count: number of steps taken to rotate to home position
@@ -293,24 +297,25 @@ class ToolSelector:
                 count = self.toolStepper.move_steps(expected*2, direction)
 
                 if self.toolHomeSensor.read_sensor():
-                    logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
-                                 f"Actual Steps = {count}")
+                    logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = "
+                                 f"{expected}, Actual Steps = {count}")
                     self.currentTool = 0
                 else:
                     count2 = self.toolStepper.move_steps(self.STEPS_PER_TOOL * 10, direction)
 
                     if self.toolHomeSensor.read_sensor():
-                        logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = {expected}, "
-                                     f"Actual Steps = {count+count2}")
+                        logging.info(f"Tool Rotated to Blank Position from tool {self.currentTool}. Expected Steps = "
+                                     f"{expected}, Actual Steps = {count+count2}")
                         self.currentTool = 0
                     else:
                         logging.error("Tool could not be returned home")
-                        raise OperationError(__name__, 'Tool Home', "Tool home operation failed, - Blank face could not be selected")
+                        raise OperationError(__name__, 'Tool Home', "Tool home operation failed, - Blank face could "
+                                                                    "not be selected")
                 self.toolHomeSensor.clear_falling_callback()
 
         return count
 
-    def tool_select(self, tool):
+    def __tool_select(self, tool):
         """Rotates the tool to place the input tool into the selected position ready for embossing
 
         :param tool: The integer number of the tool to be selected
@@ -334,10 +339,9 @@ class ToolSelector:
             logging.info(f"Staying at tool {self.currentTool}")
             count = 0
         elif tool == 0:
-            count = self.tool_home()
+            count = self.__tool_home()
         elif tool > 7 or tool < 0:
             raise CommunicationError(self.__class__, tool, "Invalid Tool Index")
-            count = "0"
         else:
             movement = tool - self.currentTool
 
