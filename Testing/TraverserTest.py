@@ -22,13 +22,13 @@ def main():
 
             for i in range(0, 25):
                 time.sleep(0.5)
-                trav.traverse_column()
+                trav.__traverse_column()
                 time.sleep(0.5)
-                trav.traverse_character()
+                trav.__traverse_character()
 
             time.sleep(1)
             print("Returning Home")
-            trav.traverse_home()
+            trav.__traverse_home()
             time.sleep(1)
 
     except KeyboardInterrupt:

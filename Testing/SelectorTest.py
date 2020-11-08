@@ -17,7 +17,7 @@ def main():
         while True:
 
             for i in range(0, 10):
-                tool.tool_select((i*20) % 8)
+                tool.__tool_select((i * 20) % 8)
                 time.sleep(0.5)
 
     except KeyboardInterrupt:
