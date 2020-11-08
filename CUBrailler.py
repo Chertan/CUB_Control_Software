@@ -68,8 +68,7 @@ def main():
 
     except InitialisationError as err:
         # Exception while initialising components
-        print(f"Error while Initalising {err.component} - {err.message}")
-        logging.error(err.message)
+        logging.error(f"Error while Initialising {err.component} - {err.message}")
 
     except OperationError as err:
         # Exception during operation
@@ -79,8 +78,8 @@ def main():
         # Shut down the system, ensures outputs are disabled and threads are joined on close
         print("Shutting down components...", end='')
         shutdown()
-        print("Complete")
-        print("Goodbye")
+        print("Complete\n")
+        print("Goodbye.\n")
     return 0
 
 
@@ -143,15 +142,16 @@ def setup_logging(level, logfile):
     :param logfile: Output file for the logging if logging is to be to a file
     :return:
     """
-    log_format = '%(asctime)s : %(levelname)s : %(module)s : %(message)s'
+    # Define format for logging strings
+    log_format = '%(asctime)s.%(msecs)03d : %(levelname)s : %(module)s : %(message)s'
     date_format = '%d/%m/%Y - %H:%M:%S'
 
-    #for name in ['Embosser', 'Selector', 'Traverser', 'Feeder', 'Input']:
-    #    temp_logger = logging.getLogger(name)
-
+    # Log to file if flag was set
     if logfile is None:
+        # Log to screen
         logging.basicConfig(level=level, format=log_format, datefmt=date_format)
     else:
+        # Log to file
         logging.basicConfig(level=level, format=log_format, datefmt=date_format, filename=logfile)
 
 
@@ -164,7 +164,7 @@ def initialise_components(mode, filename, file_language):
     :return:
     """
     # Construct component objects
-    print("Initialising Compononents...", end='')
+    print("Initialising Components...", end='')
     logging.info("Constructing Components...")
     components['Embosser'] = Embosser(simulate=True)
     components['Traverser'] = HeadTraverser(simulate=True)
@@ -179,7 +179,8 @@ def initialise_components(mode, filename, file_language):
     print("Running Startup routines", end='')
     # For each of the components
     for name, comp in components.items():
-        logging.info(f"Receiving startup message from {name}")
+        logging.debug(f"Confirming startup for {name}")
+        print(".", end='')
         # Embosser is controlled by main thread
         if name == 'Embosser':
             # run Embosser startup
@@ -190,12 +191,10 @@ def initialise_components(mode, filename, file_language):
 
         # Ensure startup was successful
         if msg == ACK:
-            logging.info(f"Main Thread received ACK message {msg} from {name}")
+            logging.info(f"Startup Confirmed for {name}")
         else:
             # Startup Failure
             raise InitialisationError(name, f"Initialisation Failed. ACK message: {msg}")
-        print(".",end='')
-
     print("Complete")
 
 
@@ -205,6 +204,8 @@ def start_threads():
     :return: None
     """
     print("Starting Threads...", end='')
+
+    # Initialise task counters to zero
     tasks['Traverser'] = 0
     tasks['Selector'] = 0
     tasks['Feeder'] = 0
@@ -214,7 +215,9 @@ def start_threads():
     for name, component in components.items():
         if name != 'Embosser':
             logging.info(f"Starting {name} thread...")
+            # Create thread targeting the thread_in function of the component
             threads[name] = Thread(target=component.thread_in)
+            # Start the threads execution (Runs startup routine)
             threads[name].start()
     print("Complete")
 
@@ -239,34 +242,43 @@ def cub_loop():
     while not end_of_input:
         # Retrieve the next character from the Input component
         next_char = components['Input'].recv()
+        logging.info(f"Processing character: {next_char}")
+        try:
 
-        # Input signals the end of input
-        if next_char == "END OF INPUT":
-            end_of_input = True
-        # Input is a backspace
-        elif next_char == "BACKSPACE":
-            # Perform Backspace
-            try:
-                # Last character is a space,
-                if last_char != "000000":
-                    backspace(clear=True)
-                # last character is a space, no need to clear
+            if next_char == "END OF INPUT":
+                # Input signals the end of input
+                end_of_input = True
+
+            elif next_char == "BACKSPACE":
+                # Input is a backspace
+                    if last_char != "000000":
+                        # Last character not a space, clear the cell
+                        backspace(clear=True)
+                    else:
+                        # last character is a space, no need to clear
+                        backspace(clear=False)
+
+                    # Last character buffer is now out of date
+                    last_char = 'x'
+
+            elif not word_wrap:
+                # Only print word on spaces
+                if next_char == "000000":
+                    # Print the buffered word
+                    print_word(word_buffer)
                 else:
-                    backspace(clear=False)
+                    # Add the character to the buffer
+                    word_buffer.append(next_char)
 
-                # Last character buffer is now out of date
-                last_char = 'x'
-            except OperationError as op:
-                logging.warning(f"{op.component} WARNING: {op.operation} Failed - {op.message}")
-        elif word_wrap:
-            head_next_char()
-            print_char(next_char)
-
-        elif not word_wrap:
-            if next_char == "000000":
-                print_word(word_buffer)
             else:
-                word_buffer.append(next_char)
+                # Print each character as received
+                head_next_char()
+                print_char(next_char)
+
+        except OperationError as op:
+            # Catch errors in operations (Thrown by Task barrier)
+            logging.warning(f"{op.component} WARNING: {op.operation} Failed - {op.message}")
+        # Keep track of previous character
         last_char = next_char
 
 
@@ -276,14 +288,13 @@ def print_word(word):
     :param word:
     :return: None
     """
-    # For each word:
-    # - Move Head Char (Send word length - i)
-    # - Print Char
-    # Then print Space
+    logging.debug(f"Printing word: {word}")
+    # Print each character in the word:
     for i, char in enumerate(word):
         head_next_char(len(word) - i)
         print_char(char)
 
+    # Print space as per last input
     print_char("000000")
 
 
@@ -293,6 +304,7 @@ def print_char(char):
     :param char: Character in CUB Braille format to be printed
     :return: None
     """
+    logging.debug(f"Printing character: {char}")
     # Print Left
     # Move Head Col
     # Print Right
@@ -321,9 +333,10 @@ def print_col(column):
     :param column: Input half CUB Braille format to be output
     :return: None
     """
+    logging.debug(f"Printing Column: {column}")
     send_task('Selector', "MOVE " + column)
 
-    task_barrier(targets=['Selector', 'Traverser'])
+    task_barrier(targets=['Selector', 'Traverser', 'Feeder'])
 
     components['Embosser'].activate()
 
@@ -336,26 +349,28 @@ def head_next_char(word_length=1):
     """
     global current_line, current_char
 
+    logging.debug(f"Moving Head Position to next character")
+
     # Check if the current character (or word) will overflow the line
     if (current_char + word_length) > components['Feeder'].get_paper_size():
         # If so, return the head to the home position
         send_task('Selector', "HOME")
+        current_char = 0
         # Check if reached the end of the paper
         if current_line == components['Feeder'].get_paper_length():
             # If so, eject the page and load another
+            logging.debug(f"Loading new page into embosser")
             send_task('Feeder', "PAPER EJECT")
             send_task('Feeder', "PAPER LOAD")
             current_line = 1
 
         else:
             # If not at end of page, load the next line
+            logging.debug(f"Feeding to next line of page")
             send_task('Feeder', "FEED 1 POS")
             current_line += 1
 
-        send_task('Traverser', "HOME")
-        current_char = 0
-
-    #
+    # Make movement to next character
     if current_char == 0:
         # First character of the line, no need to move
         current_char += 1
@@ -363,9 +378,6 @@ def head_next_char(word_length=1):
         # Move to the next character position
         send_task('Traverser', "MOVE CHAR POS")
         current_char += 1
-
-    # Wait until movement is complete to continue
-    task_barrier(['Selector', 'Traverser', 'Feeder'])
 
 
 def backspace(clear=True):
@@ -382,7 +394,7 @@ def backspace(clear=True):
         # Select the clear tool
         send_task('Selector', "HOME")
         # Wait for movement and tool selection to complete
-        task_barrier(targets=['Selector'])
+        task_barrier(targets=['Selector', 'Traverser', 'Feeder'])
         # Emboss action
         components['Embosser'].activate()
         # Move to the first column
@@ -449,7 +461,7 @@ def task_barrier(targets=list()):
         for tar in targets:
             group.append([tar, tasks[tar]])
 
-    logging.info(f"Task barrier for: {group}")
+    logging.debug(f"Task barrier for: {group}")
 
     # For each component in the group, and its task count
     for name, count in group:
@@ -464,7 +476,7 @@ def task_barrier(targets=list()):
                 logging.error(msg)
                 raise OperationError(name, "", msg)
 
-    logging.info(f"Leaving Task barrier for: {group}")
+    logging.debug(f"Leaving Task barrier for: {group}")
 
 
 def shutdown():
@@ -497,7 +509,7 @@ def join_threads():
     :return: None
     """
     for name, t in threads.items():
-        logging.info(f"Joining Thread: {name}")
+        logging.debug(f"Joining Thread: {name}")
         try:
             t.join()
             logging.info(f"Successfully Joined Thread: {name}")
