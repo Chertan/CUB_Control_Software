@@ -48,15 +48,20 @@ class Embosser:
         self.SIMULATE = simulate
         if self.SIMULATE:
             logging.info("Setting up Embosser as Simulated Component.")
+        else:
+            logging.info(f"Setting Embosser with Enable on GPIO Pin: {Embosser.COILENA}")
 
+        # DC Output component which is the output tied to the embosser coils
         self.embosser = DCOutputDevice(Embosser.COILDIR, Embosser.COILENA)
+
+        # PhotoSensor hardware interface to the embosser home photosensor
         self.embosserHomeSensor = PhotoSensor(Embosser.COILPS, Embosser.PS_TRUE)
 
-        logging.info(f"Setting Embosser with Enable on GPIO Pin: {Embosser.COILENA}")
-
+        # Setup callback functions for timing plate activations
         self.embosserHomeSensor.set_falling_callback(self.__leave_callback)
         self.embosserHomeSensor.set_rising_callback(self.__home_callback)
 
+        # Setup timing reference and startup check flags
         self.start = time.time()
         self.home_check = False
         self.leave_check = False
@@ -67,10 +72,11 @@ class Embosser:
 
         """
         if self.SIMULATE:
-            logging.debug("Simulating startup of Embosser...")
+            logging.info("Simulating startup of Embosser...")
             time.sleep(Embosser.PULSE_LEN * 2)
             out = "ACK"
         else:
+            logging.info("Completing startup of Embosser...")
             if self.embosserHomeSensor.read_sensor():
                 self.activate()
                 time.sleep(Embosser.PULSE_LEN)
@@ -120,7 +126,7 @@ class Embosser:
             time.sleep(Embosser.PULSE_LEN)
         else:
             current = self.start - time.time()
-            logging.info(f"Embosser Activation at t+{current} seconds for a length of {length}")
+            logging.info(f"Embosser Activation at t+{current} seconds for a length of {length} seconds")
             if Embosser.DUAL_DIR:
                 self.embosser.swap_pulse(Embosser.DOWN_DIR, duration=(length/2))
             else:
