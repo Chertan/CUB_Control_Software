@@ -1,0 +1,997 @@
+09/11/2020 - 23:08:54.656 : INFO : CUBrailler : Constructing Components...
+09/11/2020 - 23:08:54.657 : INFO : Embosser : Setting Embosser with Enable on GPIO Pin: 19
+09/11/2020 - 23:08:54.660 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 7
+09/11/2020 - 23:08:54.661 : INFO : HeadTraverser : Setting up Traverser with STEP Pin: 20
+09/11/2020 - 23:08:54.664 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 4
+09/11/2020 - 23:08:54.725 : INFO : ToolSelector : Setting up Selector component
+09/11/2020 - 23:08:54.728 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:08:54.729 : INFO : Feeder : Setting up Feeder as Simulated Component.
+09/11/2020 - 23:08:54.731 : INFO : Feeder : Setting up Line Feed Stepper with STEP Pin: 18
+09/11/2020 - 23:08:54.733 : INFO : Feeder : Setting up Paper Feed Motor with ENA Pin: 12
+09/11/2020 - 23:08:54.733 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 22
+09/11/2020 - 23:08:54.734 : INFO : Feeder : Setting up Paper Input Sensor on Pin: 22
+09/11/2020 - 23:08:54.735 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:08:54.735 : INFO : Feeder : Setting up Paper Output Sensor on Pin: 17
+09/11/2020 - 23:08:54.736 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 14
+09/11/2020 - 23:08:54.736 : INFO : Feeder : Setting up A4 Paper Size Sensor on Pin: 14
+09/11/2020 - 23:08:54.737 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 15
+09/11/2020 - 23:08:54.737 : INFO : Feeder : Setting up Braille Paper Size Sensor on Pin: 15
+09/11/2020 - 23:08:54.738 : INFO : Input : Setting up Input in mode: KEYBOARD
+09/11/2020 - 23:08:54.739 : INFO : CUBrailler : Starting Traverser thread...
+09/11/2020 - 23:08:54.740 : INFO : HeadTraverser : Performing Traverser Startup
+09/11/2020 - 23:08:54.740 : INFO : CUBrailler : Starting Selector thread...
+09/11/2020 - 23:08:54.742 : INFO : ToolSelector : Performing Selector Startup
+09/11/2020 - 23:08:54.742 : INFO : CUBrailler : Starting Feeder thread...
+09/11/2020 - 23:08:54.744 : INFO : Feeder : Simulating Feeder Startup
+09/11/2020 - 23:08:54.745 : INFO : CUBrailler : Starting Input thread...
+09/11/2020 - 23:08:54.746 : INFO : Input : Initialising input method
+09/11/2020 - 23:08:54.747 : INFO : Embosser : Completing startup of Embosser...
+09/11/2020 - 23:08:54.749 : INFO : Embosser : Embosser Activation at t+-0.08767557144165039 seconds for a length of 0.1 seconds
+09/11/2020 - 23:08:54.750 : INFO : Input : Connecting to keyboard for input
+09/11/2020 - 23:08:55.052 : ERROR : CUBrailler : Error while Initialising Embosser - Initialisation Failed. ACK message: Embosser did not leave Home Position
+09/11/2020 - 23:08:55.053 : INFO : CUBrailler : Shutting Down CUB System
+09/11/2020 - 23:08:55.053 : INFO : CUBrailler : Shutting down component: Embosser
+09/11/2020 - 23:08:55.054 : INFO : CUBrailler : Shutting down component: Traverser
+09/11/2020 - 23:08:55.055 : INFO : CUBrailler : Shutting down component: Selector
+09/11/2020 - 23:08:55.055 : INFO : CUBrailler : Shutting down component: Feeder
+09/11/2020 - 23:08:55.056 : INFO : CUBrailler : Shutting down component: Input
+09/11/2020 - 23:08:55.517 : INFO : HeadTraverser : Tool Returned Home. Steps taken = 526
+09/11/2020 - 23:08:55.599 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 41
+09/11/2020 - 23:08:56.627 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:08:56.629 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:08:56.629 : INFO : CUBrailler : Successfully Joined Thread: Traverser
+09/11/2020 - 23:08:56.632 : ERROR : ToolSelector : Tool not Blank After Test
+09/11/2020 - 23:08:56.633 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:08:56.634 : INFO : CUBrailler : Successfully Joined Thread: Selector
+09/11/2020 - 23:08:56.634 : INFO : CUBrailler : Successfully Joined Thread: Feeder
+09/11/2020 - 23:08:56.634 : INFO : CUBrailler : Successfully Joined Thread: Input
+09/11/2020 - 23:08:56.635 : INFO : CUBrailler : Shut down complete
+09/11/2020 - 23:09:17.997 : INFO : CUBrailler : Constructing Components...
+09/11/2020 - 23:09:17.997 : INFO : Embosser : Setting Embosser with Enable on GPIO Pin: 19
+09/11/2020 - 23:09:18.000 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 7
+09/11/2020 - 23:09:18.001 : INFO : HeadTraverser : Setting up Traverser with STEP Pin: 20
+09/11/2020 - 23:09:18.004 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 4
+09/11/2020 - 23:09:18.065 : INFO : ToolSelector : Setting up Selector component
+09/11/2020 - 23:09:18.068 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:09:18.068 : INFO : Feeder : Setting up Feeder as Simulated Component.
+09/11/2020 - 23:09:18.071 : INFO : Feeder : Setting up Line Feed Stepper with STEP Pin: 18
+09/11/2020 - 23:09:18.072 : INFO : Feeder : Setting up Paper Feed Motor with ENA Pin: 12
+09/11/2020 - 23:09:18.073 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 22
+09/11/2020 - 23:09:18.073 : INFO : Feeder : Setting up Paper Input Sensor on Pin: 22
+09/11/2020 - 23:09:18.074 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:09:18.075 : INFO : Feeder : Setting up Paper Output Sensor on Pin: 17
+09/11/2020 - 23:09:18.075 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 14
+09/11/2020 - 23:09:18.076 : INFO : Feeder : Setting up A4 Paper Size Sensor on Pin: 14
+09/11/2020 - 23:09:18.077 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 15
+09/11/2020 - 23:09:18.077 : INFO : Feeder : Setting up Braille Paper Size Sensor on Pin: 15
+09/11/2020 - 23:09:18.077 : INFO : Input : Setting up Input in mode: KEYBOARD
+09/11/2020 - 23:09:18.078 : INFO : CUBrailler : Starting Traverser thread...
+09/11/2020 - 23:09:18.080 : INFO : HeadTraverser : Performing Traverser Startup
+09/11/2020 - 23:09:18.080 : INFO : CUBrailler : Starting Selector thread...
+09/11/2020 - 23:09:18.081 : INFO : HeadTraverser : Tool Already Home. Steps taken = 0
+09/11/2020 - 23:09:18.082 : INFO : ToolSelector : Performing Selector Startup
+09/11/2020 - 23:09:18.082 : INFO : CUBrailler : Starting Feeder thread...
+09/11/2020 - 23:09:18.084 : INFO : Feeder : Simulating Feeder Startup
+09/11/2020 - 23:09:18.085 : INFO : CUBrailler : Starting Input thread...
+09/11/2020 - 23:09:18.087 : INFO : Input : Initialising input method
+09/11/2020 - 23:09:18.088 : INFO : Embosser : Completing startup of Embosser...
+09/11/2020 - 23:09:18.089 : INFO : Embosser : Embosser Activation at t+-0.08822989463806152 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:18.091 : INFO : Input : Connecting to keyboard for input
+09/11/2020 - 23:09:18.256 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 8
+09/11/2020 - 23:09:18.392 : INFO : CUBrailler : Startup Confirmed for Embosser
+09/11/2020 - 23:09:19.236 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:09:19.238 : INFO : CUBrailler : Startup Confirmed for Traverser
+09/11/2020 - 23:09:19.334 : INFO : CUBrailler : Startup Confirmed for Selector
+09/11/2020 - 23:09:19.335 : INFO : CUBrailler : Startup Confirmed for Feeder
+09/11/2020 - 23:09:19.336 : INFO : CUBrailler : Startup Confirmed for Input
+09/11/2020 - 23:09:19.338 : INFO : Input : Starting Input Loop
+09/11/2020 - 23:09:24.137 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:09:24.138 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:09:24.139 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:24.264 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:09:24.265 : INFO : Embosser : Embosser Activation at t+-6.263503789901733 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:24.467 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:24.635 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 8
+09/11/2020 - 23:09:24.637 : INFO : Embosser : Embosser Activation at t+-6.635568618774414 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:25.254 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:09:25.255 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:09:25.256 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:25.257 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:25.506 : INFO : ToolSelector : Moved Tool from 0 to tool 6 in 12 steps
+09/11/2020 - 23:09:25.507 : INFO : Embosser : Embosser Activation at t+-7.505875587463379 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:25.710 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:26.084 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:09:26.085 : INFO : Embosser : Embosser Activation at t+-8.083463191986084 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:26.634 : INFO : Input : Input from KEYBOARD is: ['100110']
+09/11/2020 - 23:09:26.635 : INFO : CUBrailler : Processing character: 100110
+09/11/2020 - 23:09:26.635 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:26.636 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:26.637 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:09:26.727 : INFO : Embosser : Embosser Activation at t+-8.725443363189697 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:26.929 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:27.179 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:09:27.179 : INFO : Embosser : Embosser Activation at t+-9.178420543670654 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:27.819 : INFO : Input : Input from KEYBOARD is: ['110100']
+09/11/2020 - 23:09:27.820 : INFO : CUBrailler : Processing character: 110100
+09/11/2020 - 23:09:27.820 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:27.821 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:27.822 : INFO : ToolSelector : Staying at tool 3
+09/11/2020 - 23:09:27.914 : INFO : Embosser : Embosser Activation at t+-9.913170099258423 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:28.117 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:28.366 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:09:28.367 : INFO : Embosser : Embosser Activation at t+-10.366164922714233 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:29.023 : INFO : Input : Input from KEYBOARD is: ['111100']
+09/11/2020 - 23:09:29.024 : INFO : CUBrailler : Processing character: 111100
+09/11/2020 - 23:09:29.024 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:29.025 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:29.274 : INFO : ToolSelector : Moved Tool from 1 to tool 7 in 12 steps
+09/11/2020 - 23:09:29.275 : INFO : Embosser : Embosser Activation at t+-11.27422046661377 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:29.478 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:29.727 : INFO : ToolSelector : Moved Tool from 7 to tool 1 in 12 steps
+09/11/2020 - 23:09:29.728 : INFO : Embosser : Embosser Activation at t+-11.726855993270874 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:30.451 : INFO : Input : Input from KEYBOARD is: ['100010']
+09/11/2020 - 23:09:30.452 : INFO : CUBrailler : Processing character: 100010
+09/11/2020 - 23:09:30.453 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:30.454 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:30.454 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:09:30.546 : INFO : Embosser : Embosser Activation at t+-12.544541120529175 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:30.749 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:30.874 : INFO : ToolSelector : Moved Tool from 1 to tool 2 in 6 steps
+09/11/2020 - 23:09:30.875 : INFO : Embosser : Embosser Activation at t+-12.87410593032837 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:31.524 : INFO : Input : Input from KEYBOARD is: ['010111']
+09/11/2020 - 23:09:31.525 : INFO : CUBrailler : Processing character: 010111
+09/11/2020 - 23:09:31.526 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:31.527 : INFO : ToolSelector : Staying at tool 2
+09/11/2020 - 23:09:31.527 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:31.620 : INFO : Embosser : Embosser Activation at t+-13.61887264251709 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:31.823 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:32.194 : INFO : ToolSelector : Moved Tool from 2 to tool 7 in 18 steps
+09/11/2020 - 23:09:32.196 : INFO : Embosser : Embosser Activation at t+-14.194454431533813 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:32.767 : INFO : Input : Input from KEYBOARD is: ['111010']
+09/11/2020 - 23:09:32.768 : INFO : CUBrailler : Processing character: 111010
+09/11/2020 - 23:09:32.768 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:32.769 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:32.770 : INFO : ToolSelector : Staying at tool 7
+09/11/2020 - 23:09:32.863 : INFO : Embosser : Embosser Activation at t+-14.861445665359497 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:33.066 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:33.438 : INFO : ToolSelector : Moved Tool from 7 to tool 2 in 18 steps
+09/11/2020 - 23:09:33.439 : INFO : Embosser : Embosser Activation at t+-15.438114881515503 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:34.022 : INFO : Input : Input from KEYBOARD is: ['011110']
+09/11/2020 - 23:09:34.023 : INFO : CUBrailler : Processing character: 011110
+09/11/2020 - 23:09:34.024 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:34.025 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:34.520 : INFO : ToolSelector : Moved Tool from 2 to tool 6 in 24 steps
+09/11/2020 - 23:09:34.521 : INFO : Embosser : Embosser Activation at t+-16.519918203353882 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:34.724 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:35.097 : INFO : ToolSelector : Moved Tool from 6 to tool 3 in 18 steps
+09/11/2020 - 23:09:35.098 : INFO : Embosser : Embosser Activation at t+-17.096486568450928 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:35.745 : INFO : Input : Input from KEYBOARD is: ['010111']
+09/11/2020 - 23:09:35.746 : INFO : CUBrailler : Processing character: 010111
+09/11/2020 - 23:09:35.746 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:35.747 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:35.873 : INFO : ToolSelector : Moved Tool from 3 to tool 2 in 6 steps
+09/11/2020 - 23:09:35.873 : INFO : Embosser : Embosser Activation at t+-17.87239933013916 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:36.076 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:36.448 : INFO : ToolSelector : Moved Tool from 2 to tool 7 in 18 steps
+09/11/2020 - 23:09:36.449 : INFO : Embosser : Embosser Activation at t+-18.44797158241272 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:37.058 : INFO : Input : Input from KEYBOARD is: ['111110']
+09/11/2020 - 23:09:37.059 : INFO : CUBrailler : Processing character: 111110
+09/11/2020 - 23:09:37.059 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:37.060 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:37.061 : INFO : ToolSelector : Staying at tool 7
+09/11/2020 - 23:09:37.153 : INFO : Embosser : Embosser Activation at t+-19.151663303375244 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:37.355 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:37.852 : INFO : ToolSelector : Moved Tool from 7 to tool 3 in 24 steps
+09/11/2020 - 23:09:37.853 : INFO : Embosser : Embosser Activation at t+-19.852078199386597 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:38.418 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:09:38.419 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:09:38.419 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:38.420 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:38.669 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:09:38.670 : INFO : Embosser : Embosser Activation at t+-20.669093370437622 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:38.876 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:38.981 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 5
+09/11/2020 - 23:09:38.983 : INFO : Embosser : Embosser Activation at t+-20.98170256614685 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:39.772 : INFO : Input : Input from KEYBOARD is: ['101011']
+09/11/2020 - 23:09:39.773 : INFO : CUBrailler : Processing character: 101011
+09/11/2020 - 23:09:39.773 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:39.775 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:40.147 : INFO : ToolSelector : Moved Tool from 0 to tool 5 in 18 steps
+09/11/2020 - 23:09:40.149 : INFO : Embosser : Embosser Activation at t+-22.147518396377563 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:40.351 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:40.477 : INFO : ToolSelector : Moved Tool from 5 to tool 6 in 6 steps
+09/11/2020 - 23:09:40.478 : INFO : Embosser : Embosser Activation at t+-22.476696252822876 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:41.192 : INFO : Input : Input from KEYBOARD is: ['101101']
+09/11/2020 - 23:09:41.192 : INFO : CUBrailler : Processing character: 101101
+09/11/2020 - 23:09:41.193 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:41.194 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:41.319 : INFO : ToolSelector : Moved Tool from 6 to tool 5 in 6 steps
+09/11/2020 - 23:09:41.320 : INFO : Embosser : Embosser Activation at t+-23.318731546401978 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:41.522 : INFO : ToolSelector : Staying at tool 5
+09/11/2020 - 23:09:41.523 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:41.576 : INFO : Embosser : Embosser Activation at t+-23.57529926300049 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:45.214 : INFO : Input : Input from KEYBOARD is: ['000000']
+09/11/2020 - 23:09:45.215 : INFO : CUBrailler : Processing character: 000000
+09/11/2020 - 23:09:45.216 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:45.216 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:45.824 : INFO : Input : Input from KEYBOARD is: ['000000']
+09/11/2020 - 23:09:45.825 : INFO : CUBrailler : Processing character: 000000
+09/11/2020 - 23:09:45.826 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:45.826 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:46.364 : INFO : Input : Input from KEYBOARD is: ['000000']
+09/11/2020 - 23:09:46.365 : INFO : CUBrailler : Processing character: 000000
+09/11/2020 - 23:09:46.365 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:46.366 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:46.906 : INFO : Input : Input from KEYBOARD is: ['000000']
+09/11/2020 - 23:09:46.908 : INFO : CUBrailler : Processing character: 000000
+09/11/2020 - 23:09:46.908 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:46.909 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:47.425 : INFO : Input : Input from KEYBOARD is: ['000000']
+09/11/2020 - 23:09:47.426 : INFO : CUBrailler : Processing character: 000000
+09/11/2020 - 23:09:47.426 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:47.427 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:48.026 : INFO : Input : Keyboard triggered Shutdown
+09/11/2020 - 23:09:48.027 : INFO : CUBrailler : Processing character: Close Signalled from Keyboard Input - Keyboard Interrupt received
+09/11/2020 - 23:09:48.027 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:48.029 : ERROR : CUBrailler : <class 'component_control.ToolSelector.ToolSelector'> ERROR: Conversion to Base 2 Index Failed - MSG: Clo
+09/11/2020 - 23:09:48.030 : WARNING : CUBrailler : Selector WARNING:  Failed - <class 'component_control.ToolSelector.ToolSelector'> ERROR: Conversion to Base 2 Index Failed - MSG: Clo
+09/11/2020 - 23:09:48.031 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:09:48.031 : INFO : CUBrailler : Processing character: END OF INPUT
+09/11/2020 - 23:09:48.032 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:09:48.032 : WARNING : StepperMotor : Stepper not started due to Emergency Stop Flag set on STEP Pin: 20
+09/11/2020 - 23:09:48.032 : INFO : CUBrailler : Shutting Down CUB System
+09/11/2020 - 23:09:48.034 : INFO : CUBrailler : Shutting down component: Embosser
+09/11/2020 - 23:09:48.035 : INFO : CUBrailler : Shutting down component: Traverser
+09/11/2020 - 23:09:48.035 : INFO : CUBrailler : Shutting down component: Selector
+09/11/2020 - 23:09:48.036 : INFO : CUBrailler : Shutting down component: Feeder
+09/11/2020 - 23:09:48.038 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:09:48.038 : INFO : CUBrailler : Shutting down component: Input
+09/11/2020 - 23:09:48.039 : INFO : CUBrailler : Successfully Joined Thread: Traverser
+09/11/2020 - 23:09:48.040 : INFO : CUBrailler : Successfully Joined Thread: Selector
+09/11/2020 - 23:09:48.040 : INFO : CUBrailler : Successfully Joined Thread: Feeder
+09/11/2020 - 23:09:48.041 : INFO : CUBrailler : Successfully Joined Thread: Input
+09/11/2020 - 23:09:48.041 : INFO : CUBrailler : Shut down complete
+09/11/2020 - 23:09:55.098 : INFO : CUBrailler : Constructing Components...
+09/11/2020 - 23:09:55.099 : INFO : Embosser : Setting Embosser with Enable on GPIO Pin: 19
+09/11/2020 - 23:09:55.101 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 7
+09/11/2020 - 23:09:55.102 : INFO : HeadTraverser : Setting up Traverser with STEP Pin: 20
+09/11/2020 - 23:09:55.105 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 4
+09/11/2020 - 23:09:55.166 : INFO : ToolSelector : Setting up Selector component
+09/11/2020 - 23:09:55.169 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:09:55.170 : INFO : Feeder : Setting up Feeder as Simulated Component.
+09/11/2020 - 23:09:55.172 : INFO : Feeder : Setting up Line Feed Stepper with STEP Pin: 18
+09/11/2020 - 23:09:55.174 : INFO : Feeder : Setting up Paper Feed Motor with ENA Pin: 12
+09/11/2020 - 23:09:55.175 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 22
+09/11/2020 - 23:09:55.175 : INFO : Feeder : Setting up Paper Input Sensor on Pin: 22
+09/11/2020 - 23:09:55.176 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:09:55.176 : INFO : Feeder : Setting up Paper Output Sensor on Pin: 17
+09/11/2020 - 23:09:55.177 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 14
+09/11/2020 - 23:09:55.178 : INFO : Feeder : Setting up A4 Paper Size Sensor on Pin: 14
+09/11/2020 - 23:09:55.179 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 15
+09/11/2020 - 23:09:55.179 : INFO : Feeder : Setting up Braille Paper Size Sensor on Pin: 15
+09/11/2020 - 23:09:55.180 : INFO : Input : Setting up Input in mode: KEYBOARD
+09/11/2020 - 23:09:55.181 : INFO : CUBrailler : Starting Traverser thread...
+09/11/2020 - 23:09:55.182 : INFO : HeadTraverser : Performing Traverser Startup
+09/11/2020 - 23:09:55.182 : INFO : CUBrailler : Starting Selector thread...
+09/11/2020 - 23:09:55.184 : INFO : ToolSelector : Performing Selector Startup
+09/11/2020 - 23:09:55.184 : INFO : CUBrailler : Starting Feeder thread...
+09/11/2020 - 23:09:55.186 : INFO : Feeder : Simulating Feeder Startup
+09/11/2020 - 23:09:55.187 : INFO : CUBrailler : Starting Input thread...
+09/11/2020 - 23:09:55.189 : INFO : Input : Initialising input method
+09/11/2020 - 23:09:55.190 : INFO : Embosser : Completing startup of Embosser...
+09/11/2020 - 23:09:55.191 : INFO : Input : Connecting to keyboard for input
+09/11/2020 - 23:09:55.192 : INFO : Embosser : Embosser Activation at t+-0.08958649635314941 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:55.494 : INFO : CUBrailler : Startup Confirmed for Embosser
+09/11/2020 - 23:09:55.664 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 23
+09/11/2020 - 23:09:56.480 : INFO : HeadTraverser : Tool Returned Home. Steps taken = 913
+09/11/2020 - 23:09:57.572 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:09:57.573 : INFO : CUBrailler : Startup Confirmed for Traverser
+09/11/2020 - 23:09:57.574 : INFO : CUBrailler : Startup Confirmed for Selector
+09/11/2020 - 23:09:57.574 : INFO : CUBrailler : Startup Confirmed for Feeder
+09/11/2020 - 23:09:57.574 : INFO : CUBrailler : Startup Confirmed for Input
+09/11/2020 - 23:09:57.575 : INFO : Input : Starting Input Loop
+09/11/2020 - 23:09:59.026 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:09:59.027 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:09:59.028 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:09:59.153 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:09:59.154 : INFO : Embosser : Embosser Activation at t+-4.05175256729126 seconds for a length of 0.1 seconds
+09/11/2020 - 23:09:59.357 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:09:59.503 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 7
+09/11/2020 - 23:09:59.505 : INFO : Embosser : Embosser Activation at t+-4.402113437652588 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:00.498 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:10:00.503 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:10:00.504 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:00.505 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:00.753 : INFO : ToolSelector : Moved Tool from 0 to tool 6 in 12 steps
+09/11/2020 - 23:10:00.754 : INFO : Embosser : Embosser Activation at t+-5.651504993438721 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:00.956 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:01.328 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:10:01.329 : INFO : Embosser : Embosser Activation at t+-6.226797819137573 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:02.108 : INFO : Input : Input from KEYBOARD is: ['100110']
+09/11/2020 - 23:10:02.109 : INFO : CUBrailler : Processing character: 100110
+09/11/2020 - 23:10:02.110 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:02.111 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:02.111 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:10:02.202 : INFO : Embosser : Embosser Activation at t+-7.0997278690338135 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:02.405 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:02.654 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:10:02.654 : INFO : Embosser : Embosser Activation at t+-7.551957845687866 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:10.611 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:10:10.612 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:10:10.612 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:10.613 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:10.984 : INFO : ToolSelector : Moved Tool from 3 to tool 6 in 18 steps
+09/11/2020 - 23:10:10.985 : INFO : Embosser : Embosser Activation at t+-15.882932662963867 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:11.188 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:11.561 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:10:11.562 : INFO : Embosser : Embosser Activation at t+-16.459950923919678 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:14.808 : INFO : Input : Input from KEYBOARD is: ['100110']
+09/11/2020 - 23:10:14.809 : INFO : CUBrailler : Processing character: 100110
+09/11/2020 - 23:10:14.810 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:14.810 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:14.811 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:10:14.900 : INFO : Embosser : Embosser Activation at t+-19.79730463027954 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:15.103 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:15.351 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:10:15.352 : INFO : Embosser : Embosser Activation at t+-20.249846696853638 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:19.928 : INFO : Input : Input from KEYBOARD is: ['100110']
+09/11/2020 - 23:10:19.929 : INFO : CUBrailler : Processing character: 100110
+09/11/2020 - 23:10:19.929 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:19.930 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:20.179 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:10:20.180 : INFO : Embosser : Embosser Activation at t+-25.077304124832153 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:20.383 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:20.632 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:10:20.633 : INFO : Embosser : Embosser Activation at t+-25.530130624771118 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:21.177 : INFO : Input : Input from KEYBOARD is: ['110100']
+09/11/2020 - 23:10:21.178 : INFO : CUBrailler : Processing character: 110100
+09/11/2020 - 23:10:21.178 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:21.179 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:21.180 : INFO : ToolSelector : Staying at tool 3
+09/11/2020 - 23:10:21.271 : INFO : Embosser : Embosser Activation at t+-26.16810131072998 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:21.473 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:21.723 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:10:21.724 : INFO : Embosser : Embosser Activation at t+-26.621139764785767 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:22.250 : INFO : Input : Input from KEYBOARD is: ['111100']
+09/11/2020 - 23:10:22.251 : INFO : CUBrailler : Processing character: 111100
+09/11/2020 - 23:10:22.251 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:22.252 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:22.502 : INFO : ToolSelector : Moved Tool from 1 to tool 7 in 12 steps
+09/11/2020 - 23:10:22.503 : INFO : Embosser : Embosser Activation at t+-27.400258779525757 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:22.706 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:22.954 : INFO : ToolSelector : Moved Tool from 7 to tool 1 in 12 steps
+09/11/2020 - 23:10:22.955 : INFO : Embosser : Embosser Activation at t+-27.852779865264893 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:23.482 : INFO : Input : Input from KEYBOARD is: ['110010']
+09/11/2020 - 23:10:23.482 : INFO : CUBrailler : Processing character: 110010
+09/11/2020 - 23:10:23.483 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:23.484 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:23.733 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:10:23.733 : INFO : Embosser : Embosser Activation at t+-28.631004333496094 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:23.937 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:24.061 : INFO : ToolSelector : Moved Tool from 3 to tool 2 in 6 steps
+09/11/2020 - 23:10:24.062 : INFO : Embosser : Embosser Activation at t+-28.95971655845642 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:24.616 : INFO : Input : Input from KEYBOARD is: ['110100']
+09/11/2020 - 23:10:24.617 : INFO : CUBrailler : Processing character: 110100
+09/11/2020 - 23:10:24.617 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:24.618 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:24.743 : INFO : ToolSelector : Moved Tool from 2 to tool 3 in 6 steps
+09/11/2020 - 23:10:24.744 : INFO : Embosser : Embosser Activation at t+-29.641130685806274 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:24.947 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:25.195 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:10:25.196 : INFO : Embosser : Embosser Activation at t+-30.093533277511597 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:25.864 : INFO : Input : Input from KEYBOARD is: ['011110']
+09/11/2020 - 23:10:25.864 : INFO : CUBrailler : Processing character: 011110
+09/11/2020 - 23:10:25.865 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:25.866 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:26.238 : INFO : ToolSelector : Moved Tool from 1 to tool 6 in 18 steps
+09/11/2020 - 23:10:26.239 : INFO : Embosser : Embosser Activation at t+-31.136807441711426 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:26.442 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:26.813 : INFO : ToolSelector : Moved Tool from 6 to tool 3 in 18 steps
+09/11/2020 - 23:10:26.814 : INFO : Embosser : Embosser Activation at t+-31.711789846420288 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:27.059 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:27.060 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:27.060 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:27.061 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:27.310 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:10:27.311 : INFO : Embosser : Embosser Activation at t+-32.20889186859131 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:27.515 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:27.656 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:27.682 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 8
+09/11/2020 - 23:10:27.684 : INFO : Embosser : Embosser Activation at t+-32.58121180534363 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:27.886 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:27.886 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:27.887 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:28.013 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:10:28.014 : INFO : Embosser : Embosser Activation at t+-32.9116005897522 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:28.217 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:28.323 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 5
+09/11/2020 - 23:10:28.324 : INFO : Embosser : Embosser Activation at t+-33.22169876098633 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:28.508 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:28.526 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:28.527 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:28.528 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:28.654 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:10:28.655 : INFO : Embosser : Embosser Activation at t+-33.55230402946472 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:28.858 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:28.984 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:10:28.985 : INFO : Embosser : Embosser Activation at t+-33.88263463973999 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:29.594 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:29.595 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:29.595 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:29.596 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:29.722 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:10:29.722 : INFO : Embosser : Embosser Activation at t+-34.61995220184326 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:29.925 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:30.052 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:10:30.053 : INFO : Embosser : Embosser Activation at t+-34.95098853111267 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:30.403 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:30.404 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:30.404 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:30.405 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:30.531 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:10:30.532 : INFO : Embosser : Embosser Activation at t+-35.42908000946045 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:30.734 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:30.860 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:10:30.862 : INFO : Embosser : Embosser Activation at t+-35.759117126464844 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:31.207 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:31.208 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:31.208 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:31.209 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:31.335 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:10:31.335 : INFO : Embosser : Embosser Activation at t+-36.233010053634644 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:31.538 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:31.664 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:10:31.665 : INFO : Embosser : Embosser Activation at t+-36.56272792816162 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:31.951 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:10:31.952 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:10:31.952 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:31.953 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:32.078 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:10:32.079 : INFO : Embosser : Embosser Activation at t+-36.97696399688721 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:32.282 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:32.409 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:10:32.410 : INFO : Embosser : Embosser Activation at t+-37.3076696395874 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:32.613 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:10:32.614 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:10:32.614 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:32.615 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:32.865 : INFO : ToolSelector : Moved Tool from 0 to tool 6 in 12 steps
+09/11/2020 - 23:10:32.866 : INFO : Embosser : Embosser Activation at t+-37.763375997543335 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:33.069 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:33.441 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:10:33.442 : INFO : Embosser : Embosser Activation at t+-38.339890003204346 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:34.254 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:10:34.255 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:10:34.255 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:34.256 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:34.628 : INFO : ToolSelector : Moved Tool from 1 to tool 6 in 18 steps
+09/11/2020 - 23:10:34.629 : INFO : Embosser : Embosser Activation at t+-39.52689051628113 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:34.832 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:35.205 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:10:35.206 : INFO : Embosser : Embosser Activation at t+-40.10330152511597 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:37.645 : INFO : Input : Input from KEYBOARD is: ['111000']
+09/11/2020 - 23:10:37.646 : INFO : CUBrailler : Processing character: 111000
+09/11/2020 - 23:10:37.646 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:37.647 : INFO : Feeder : Simulating Get Paper Length Operation, return value of 27...
+09/11/2020 - 23:10:37.648 : INFO : Feeder : Simulating Feed Line Operation...
+09/11/2020 - 23:10:37.775 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:10:37.902 : INFO : ToolSelector : Moved Tool from 0 to tool 7 in 6 steps
+09/11/2020 - 23:10:37.917 : INFO : Input : Input from KEYBOARD is: ['101000']
+09/11/2020 - 23:10:38.961 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 871, Actual Steps = 891
+09/11/2020 - 23:10:38.962 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:10:39.024 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 891, Actual Steps = 911
+09/11/2020 - 23:10:39.025 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:10:39.069 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 911, Actual Steps = 925
+09/11/2020 - 23:10:39.070 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:10:39.071 : INFO : Embosser : Embosser Activation at t+-43.968636989593506 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:39.274 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:39.442 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 7. Expected Steps = 6, Actual Steps = 8
+09/11/2020 - 23:10:39.444 : INFO : Embosser : Embosser Activation at t+-44.34114146232605 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:39.646 : INFO : CUBrailler : Processing character: 101000
+09/11/2020 - 23:10:39.646 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:10:39.648 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:10:40.019 : INFO : ToolSelector : Moved Tool from 0 to tool 5 in 18 steps
+09/11/2020 - 23:10:40.020 : INFO : Embosser : Embosser Activation at t+-44.917792081832886 seconds for a length of 0.1 seconds
+09/11/2020 - 23:10:40.223 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:10:40.576 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 17
+09/11/2020 - 23:10:40.577 : INFO : Embosser : Embosser Activation at t+-45.47498393058777 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:03.346 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:11:03.347 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:11:03.347 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:03.348 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:03.473 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:11:03.474 : INFO : Embosser : Embosser Activation at t+-68.37156987190247 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:03.677 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:03.824 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 7
+09/11/2020 - 23:11:03.825 : INFO : Embosser : Embosser Activation at t+-68.72255182266235 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:04.261 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:11:04.261 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:11:04.262 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:04.263 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:04.511 : INFO : ToolSelector : Moved Tool from 0 to tool 6 in 12 steps
+09/11/2020 - 23:11:04.512 : INFO : Embosser : Embosser Activation at t+-69.40963125228882 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:04.715 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:05.087 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:11:05.088 : INFO : Embosser : Embosser Activation at t+-69.98585438728333 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:05.590 : INFO : Input : Input from KEYBOARD is: ['100110']
+09/11/2020 - 23:11:05.590 : INFO : CUBrailler : Processing character: 100110
+09/11/2020 - 23:11:05.591 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:05.592 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:05.592 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:11:05.683 : INFO : Embosser : Embosser Activation at t+-70.58085179328918 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:05.886 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:06.135 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:11:06.136 : INFO : Embosser : Embosser Activation at t+-71.0337598323822 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:06.529 : INFO : Input : Input from KEYBOARD is: ['110100']
+09/11/2020 - 23:11:06.529 : INFO : CUBrailler : Processing character: 110100
+09/11/2020 - 23:11:06.530 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:06.531 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:06.531 : INFO : ToolSelector : Staying at tool 3
+09/11/2020 - 23:11:06.625 : INFO : Embosser : Embosser Activation at t+-71.52240490913391 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:06.829 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:07.077 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:11:07.078 : INFO : Embosser : Embosser Activation at t+-71.97565531730652 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:07.456 : INFO : Input : Input from KEYBOARD is: ['111100']
+09/11/2020 - 23:11:07.457 : INFO : CUBrailler : Processing character: 111100
+09/11/2020 - 23:11:07.458 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:07.459 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:07.707 : INFO : ToolSelector : Moved Tool from 1 to tool 7 in 12 steps
+09/11/2020 - 23:11:07.708 : INFO : Embosser : Embosser Activation at t+-72.6054675579071 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:07.911 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:08.160 : INFO : ToolSelector : Moved Tool from 7 to tool 1 in 12 steps
+09/11/2020 - 23:11:08.161 : INFO : Embosser : Embosser Activation at t+-73.05814838409424 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:08.434 : INFO : Input : Input from KEYBOARD is: ['110010']
+09/11/2020 - 23:11:08.435 : INFO : CUBrailler : Processing character: 110010
+09/11/2020 - 23:11:08.435 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:08.436 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:08.685 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:11:08.686 : INFO : Embosser : Embosser Activation at t+-73.58317565917969 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:08.889 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:09.014 : INFO : ToolSelector : Moved Tool from 3 to tool 2 in 6 steps
+09/11/2020 - 23:11:09.015 : INFO : Embosser : Embosser Activation at t+-73.91245460510254 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:09.384 : INFO : Input : Input from KEYBOARD is: ['010110']
+09/11/2020 - 23:11:09.385 : INFO : CUBrailler : Processing character: 010110
+09/11/2020 - 23:11:09.385 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:09.386 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:09.387 : INFO : ToolSelector : Staying at tool 2
+09/11/2020 - 23:11:09.476 : INFO : Embosser : Embosser Activation at t+-74.37379145622253 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:09.679 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:09.804 : INFO : ToolSelector : Moved Tool from 2 to tool 3 in 6 steps
+09/11/2020 - 23:11:09.805 : INFO : Embosser : Embosser Activation at t+-74.70245218276978 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:10.177 : INFO : Input : Input from KEYBOARD is: ['101000']
+09/11/2020 - 23:11:10.178 : INFO : CUBrailler : Processing character: 101000
+09/11/2020 - 23:11:10.178 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:10.179 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:10.428 : INFO : ToolSelector : Moved Tool from 3 to tool 5 in 12 steps
+09/11/2020 - 23:11:10.429 : INFO : Embosser : Embosser Activation at t+-75.32670402526855 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:10.633 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:11.086 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 22
+09/11/2020 - 23:11:11.087 : INFO : Embosser : Embosser Activation at t+-75.98500323295593 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:11.359 : INFO : Input : Input from KEYBOARD is: ['111000']
+09/11/2020 - 23:11:11.360 : INFO : CUBrailler : Processing character: 111000
+09/11/2020 - 23:11:11.360 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:11.361 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:11.486 : INFO : ToolSelector : Moved Tool from 0 to tool 7 in 6 steps
+09/11/2020 - 23:11:11.487 : INFO : Embosser : Embosser Activation at t+-76.3842294216156 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:11.689 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:11.795 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 7. Expected Steps = 6, Actual Steps = 5
+09/11/2020 - 23:11:11.796 : INFO : Embosser : Embosser Activation at t+-76.69366693496704 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:12.133 : INFO : Input : Input from KEYBOARD is: ['101111']
+09/11/2020 - 23:11:12.134 : INFO : CUBrailler : Processing character: 101111
+09/11/2020 - 23:11:12.134 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:12.135 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:12.507 : INFO : ToolSelector : Moved Tool from 0 to tool 5 in 18 steps
+09/11/2020 - 23:11:12.508 : INFO : Embosser : Embosser Activation at t+-77.40511393547058 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:12.710 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:12.959 : INFO : ToolSelector : Moved Tool from 5 to tool 7 in 12 steps
+09/11/2020 - 23:11:12.960 : INFO : Embosser : Embosser Activation at t+-77.85786986351013 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:13.201 : INFO : Input : Input from KEYBOARD is: ['011110']
+09/11/2020 - 23:11:13.202 : INFO : CUBrailler : Processing character: 011110
+09/11/2020 - 23:11:13.202 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:13.203 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:13.328 : INFO : ToolSelector : Moved Tool from 7 to tool 6 in 6 steps
+09/11/2020 - 23:11:13.329 : INFO : Embosser : Embosser Activation at t+-78.22642469406128 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:13.531 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:13.904 : INFO : ToolSelector : Moved Tool from 6 to tool 3 in 18 steps
+09/11/2020 - 23:11:13.905 : INFO : Embosser : Embosser Activation at t+-78.80287742614746 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:14.153 : INFO : Input : Input from KEYBOARD is: ['111010']
+09/11/2020 - 23:11:14.154 : INFO : CUBrailler : Processing character: 111010
+09/11/2020 - 23:11:14.155 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:14.156 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:14.652 : INFO : ToolSelector : Moved Tool from 3 to tool 7 in 24 steps
+09/11/2020 - 23:11:14.653 : INFO : Embosser : Embosser Activation at t+-79.55061674118042 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:14.856 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:15.227 : INFO : ToolSelector : Moved Tool from 7 to tool 2 in 18 steps
+09/11/2020 - 23:11:15.228 : INFO : Embosser : Embosser Activation at t+-80.1255931854248 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:15.483 : INFO : Input : Input from KEYBOARD is: ['100010']
+09/11/2020 - 23:11:15.484 : INFO : CUBrailler : Processing character: 100010
+09/11/2020 - 23:11:15.484 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:15.485 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:15.611 : INFO : ToolSelector : Moved Tool from 2 to tool 1 in 6 steps
+09/11/2020 - 23:11:15.612 : INFO : Embosser : Embosser Activation at t+-80.50906419754028 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:15.815 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:11:15.939 : INFO : ToolSelector : Moved Tool from 1 to tool 2 in 6 steps
+09/11/2020 - 23:11:15.940 : INFO : Embosser : Embosser Activation at t+-80.83756160736084 seconds for a length of 0.1 seconds
+09/11/2020 - 23:11:26.080 : INFO : Input : Keyboard triggered Shutdown
+09/11/2020 - 23:11:26.081 : INFO : CUBrailler : Processing character: Close Signalled from Keyboard Input - Keyboard Interrupt received
+09/11/2020 - 23:11:26.082 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:11:26.083 : ERROR : CUBrailler : <class 'component_control.ToolSelector.ToolSelector'> ERROR: Conversion to Base 2 Index Failed - MSG: Clo
+09/11/2020 - 23:11:26.084 : WARNING : CUBrailler : Selector WARNING:  Failed - <class 'component_control.ToolSelector.ToolSelector'> ERROR: Conversion to Base 2 Index Failed - MSG: Clo
+09/11/2020 - 23:11:26.084 : INFO : CUBrailler : Processing character: END OF INPUT
+09/11/2020 - 23:11:26.085 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:11:26.085 : INFO : CUBrailler : Shutting Down CUB System
+09/11/2020 - 23:11:26.086 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:11:26.086 : WARNING : StepperMotor : Stepper not started due to Emergency Stop Flag set on STEP Pin: 20
+09/11/2020 - 23:11:26.087 : INFO : CUBrailler : Shutting down component: Embosser
+09/11/2020 - 23:11:26.089 : INFO : CUBrailler : Shutting down component: Traverser
+09/11/2020 - 23:11:26.089 : INFO : CUBrailler : Shutting down component: Selector
+09/11/2020 - 23:11:26.090 : INFO : CUBrailler : Shutting down component: Feeder
+09/11/2020 - 23:11:26.091 : INFO : CUBrailler : Shutting down component: Input
+09/11/2020 - 23:11:26.091 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:11:26.092 : INFO : CUBrailler : Successfully Joined Thread: Traverser
+09/11/2020 - 23:11:26.093 : INFO : CUBrailler : Successfully Joined Thread: Selector
+09/11/2020 - 23:11:26.093 : INFO : CUBrailler : Successfully Joined Thread: Feeder
+09/11/2020 - 23:11:26.093 : INFO : CUBrailler : Successfully Joined Thread: Input
+09/11/2020 - 23:11:26.093 : INFO : CUBrailler : Shut down complete
+09/11/2020 - 23:18:49.658 : INFO : CUBrailler : Constructing Components...
+09/11/2020 - 23:18:49.659 : INFO : Embosser : Setting Embosser with Enable on GPIO Pin: 19
+09/11/2020 - 23:18:49.661 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 7
+09/11/2020 - 23:18:49.663 : INFO : HeadTraverser : Setting up Traverser with STEP Pin: 20
+09/11/2020 - 23:18:49.666 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 4
+09/11/2020 - 23:18:49.726 : INFO : ToolSelector : Setting up Selector component
+09/11/2020 - 23:18:49.729 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:18:49.730 : INFO : Feeder : Setting up Feeder as Simulated Component.
+09/11/2020 - 23:18:49.732 : INFO : Feeder : Setting up Line Feed Stepper with STEP Pin: 18
+09/11/2020 - 23:18:49.734 : INFO : Feeder : Setting up Paper Feed Motor with ENA Pin: 12
+09/11/2020 - 23:18:49.735 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 22
+09/11/2020 - 23:18:49.735 : INFO : Feeder : Setting up Paper Input Sensor on Pin: 22
+09/11/2020 - 23:18:49.736 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:18:49.737 : INFO : Feeder : Setting up Paper Output Sensor on Pin: 17
+09/11/2020 - 23:18:49.737 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 14
+09/11/2020 - 23:18:49.738 : INFO : Feeder : Setting up A4 Paper Size Sensor on Pin: 14
+09/11/2020 - 23:18:49.739 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 15
+09/11/2020 - 23:18:49.739 : INFO : Feeder : Setting up Braille Paper Size Sensor on Pin: 15
+09/11/2020 - 23:18:49.740 : INFO : Input : Setting up Input in mode: KEYBOARD
+09/11/2020 - 23:18:49.740 : INFO : CUBrailler : Starting Traverser thread...
+09/11/2020 - 23:18:49.742 : INFO : HeadTraverser : Performing Traverser Startup
+09/11/2020 - 23:18:49.742 : INFO : CUBrailler : Starting Selector thread...
+09/11/2020 - 23:18:49.743 : INFO : ToolSelector : Performing Selector Startup
+09/11/2020 - 23:18:49.744 : INFO : CUBrailler : Starting Feeder thread...
+09/11/2020 - 23:18:49.746 : INFO : Feeder : Simulating Feeder Startup
+09/11/2020 - 23:18:49.747 : INFO : CUBrailler : Starting Input thread...
+09/11/2020 - 23:18:49.748 : INFO : Input : Initialising input method
+09/11/2020 - 23:18:49.749 : INFO : Embosser : Completing startup of Embosser...
+09/11/2020 - 23:18:49.750 : INFO : Embosser : Embosser Activation at t+-0.08755207061767578 seconds for a length of 0.1 seconds
+09/11/2020 - 23:18:49.752 : INFO : Input : Connecting to keyboard for input
+09/11/2020 - 23:18:50.053 : ERROR : CUBrailler : Error while Initialising Embosser - Initialisation Failed. ACK message: Embosser did not leave Home Position
+09/11/2020 - 23:18:50.053 : INFO : CUBrailler : Shutting Down CUB System
+09/11/2020 - 23:18:50.054 : INFO : CUBrailler : Shutting down component: Embosser
+09/11/2020 - 23:18:50.055 : INFO : CUBrailler : Shutting down component: Traverser
+09/11/2020 - 23:18:50.055 : INFO : CUBrailler : Shutting down component: Selector
+09/11/2020 - 23:18:50.056 : INFO : CUBrailler : Shutting down component: Feeder
+09/11/2020 - 23:18:50.056 : INFO : CUBrailler : Shutting down component: Input
+09/11/2020 - 23:18:50.582 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 40
+09/11/2020 - 23:18:50.707 : INFO : HeadTraverser : Tool Returned Home. Steps taken = 664
+09/11/2020 - 23:18:50.794 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:18:50.795 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:18:50.796 : INFO : CUBrailler : Successfully Joined Thread: Traverser
+09/11/2020 - 23:18:50.812 : WARNING : StepperMotor : Stepper not started due to Emergency Stop Flag set on STEP Pin: 13
+09/11/2020 - 23:18:50.814 : ERROR : ToolSelector : Tool not Blank After Test
+09/11/2020 - 23:18:50.815 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:18:50.816 : INFO : CUBrailler : Successfully Joined Thread: Selector
+09/11/2020 - 23:18:50.816 : INFO : CUBrailler : Successfully Joined Thread: Feeder
+09/11/2020 - 23:18:50.816 : INFO : CUBrailler : Successfully Joined Thread: Input
+09/11/2020 - 23:18:50.817 : INFO : CUBrailler : Shut down complete
+09/11/2020 - 23:18:52.722 : INFO : CUBrailler : Constructing Components...
+09/11/2020 - 23:18:52.722 : INFO : Embosser : Setting Embosser with Enable on GPIO Pin: 19
+09/11/2020 - 23:18:52.725 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 7
+09/11/2020 - 23:18:52.726 : INFO : HeadTraverser : Setting up Traverser with STEP Pin: 20
+09/11/2020 - 23:18:52.729 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 4
+09/11/2020 - 23:18:52.790 : INFO : ToolSelector : Setting up Selector component
+09/11/2020 - 23:18:52.793 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:18:52.794 : INFO : Feeder : Setting up Feeder as Simulated Component.
+09/11/2020 - 23:18:52.796 : INFO : Feeder : Setting up Line Feed Stepper with STEP Pin: 18
+09/11/2020 - 23:18:52.798 : INFO : Feeder : Setting up Paper Feed Motor with ENA Pin: 12
+09/11/2020 - 23:18:52.799 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 22
+09/11/2020 - 23:18:52.799 : INFO : Feeder : Setting up Paper Input Sensor on Pin: 22
+09/11/2020 - 23:18:52.800 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 17
+09/11/2020 - 23:18:52.801 : INFO : Feeder : Setting up Paper Output Sensor on Pin: 17
+09/11/2020 - 23:18:52.801 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 14
+09/11/2020 - 23:18:52.802 : INFO : Feeder : Setting up A4 Paper Size Sensor on Pin: 14
+09/11/2020 - 23:18:52.803 : INFO : PhotoSensor : Setting up Photo Sensor INPUT on GPIO Pin: 15
+09/11/2020 - 23:18:52.803 : INFO : Feeder : Setting up Braille Paper Size Sensor on Pin: 15
+09/11/2020 - 23:18:52.803 : INFO : Input : Setting up Input in mode: KEYBOARD
+09/11/2020 - 23:18:52.804 : INFO : CUBrailler : Starting Traverser thread...
+09/11/2020 - 23:18:52.805 : INFO : HeadTraverser : Performing Traverser Startup
+09/11/2020 - 23:18:52.806 : INFO : CUBrailler : Starting Selector thread...
+09/11/2020 - 23:18:52.808 : INFO : ToolSelector : Performing Selector Startup
+09/11/2020 - 23:18:52.808 : INFO : HeadTraverser : Tool Already Home. Steps taken = 0
+09/11/2020 - 23:18:52.808 : INFO : CUBrailler : Starting Feeder thread...
+09/11/2020 - 23:18:52.810 : INFO : Feeder : Simulating Feeder Startup
+09/11/2020 - 23:18:52.812 : INFO : CUBrailler : Starting Input thread...
+09/11/2020 - 23:18:52.813 : INFO : Input : Initialising input method
+09/11/2020 - 23:18:52.814 : INFO : Embosser : Completing startup of Embosser...
+09/11/2020 - 23:18:52.815 : INFO : Input : Connecting to keyboard for input
+09/11/2020 - 23:18:52.816 : INFO : Embosser : Embosser Activation at t+-0.08992242813110352 seconds for a length of 0.1 seconds
+09/11/2020 - 23:18:53.119 : INFO : CUBrailler : Startup Confirmed for Embosser
+09/11/2020 - 23:18:53.668 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 41
+09/11/2020 - 23:18:53.999 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:18:54.000 : INFO : CUBrailler : Startup Confirmed for Traverser
+09/11/2020 - 23:18:54.764 : INFO : CUBrailler : Startup Confirmed for Selector
+09/11/2020 - 23:18:54.765 : INFO : CUBrailler : Startup Confirmed for Feeder
+09/11/2020 - 23:18:54.765 : INFO : CUBrailler : Startup Confirmed for Input
+09/11/2020 - 23:18:54.767 : INFO : Input : Starting Input Loop
+09/11/2020 - 23:19:19.192 : INFO : Input : Input from KEYBOARD is: ['100000']
+09/11/2020 - 23:19:19.193 : INFO : CUBrailler : Processing character: 100000
+09/11/2020 - 23:19:19.193 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:19.319 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:19:19.320 : INFO : Embosser : Embosser Activation at t+-26.593305349349976 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:19.522 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:19.689 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 1. Expected Steps = 6, Actual Steps = 8
+09/11/2020 - 23:19:19.691 : INFO : Embosser : Embosser Activation at t+-26.96435523033142 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:20.152 : INFO : Input : Input from KEYBOARD is: ['110000']
+09/11/2020 - 23:19:20.153 : INFO : CUBrailler : Processing character: 110000
+09/11/2020 - 23:19:20.153 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:20.154 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:20.527 : INFO : ToolSelector : Moved Tool from 0 to tool 3 in 18 steps
+09/11/2020 - 23:19:20.528 : INFO : Embosser : Embosser Activation at t+-27.801931142807007 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:20.731 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:20.782 : INFO : Input : Input from KEYBOARD is: ['100100']
+09/11/2020 - 23:19:21.235 : INFO : Input : Input from KEYBOARD is: ['100110']
+09/11/2020 - 23:19:21.589 : INFO : Input : Input from KEYBOARD is: ['100010']
+09/11/2020 - 23:19:21.997 : INFO : Input : Input from KEYBOARD is: ['110100']
+09/11/2020 - 23:19:22.192 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 3. Expected Steps = 18, Actual Steps = 71
+09/11/2020 - 23:19:22.194 : INFO : Embosser : Embosser Activation at t+-29.467401027679443 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:22.384 : INFO : Input : Input from KEYBOARD is: ['111100']
+09/11/2020 - 23:19:22.396 : INFO : CUBrailler : Processing character: 100100
+09/11/2020 - 23:19:22.396 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:22.397 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:22.522 : INFO : ToolSelector : Moved Tool from 0 to tool 1 in 6 steps
+09/11/2020 - 23:19:22.524 : INFO : Embosser : Embosser Activation at t+-29.797264337539673 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:22.726 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:19:22.727 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:22.743 : INFO : Input : Input from KEYBOARD is: ['110010']
+09/11/2020 - 23:19:22.779 : INFO : Embosser : Embosser Activation at t+-30.052510976791382 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:22.981 : INFO : CUBrailler : Processing character: 100110
+09/11/2020 - 23:19:22.981 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:22.982 : INFO : ToolSelector : Staying at tool 1
+09/11/2020 - 23:19:22.983 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:23.074 : INFO : Embosser : Embosser Activation at t+-30.34795570373535 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:23.085 : INFO : Input : Input from KEYBOARD is: ['010100']
+09/11/2020 - 23:19:23.277 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:23.526 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:19:23.527 : INFO : Embosser : Embosser Activation at t+-30.800782442092896 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:23.588 : INFO : Input : Input from KEYBOARD is: ['010110']
+09/11/2020 - 23:19:23.729 : INFO : CUBrailler : Processing character: 100010
+09/11/2020 - 23:19:23.730 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:23.731 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:23.962 : INFO : Input : Input from KEYBOARD is: ['101000']
+09/11/2020 - 23:19:23.980 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:19:23.981 : INFO : Embosser : Embosser Activation at t+-31.254290103912354 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:24.184 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:24.308 : INFO : ToolSelector : Moved Tool from 1 to tool 2 in 6 steps
+09/11/2020 - 23:19:24.309 : INFO : Embosser : Embosser Activation at t+-31.583025217056274 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:24.434 : INFO : Input : Input from KEYBOARD is: ['111000']
+09/11/2020 - 23:19:24.514 : INFO : CUBrailler : Processing character: 110100
+09/11/2020 - 23:19:24.514 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:24.516 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:24.641 : INFO : ToolSelector : Moved Tool from 2 to tool 3 in 6 steps
+09/11/2020 - 23:19:24.642 : INFO : Embosser : Embosser Activation at t+-31.915500164031982 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:24.829 : INFO : Input : Input from KEYBOARD is: ['101100']
+09/11/2020 - 23:19:24.845 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:25.094 : INFO : ToolSelector : Moved Tool from 3 to tool 1 in 12 steps
+09/11/2020 - 23:19:25.095 : INFO : Embosser : Embosser Activation at t+-32.36842584609985 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:25.261 : INFO : Input : Input from KEYBOARD is: ['101110']
+09/11/2020 - 23:19:25.297 : INFO : CUBrailler : Processing character: 111100
+09/11/2020 - 23:19:25.297 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:25.298 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:25.546 : INFO : ToolSelector : Moved Tool from 1 to tool 7 in 12 steps
+09/11/2020 - 23:19:25.547 : INFO : Embosser : Embosser Activation at t+-32.82071352005005 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:25.628 : INFO : Input : Input from KEYBOARD is: ['101010']
+09/11/2020 - 23:19:25.750 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:25.998 : INFO : ToolSelector : Moved Tool from 7 to tool 1 in 12 steps
+09/11/2020 - 23:19:25.999 : INFO : Embosser : Embosser Activation at t+-33.27266049385071 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:26.021 : INFO : Input : Input from KEYBOARD is: ['111100']
+09/11/2020 - 23:19:26.201 : INFO : CUBrailler : Processing character: 110010
+09/11/2020 - 23:19:26.202 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:26.203 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:26.451 : INFO : ToolSelector : Moved Tool from 1 to tool 3 in 12 steps
+09/11/2020 - 23:19:26.452 : INFO : Embosser : Embosser Activation at t+-33.72573280334473 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:26.560 : INFO : Input : Input from KEYBOARD is: ['111110']
+09/11/2020 - 23:19:26.655 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:26.779 : INFO : ToolSelector : Moved Tool from 3 to tool 2 in 6 steps
+09/11/2020 - 23:19:26.780 : INFO : Embosser : Embosser Activation at t+-34.05365872383118 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:26.982 : INFO : CUBrailler : Processing character: 010100
+09/11/2020 - 23:19:26.982 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:26.983 : INFO : ToolSelector : Staying at tool 2
+09/11/2020 - 23:19:26.984 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:27.007 : INFO : Input : Input from KEYBOARD is: ['111010']
+09/11/2020 - 23:19:27.077 : INFO : Embosser : Embosser Activation at t+-34.35110831260681 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:27.281 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:27.366 : INFO : Input : Input from KEYBOARD is: ['011100']
+09/11/2020 - 23:19:27.404 : INFO : ToolSelector : Moved Tool from 2 to tool 1 in 6 steps
+09/11/2020 - 23:19:27.405 : INFO : Embosser : Embosser Activation at t+-34.67903208732605 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:27.607 : INFO : CUBrailler : Processing character: 010110
+09/11/2020 - 23:19:27.608 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:27.610 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:27.733 : INFO : ToolSelector : Moved Tool from 1 to tool 2 in 6 steps
+09/11/2020 - 23:19:27.734 : INFO : Embosser : Embosser Activation at t+-35.007712602615356 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:27.937 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:28.061 : INFO : ToolSelector : Moved Tool from 2 to tool 3 in 6 steps
+09/11/2020 - 23:19:28.062 : INFO : Embosser : Embosser Activation at t+-35.33559060096741 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:28.264 : INFO : CUBrailler : Processing character: 101000
+09/11/2020 - 23:19:28.264 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:28.266 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:28.514 : INFO : ToolSelector : Moved Tool from 3 to tool 5 in 12 steps
+09/11/2020 - 23:19:28.515 : INFO : Embosser : Embosser Activation at t+-35.78850078582764 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:28.718 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:29.235 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 5. Expected Steps = 18, Actual Steps = 25
+09/11/2020 - 23:19:29.236 : INFO : Embosser : Embosser Activation at t+-36.50983810424805 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:29.438 : INFO : CUBrailler : Processing character: 111000
+09/11/2020 - 23:19:29.439 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:29.443 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:29.568 : INFO : ToolSelector : Moved Tool from 0 to tool 7 in 6 steps
+09/11/2020 - 23:19:29.569 : INFO : Embosser : Embosser Activation at t+-36.84288573265076 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:29.772 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:29.897 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 7. Expected Steps = 6, Actual Steps = 6
+09/11/2020 - 23:19:29.899 : INFO : Embosser : Embosser Activation at t+-37.17255449295044 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:30.101 : INFO : CUBrailler : Processing character: 101100
+09/11/2020 - 23:19:30.101 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:30.102 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:30.337 : INFO : Input : Input from KEYBOARD is: ['011110']
+09/11/2020 - 23:19:30.475 : INFO : ToolSelector : Moved Tool from 0 to tool 5 in 18 steps
+09/11/2020 - 23:19:30.476 : INFO : Embosser : Embosser Activation at t+-37.7494580745697 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:30.678 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:30.831 : INFO : Input : Input from KEYBOARD is: ['101001']
+09/11/2020 - 23:19:31.175 : INFO : ToolSelector : Moved Tool from 5 to tool 1 in 24 steps
+09/11/2020 - 23:19:31.176 : INFO : Embosser : Embosser Activation at t+-38.449389934539795 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:31.378 : INFO : CUBrailler : Processing character: 101110
+09/11/2020 - 23:19:31.378 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:31.379 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:31.776 : INFO : Input : Input from KEYBOARD is: ['111001']
+09/11/2020 - 23:19:31.875 : INFO : ToolSelector : Moved Tool from 1 to tool 5 in 24 steps
+09/11/2020 - 23:19:31.876 : INFO : Embosser : Embosser Activation at t+-39.149919748306274 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:32.079 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:32.328 : INFO : ToolSelector : Moved Tool from 5 to tool 3 in 12 steps
+09/11/2020 - 23:19:32.329 : INFO : Embosser : Embosser Activation at t+-39.602534770965576 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:32.531 : INFO : CUBrailler : Processing character: 101010
+09/11/2020 - 23:19:32.531 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:32.532 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:32.588 : INFO : Input : Input from KEYBOARD is: ['010111']
+09/11/2020 - 23:19:32.781 : INFO : ToolSelector : Moved Tool from 3 to tool 5 in 12 steps
+09/11/2020 - 23:19:32.782 : INFO : Embosser : Embosser Activation at t+-40.055973529815674 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:32.985 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:33.227 : INFO : Input : Input from KEYBOARD is: ['101101']
+09/11/2020 - 23:19:33.358 : INFO : ToolSelector : Moved Tool from 5 to tool 2 in 18 steps
+09/11/2020 - 23:19:33.358 : INFO : Embosser : Embosser Activation at t+-40.63225746154785 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:33.561 : INFO : CUBrailler : Processing character: 111100
+09/11/2020 - 23:19:33.561 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:33.562 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:33.671 : INFO : Input : Input from KEYBOARD is: ['101111']
+09/11/2020 - 23:19:33.934 : INFO : ToolSelector : Moved Tool from 2 to tool 7 in 18 steps
+09/11/2020 - 23:19:33.935 : INFO : Embosser : Embosser Activation at t+-41.20858025550842 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:34.137 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:34.386 : INFO : ToolSelector : Moved Tool from 7 to tool 1 in 12 steps
+09/11/2020 - 23:19:34.387 : INFO : Embosser : Embosser Activation at t+-41.661168575286865 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:34.466 : INFO : Input : Input from KEYBOARD is: ['101011']
+09/11/2020 - 23:19:34.590 : INFO : CUBrailler : Processing character: 111110
+09/11/2020 - 23:19:34.590 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:34.591 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:34.841 : INFO : ToolSelector : Moved Tool from 1 to tool 7 in 12 steps
+09/11/2020 - 23:19:34.842 : INFO : Embosser : Embosser Activation at t+-42.11532163619995 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:35.044 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:35.539 : INFO : ToolSelector : Moved Tool from 7 to tool 3 in 24 steps
+09/11/2020 - 23:19:35.540 : INFO : Embosser : Embosser Activation at t+-42.81343936920166 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:35.742 : INFO : CUBrailler : Processing character: 111010
+09/11/2020 - 23:19:35.742 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:35.743 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:36.240 : INFO : ToolSelector : Moved Tool from 3 to tool 7 in 24 steps
+09/11/2020 - 23:19:36.241 : INFO : Embosser : Embosser Activation at t+-43.514394998550415 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:36.443 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:36.816 : INFO : ToolSelector : Moved Tool from 7 to tool 2 in 18 steps
+09/11/2020 - 23:19:36.817 : INFO : Embosser : Embosser Activation at t+-44.0907301902771 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:37.019 : INFO : CUBrailler : Processing character: 011100
+09/11/2020 - 23:19:37.020 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:37.021 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:37.515 : INFO : ToolSelector : Moved Tool from 2 to tool 6 in 24 steps
+09/11/2020 - 23:19:37.516 : INFO : Embosser : Embosser Activation at t+-44.78954720497131 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:37.718 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:38.091 : INFO : ToolSelector : Moved Tool from 6 to tool 1 in 18 steps
+09/11/2020 - 23:19:38.092 : INFO : Embosser : Embosser Activation at t+-45.36568593978882 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:38.294 : INFO : CUBrailler : Processing character: 011110
+09/11/2020 - 23:19:38.294 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:38.295 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:38.667 : INFO : ToolSelector : Moved Tool from 1 to tool 6 in 18 steps
+09/11/2020 - 23:19:38.668 : INFO : Embosser : Embosser Activation at t+-45.941364765167236 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:38.870 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:39.243 : INFO : ToolSelector : Moved Tool from 6 to tool 3 in 18 steps
+09/11/2020 - 23:19:39.244 : INFO : Embosser : Embosser Activation at t+-46.51774191856384 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:39.446 : INFO : CUBrailler : Processing character: 101001
+09/11/2020 - 23:19:39.447 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:39.447 : INFO : Feeder : Simulating Get Paper Length Operation, return value of 27...
+09/11/2020 - 23:19:39.449 : INFO : Feeder : Simulating Feed Line Operation...
+09/11/2020 - 23:19:39.823 : INFO : ToolSelector : Tool Rotated to Blank Position from tool 3. Expected Steps = 18, Actual Steps = 18
+09/11/2020 - 23:19:40.196 : INFO : ToolSelector : Moved Tool from 0 to tool 5 in 18 steps
+09/11/2020 - 23:19:40.745 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 871, Actual Steps = 891
+09/11/2020 - 23:19:40.746 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:40.807 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 891, Actual Steps = 911
+09/11/2020 - 23:19:40.808 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:40.869 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 911, Actual Steps = 931
+09/11/2020 - 23:19:40.870 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:40.931 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 931, Actual Steps = 951
+09/11/2020 - 23:19:40.932 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:40.993 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 951, Actual Steps = 971
+09/11/2020 - 23:19:40.994 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:41.055 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 971, Actual Steps = 991
+09/11/2020 - 23:19:41.056 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:41.117 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 991, Actual Steps = 1011
+09/11/2020 - 23:19:41.118 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:41.179 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 1011, Actual Steps = 1031
+09/11/2020 - 23:19:41.179 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:41.241 : INFO : HeadTraverser : Tool Returned Home. Expected Steps = 1031, Actual Steps = 1051
+09/11/2020 - 23:19:41.241 : INFO : PhotoSensor : Cleared rising callback on pin 4
+09/11/2020 - 23:19:41.243 : INFO : Embosser : Embosser Activation at t+-48.51639771461487 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:41.445 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:41.571 : INFO : ToolSelector : Moved Tool from 5 to tool 4 in 6 steps
+09/11/2020 - 23:19:41.572 : INFO : Embosser : Embosser Activation at t+-48.84533476829529 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:41.774 : INFO : CUBrailler : Processing character: 111001
+09/11/2020 - 23:19:41.774 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:41.775 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:42.148 : INFO : ToolSelector : Moved Tool from 4 to tool 7 in 18 steps
+09/11/2020 - 23:19:42.149 : INFO : Embosser : Embosser Activation at t+-49.4225115776062 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:42.351 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:42.724 : INFO : ToolSelector : Moved Tool from 7 to tool 4 in 18 steps
+09/11/2020 - 23:19:42.725 : INFO : Embosser : Embosser Activation at t+-49.99859309196472 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:42.927 : INFO : CUBrailler : Processing character: 010111
+09/11/2020 - 23:19:42.927 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:42.928 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:43.178 : INFO : ToolSelector : Moved Tool from 4 to tool 2 in 12 steps
+09/11/2020 - 23:19:43.179 : INFO : Embosser : Embosser Activation at t+-50.45241904258728 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:43.381 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:43.753 : INFO : ToolSelector : Moved Tool from 2 to tool 7 in 18 steps
+09/11/2020 - 23:19:43.754 : INFO : Embosser : Embosser Activation at t+-51.02747964859009 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:43.956 : INFO : CUBrailler : Processing character: 101101
+09/11/2020 - 23:19:43.956 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:43.957 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:44.204 : INFO : ToolSelector : Moved Tool from 7 to tool 5 in 12 steps
+09/11/2020 - 23:19:44.205 : INFO : Embosser : Embosser Activation at t+-51.47836136817932 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:44.407 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:44.408 : INFO : ToolSelector : Staying at tool 5
+09/11/2020 - 23:19:44.458 : INFO : Embosser : Embosser Activation at t+-51.73190474510193 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:44.660 : INFO : CUBrailler : Processing character: 101111
+09/11/2020 - 23:19:44.661 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:44.661 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:44.662 : INFO : ToolSelector : Staying at tool 5
+09/11/2020 - 23:19:44.751 : INFO : Embosser : Embosser Activation at t+-52.024781703948975 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:44.954 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:45.200 : INFO : ToolSelector : Moved Tool from 5 to tool 7 in 12 steps
+09/11/2020 - 23:19:45.205 : INFO : Embosser : Embosser Activation at t+-52.479116439819336 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:45.407 : INFO : CUBrailler : Processing character: 101011
+09/11/2020 - 23:19:45.408 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:19:45.409 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:19:45.656 : INFO : ToolSelector : Moved Tool from 7 to tool 5 in 12 steps
+09/11/2020 - 23:19:45.657 : INFO : Embosser : Embosser Activation at t+-52.93097543716431 seconds for a length of 0.1 seconds
+09/11/2020 - 23:19:45.859 : INFO : HeadTraverser : Completing Head Traversal of Column in Positive Dir, count:1...
+09/11/2020 - 23:19:45.984 : INFO : ToolSelector : Moved Tool from 5 to tool 6 in 6 steps
+09/11/2020 - 23:19:45.985 : INFO : Embosser : Embosser Activation at t+-53.25872731208801 seconds for a length of 0.1 seconds
+09/11/2020 - 23:20:00.442 : INFO : Input : Keyboard triggered Shutdown
+09/11/2020 - 23:20:00.443 : INFO : CUBrailler : Processing character: Close Signalled from Keyboard Input - Keyboard Interrupt received
+09/11/2020 - 23:20:00.443 : INFO : Feeder : Simulating Get Paper Width Operation, return value of 20...
+09/11/2020 - 23:20:00.444 : INFO : HeadTraverser : Completing Head Traversal of Character in Positive Dir, count:1...
+09/11/2020 - 23:20:00.445 : WARNING : StepperMotor : Stepper not started due to Emergency Stop Flag set on STEP Pin: 20
+09/11/2020 - 23:20:00.446 : ERROR : CUBrailler : <class 'component_control.ToolSelector.ToolSelector'> ERROR: Conversion to Base 2 Index Failed - MSG: Clo
+09/11/2020 - 23:20:00.447 : WARNING : CUBrailler : Selector WARNING:  Failed - <class 'component_control.ToolSelector.ToolSelector'> ERROR: Conversion to Base 2 Index Failed - MSG: Clo
+09/11/2020 - 23:20:00.447 : INFO : CUBrailler : Processing character: END OF INPUT
+09/11/2020 - 23:20:00.448 : INFO : CUBrailler : Shutting Down CUB System
+09/11/2020 - 23:20:00.448 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:20:00.448 : INFO : CUBrailler : Shutting down component: Embosser
+09/11/2020 - 23:20:00.450 : INFO : CUBrailler : Shutting down component: Traverser
+09/11/2020 - 23:20:00.450 : INFO : CUBrailler : Shutting down component: Selector
+09/11/2020 - 23:20:00.451 : INFO : CUBrailler : Shutting down component: Feeder
+09/11/2020 - 23:20:00.452 : INFO : CUBrailler : Shutting down component: Input
+09/11/2020 - 23:20:00.453 : WARNING : StepperMotor : Stepper Motor Emergency Stop Flag Set to True
+09/11/2020 - 23:20:00.453 : INFO : CUBrailler : Successfully Joined Thread: Traverser
+09/11/2020 - 23:20:00.454 : INFO : CUBrailler : Successfully Joined Thread: Selector
+09/11/2020 - 23:20:00.454 : INFO : CUBrailler : Successfully Joined Thread: Feeder
+09/11/2020 - 23:20:00.454 : INFO : CUBrailler : Successfully Joined Thread: Input
+09/11/2020 - 23:20:00.455 : INFO : CUBrailler : Shut down complete

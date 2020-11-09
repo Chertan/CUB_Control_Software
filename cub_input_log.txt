@@ -1,0 +1,5 @@
+Log file of the CUB Input
+Log file of the CUB Translated Input
+Reading Input from Keyboard
+------------------------------
+abcdefghijklmnopqrstuvwxyz
