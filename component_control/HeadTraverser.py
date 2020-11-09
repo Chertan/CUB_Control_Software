@@ -9,17 +9,17 @@ import logging
 class HeadTraverser:
     """Abstraction Class to represent the Head Traversal mechanism for the CUB
 
-        Attributes: traverseStepper      - Stepper motor class to represent the Traversal stepper motor
-                    traverseHomeSensor   - PhotoSensor class to represent the Photosensor used to detect the traversal
-                                           home position
-                    currentStep          - Tracks current position of head in number of steps from the home position
+        Attributes: traverseStepper    - Stepper motor class to represent the Traversal stepper motor
+                    traverseHomeSensor - PhotoSensor class to represent the Photosensor used to detect the traversal
+                                         home position
+                    currentStep        - Tracks current position of head in number of steps from the home position
+                    exit               - Boolean flag to denote when the component had been notified to close
 
-        Methods:    traverse_home()      - Returns brailler head to the home position
-                    traverse_character() - Moves the brailler head by the distance between braille characters
-                                           Has optional reverse parameter
-                    traverse_column()    - Moves the brailler head by the distance between columns in braille cell
-                                           Has optional reverse parameter
-                    emergency_stop()     - Shuts down the traverser stepper motor to prevent future operation
+        Methods:    thread_in()      - Entry point for the operational thread
+                    send(<msg>)      - Sends the input message to the running thread
+                    recv()           - Returns the message at the front of the output queue from the running thread
+                    close()          - Notifies the running thread to close
+                    emergency_stop() - Shuts down operation of the component
     """
     # GPIO pins of the head traversal stepper motor
     TRAVDIR = 21
@@ -111,7 +111,7 @@ class HeadTraverser:
     def __output(self, msg):
         """Places the argument message into the pipe to be received by the cub thread
 
-        :param msg: Object to be message to another thread
+        :param msg: Message to be sent to another thread
         :return: None
         """
         logging.debug(f"HeadTraverser Sending MSG: {msg}")
@@ -120,7 +120,7 @@ class HeadTraverser:
     def __input(self):
         """Returns the next message in the pipe to be received from the cub thread
 
-        :return: The object received from another thread
+        :return: The message received from another thread
         """
         msg = self.head_pipe.recv()
         logging.debug(f"HeadTraverser Received MSG: {msg}")
@@ -136,7 +136,7 @@ class HeadTraverser:
         return key, index, direction, count
 
     def send(self, msg):
-        """Places a message into the pipe to be received by the ToolSelector Thread
+        """Places a message into the pipe to be received by the Traverser Thread
 
         :param msg: Object to be input to the Head Traverser Thread
         :return: None
@@ -144,7 +144,7 @@ class HeadTraverser:
         self.cub_pipe.send(msg)
 
     def recv(self):
-        """Retrieves a message from the pipe that as been sent by the ToolSelector Thread
+        """Retrieves a message from the pipe that as been sent by the Traverser Thread
 
         :return: Object output by Head Traverser
         """
@@ -234,6 +234,10 @@ class HeadTraverser:
             self.__output("ACK")
 
     def close(self):
+        """Notifys the Head traverser thread to close
+
+        :return: None
+        """
         self.exit = True
 
     def __movement_test(self):
@@ -277,7 +281,7 @@ class HeadTraverser:
         """
         # Logging commented to prevent unnecessary overhead in the callback to ensure quick reponse
         # Uncomment to aid in debugging
-        # logging.info("Traverser Callback Triggered")
+        # logging.debug("Traverser Callback Triggered")
         self.traverseStepper.stop()
 
     def emergency_stop(self):
