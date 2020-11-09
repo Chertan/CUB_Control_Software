@@ -118,13 +118,13 @@ class DCOutputDevice:
 
         if duration == 0:
             # Perform an instant pulse
-            logging.info(f"Pulsing Output DC Output in direction: {direction} on ENA Pin: {self.enable}")
+            logging.debug(f"Pulsing Output DC Output in direction: {direction} on ENA Pin: {self.enable}")
             # Note no effect if emergency stop flag is set
             self.__enable_output(direction)
             self.__disable_output()
         else:
             # Perform a long pulse with length = duration
-            logging.info(f"Activating Output for {duration} seconds, in direction: {direction} on ENA Pin: "
+            logging.debug(f"Activating Output for {duration} seconds, in direction: {direction} on ENA Pin: "
                          f"{self.enable}")
             count = self.__pulse_for(direction, duration)
         return count
@@ -142,7 +142,7 @@ class DCOutputDevice:
         count = [-1, -1]
 
         if duration == 0:
-            logging.info(f"Pulsing Output DC Output forwards than backwards starting with {start_direction} on ENA Pin:"
+            logging.debug(f"Pulsing Output DC Output forwards than backwards starting with {start_direction} on ENA Pin:"
                          f" {self.enable}")
             # Pulse in first direction
             count[0] = self.pulse(start_direction)
@@ -154,7 +154,7 @@ class DCOutputDevice:
                 count[1] = self.pulse((start_direction + 1) % 2)
         else:
             # Perform long swap pulse with length = duration
-            logging.info(f"Activating Output DC Output forwards than backwards for {duration} seconds. Starting with"
+            logging.debug(f"Activating Output DC Output forwards than backwards for {duration} seconds. Starting with"
                          f" {start_direction} on ENA Pin: {self.enable}")
             # Activate in first direction
             count[0] = self.__pulse_for(start_direction, duration)

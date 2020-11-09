@@ -53,7 +53,7 @@ class PhotoSensor:
             # Sensor pin is in false position
             out = False
 
-        logging.info(f"Sensor on GPIO pin #{self.pin} current value of {value}, returning {out} ")
+        logging.debug(f"Sensor on GPIO pin #{self.pin} current value of {value}, returning {out} ")
 
         return out
 

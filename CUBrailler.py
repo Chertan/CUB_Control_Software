@@ -166,9 +166,9 @@ def initialise_components(mode, filename, file_language):
     # Construct component objects
     print("Initialising Components...", end='')
     logging.info("Constructing Components...")
-    components['Embosser'] = Embosser(simulate=True)
-    components['Traverser'] = HeadTraverser(simulate=True)
-    components['Selector'] = ToolSelector(simulate=True)
+    components['Embosser'] = Embosser(simulate=False)
+    components['Traverser'] = HeadTraverser(simulate=False)
+    components['Selector'] = ToolSelector(simulate=False)
     components['Feeder'] = Feeder(simulate=True)
     components['Input'] = Input(input_mode=mode, filename=filename, file_language=file_language)
     print("Complete")
@@ -305,10 +305,6 @@ def print_char(char):
     :return: None
     """
     logging.debug(f"Printing character: {char}")
-    # Print Left
-    # Move Head Col
-    # Print Right
-    # Update Count
     global current_char
     global last_char
 
@@ -318,13 +314,11 @@ def print_char(char):
         if last_char == "000000" and current_char == 0:
             send_task('Traverser', "MOVE COL POS")
             send_task('Traverser', "MOVE CHAR POS")
-            current_char += 1
     # Print each column separately
     else:
         print_col(char[0:3])
         send_task('Traverser', "MOVE COL POS")
         print_col(char[3:6])
-        current_char += 1
 
 
 def print_col(column):
@@ -349,11 +343,12 @@ def head_next_char(word_length=1):
     """
     global current_line, current_char
 
-    logging.debug(f"Moving Head Position to next character")
+    logging.debug(f"Moving Head Position to next character, curr_char = {current_char}")
 
     # Check if the current character (or word) will overflow the line
     if (current_char + word_length) > components['Feeder'].get_paper_size():
         # If so, return the head to the home position
+        send_task('Traverser', "HOME")
         send_task('Selector', "HOME")
         current_char = 0
         # Check if reached the end of the paper

@@ -27,7 +27,7 @@ class HeadTraverser:
     TRAVENA = 16
 
     # Motor speed parameters to be tuned during testing
-    START_SPEED = 500
+    START_SPEED = 400
     MAX_SPEED = 1200
     RAMP_RATE = 15
 
@@ -316,7 +316,7 @@ class HeadTraverser:
                     logging.info(f"Tool Returned Home. Steps taken = {count}")
                 else:
                     exp = 0
-                    while not self.traverseHomeSensor.read_sensor():
+                    while not self.traverseHomeSensor.read_sensor() and not self.exit:
                         exp += count
                         count = self.traverseStepper.move_steps(20, HeadTraverser.NEG_DIR)
                         logging.info(f"Tool Returned Home. Expected Steps = {exp}, Actual Steps = {exp + count}")
@@ -339,7 +339,7 @@ class HeadTraverser:
                 logging.info(f"Simulating Head Traversal of Column in Negative Dir, count:{count}...")
                 time.sleep(0.5)
             else:
-                logging.info(f"Completing Head Traversal of Character in Negative Dir, count:{count}...")
+                logging.info(f"Completing Head Traversal of Column in Negative Dir, count:{count}...")
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.NEG_DIR)
                 self.currentStep -= HeadTraverser.STEPS_BETWEEN_COLUMN * count
         else:
@@ -347,7 +347,7 @@ class HeadTraverser:
                 logging.info(f"Simulating Head Traversal of Column in Positive Dir, count:{count}...")
                 time.sleep(0.5)
             else:
-                logging.info(f"Completing Head Traversal of Character in Positive Dir, count:{count}...")
+                logging.info(f"Completing Head Traversal of Column in Positive Dir, count:{count}...")
                 self.traverseStepper.move_steps(HeadTraverser.STEPS_BETWEEN_COLUMN*count, HeadTraverser.POS_DIR)
                 self.currentStep += HeadTraverser.STEPS_BETWEEN_COLUMN * count
 

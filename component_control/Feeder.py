@@ -61,7 +61,7 @@ class Feeder:
 
     # // Paper Width in Characters //
     # Dimensions of A4 Paper
-    A4_CELLS = 30
+    A4_CELLS = 20
     A4_LINES = 27
     # Dimensions of Braille Paper
     BRAILLE_CELLS = 40

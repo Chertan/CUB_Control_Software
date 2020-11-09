@@ -39,8 +39,8 @@ class ToolSelector:
     # Motor speed parameters to be tuned during testing
     # Tested range of speeds, current motor still skips/misses steps
     # (Software outputs appear to be fine, May be a issue with the motor itself)
-    START_SPEED = 30
-    MAX_SPEED = 30
+    START_SPEED = 50
+    MAX_SPEED = 50
     RAMP_RATE = 1
 
     # Direction Selectors to be confirmed during testing
