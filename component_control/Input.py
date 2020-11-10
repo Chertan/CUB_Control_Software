@@ -192,6 +192,7 @@ class Input:
                 self.inputlogFile.write("------------------------------\n")
                 print(f"Translating and outputting from file: {self.inFilename}")
                 print("Printing", end='')
+                sys.stdout.flush()
 
             logging.info("Starting Input Loop")
 
@@ -344,6 +345,7 @@ class Input:
         # Print to screen as progress indicator of file printing
         if self.mode == "FILE":
             print(".", end='')
+            sys.stdout.flush()
 
         return msg
 

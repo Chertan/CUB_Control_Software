@@ -1,5 +1,7 @@
 Log file of the CUB Input
 Log file of the CUB Translated Input
-Reading Input from Keyboard
+Reading Input from File: testinput.txt
 ------------------------------
-abcdefghijklmnopqrstuvwxyz
+This is some text to test the file input conversion of the Curtin University Brailler.
+Wow! Here is some funny punctuation! Where? What? How? 
+This and that, listen (closely) to the click clack
