@@ -311,7 +311,10 @@ def print_char(char):
     # No need to emboss for spaces
     if char == "000000":
         # Don't print as the first character of a new line unless there is more than one in a row
-        if last_char == "000000" and current_char == 0:
+        if current_char == 0 and last_char != "000000":
+            # Dont print space as the first character of a new line
+            # Unless it is multiple spaces in a row
+        else:
             send_task('Traverser', "MOVE COL POS")
             send_task('Traverser', "MOVE CHAR POS")
     # Print each column separately
@@ -364,14 +367,12 @@ def head_next_char(word_length=1):
             logging.debug(f"Feeding to next line of page")
             send_task('Feeder', "FEED 1 POS")
             current_line += 1
-
-    # Make movement to next character
-    if current_char == 0:
-        # First character of the line, no need to move
-        current_char += 1
     else:
-        # Move to the next character position
-        send_task('Traverser', "MOVE CHAR POS")
+        # Dont move from the start of the line until character is printed
+        if current_char != 0:
+            # Move to the next character position
+            send_task('Traverser', "MOVE CHAR POS")
+        # Incement character count
         current_char += 1
 
 
@@ -381,29 +382,10 @@ def backspace(clear=True):
     :param clear: Optional parameter which flags if an embossing of the clear tool is necessary
     :return: None
     """
-    # Move head to the second column of the last character
     global current_char, current_line
 
-    # If clear flag is set
-    if clear:
-        # Select the clear tool
-        send_task('Selector', "HOME")
-        # Wait for movement and tool selection to complete
-        task_barrier(targets=['Selector', 'Traverser', 'Feeder'])
-        # Emboss action
-        components['Embosser'].activate()
-        # Move to the first column
-        send_task('Traverser', "MOVE COL NEG")
-        # Wait for movement to be complete
-        task_barrier(targets=['Traverser'])
-        # Emboss action
-        components['Embosser'].activate()
-    else:
-        # No need to clear, just move to left column
-        send_task('Traverser', "MOVE COL NEG")
-
     # If currently at the first character of the page
-    if current_char == 1:
+    if current_char == 0:
         if current_line == 1:
             # First line of the page, cannot return to last page
             raise OperationError("CUBBrailler", "Backspace", "Unable to backspace at start of page, no action taken")
@@ -417,15 +399,29 @@ def backspace(clear=True):
             send_task('Traverser', "MOVE COL POS " + str(components['Feeder'].get_paper_size()))
             # Update State variables
             current_line -= 1
-            current_char = components['Feeder'].get_paper_size()
+            current_char = components['Feeder'].get_paper_size() -1
 
-    else:  # Not first character
+    # If clear flag is set
+    if clear:
+        # Clear the second column
+        print_col("000")
+
+        # Move to the first column
+        send_task('Traverser', "MOVE COL NEG")
+
+        #Clear the first column
+        print_col("000")
+    else:
+        # No need to clear, just move to left column
+        send_task('Traverser', "MOVE COL NEG")
+
+    # Reduce the character counter
+    current_char -= 1
+
+    # Only move backward if not already in home position
+    if current_char != 0:
         # Move to previous character
         send_task('Traverser', "MOVE CHAR NEG")
-        current_char -= 1
-
-    # Ensure head and page movement is complete before continuing
-    task_barrier(['Traverser', 'Feeder'])
 
 
 def send_task(target, task):
