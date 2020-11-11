@@ -146,6 +146,10 @@ def setup_logging(level, logfile):
     log_format = '%(asctime)s.%(msecs)03d : %(levelname)s : %(module)s : %(message)s'
     date_format = '%d/%m/%Y - %H:%M:%S'
 
+    # Set default log level
+    if level is None:
+    	level = 'WARNING'
+
     # Log to file if flag was set
     if logfile is None:
         # Log to screen
