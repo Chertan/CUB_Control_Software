@@ -315,10 +315,9 @@ def print_char(char):
     # No need to emboss for spaces
     if char == "000000":
         # Don't print as the first character of a new line unless there is more than one in a row
-        if current_char == 0 and last_char != "000000":
+        if not (current_char == 0 and last_char != "000000"):
             # Dont print space as the first character of a new line
             # Unless it is multiple spaces in a row
-        else:
             send_task('Traverser', "MOVE COL POS")
             send_task('Traverser', "MOVE CHAR POS")
     # Print each column separately
